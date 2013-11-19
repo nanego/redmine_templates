@@ -3,7 +3,7 @@ class CreateIssueTemplates < ActiveRecord::Migration
     create_table :issue_templates do |t|
 
       t.string :template_title, :default => "", :null => false
-      t.column :template_enabled, :boolean, :default => true
+      t.boolean :template_enabled, :default => true
 
       t.integer :project_id, :null => false, :default => 0
       t.string :subject, :default => "", :null => false

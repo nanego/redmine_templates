@@ -9,7 +9,7 @@ class IssueTemplate < ActiveRecord::Base
   belongs_to :priority, :class_name => 'IssuePriority', :foreign_key => 'priority_id'
   belongs_to :category, :class_name => 'IssueCategory', :foreign_key => 'category_id'
 
-  validates_presence_of :subject, :tracker, :author, :priority, :project, :status, :template_title
+  validates_presence_of :subject, :tracker, :author, :project, :status, :template_title
 
   validates_length_of :subject, :maximum => 255
   # validates_inclusion_of :done_ratio, :in => 0..100
@@ -25,27 +25,23 @@ class IssueTemplate < ActiveRecord::Base
                   :template_title,
                   :template_enabled,
                   :is_private,
-                 :status_id,
-                 :category_id,
-                 :assigned_to_id,
-                 :priority_id,
-                 :fixed_version_id,
-                 :start_date,
-                 :due_date,
-                 :done_ratio,
-                 :estimated_hours,
-                 #:custom_field_values,
-                 :custom_fields,
-                 :lock_version,
-                 :notes,
-                 :status_id,
-                 :assigned_to_id,
-                 :fixed_version_id,
-                 :done_ratio,
-                 :lock_version,
-                 :notes,
-                 :private_notes,
-                 :watcher_user_ids
+                  :status_id,
+                  :category_id,
+                  :assigned_to_id,
+                  :priority_id,
+                  :fixed_version_id,
+                  :start_date,
+                  :due_date,
+                  :done_ratio,
+                  :estimated_hours,
+                  # :custom_field_values,
+                  # :custom_fields,
+                  :lock_version,
+                  :status_id,
+                  :assigned_to_id,
+                  :fixed_version_id,
+                  :done_ratio,
+                  :lock_version
 
   def allowed_target_projects
     Project.all(:conditions => Project.allowed_to_condition(User.current, :add_issues))

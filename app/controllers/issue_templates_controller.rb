@@ -21,8 +21,6 @@ class IssueTemplatesController < ApplicationController
 
   def create
     @issue_template = IssueTemplate.new(params[:issue_template])
-    @project ||= Project.find(params[:issue_template][:project_id])
-    @issue_template.project = @project
     @issue_template.author ||= User.current
 
     if @issue_template.save
@@ -66,10 +64,6 @@ class IssueTemplatesController < ApplicationController
        @template_map[Tracker.find(tracker_id)] = templates
      end
    end
-
-   @issue_templates = IssueTemplate.where('project_id = ?', @project.id)
-
-   render :template => 'issue_templates/index.html.erb'
   end
 
   def complete_form
