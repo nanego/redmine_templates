@@ -1,0 +1,56 @@
+<% html_title(l(:label_issue_templates)) %>
+
+<div class="contextual">
+  <%= link_to(l(:label_new_templates),
+                            {:controller => 'issue_templates', :action => 'init', :project_id => @project},
+                            :class => 'icon icon-add', :method => :post) %>
+</div>
+
+<h2 class="template"><%=h "#{l(:label_issue_templates)}" %></h2>
+
+<% if @notice -%>
+  <div class="flash notice"><%= @notice -%></div>
+<% end -%>
+
+
+<% if @template_map.empty? %>
+  <div class="template_box">
+    <%= l(:no_issue_templates_for_this_project) %>
+  </div>
+<% end %>
+
+<% @template_map.each_key do |tracker| %>
+  <div class="template_box">
+    <h3 class="template_tracker"><%= tracker.name %></h3>
+
+    <table class="list issues">
+      <thead>
+      <tr>
+        <th><%= l(:id) %></th>
+        <th><%= l(:field_template_title) %></th>
+        <th><%= l(:field_subject) %></th>
+        <th><%= l(:field_author) %></th>
+        <th><%= l(:field_updated_at) %></th>
+        <th><%= l(:label_enabled) %></th>
+        <% if authorize_for("issue_templates", "edit") %>
+          <th><%=l(:button_sort)%></th>
+        <% end %>
+      </tr>
+      </thead>
+      <tbody>
+      <% @template_map[tracker].each do |issue_template| %>
+        <tr class="<%= cycle("odd", "even") %> issue_template issue">
+          <td><%= link_to h(issue_template.id),  {:controller => 'issue_templates',
+                                                  :action => 'edit', :id => issue_template.id, :project_id => @project.id}, {:title => issue_template.template_title } %></td>
+          <td><%= link_to h(issue_template.template_title),  {:controller => 'issue_templates',
+                                                     :action => 'edit', :id => issue_template.id, :project_id => @project.id}, {:title => issue_template.template_title } %></td>
+          <td><%=h issue_template.subject %></td>
+          <td><%=h issue_template.author %></td>
+          <td><%= format_time(issue_template.updated_at)%> </td>
+          <td class="center"><%= checked_image issue_template.template_enabled? %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

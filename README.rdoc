@@ -1,0 +1,4 @@
+= Redmine Issue Templates Plugin
+
+This plugin adds the ability to create and use issue templates.
+You can manage templates generation and visibility through roles, permissions and projects.

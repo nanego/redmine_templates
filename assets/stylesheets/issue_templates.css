@@ -1,0 +1,15 @@
+.pull-right-with-marging {
+    float: right;
+    margin-right: 1em;
+}
+
+.separator{
+    border-bottom: 1px solid #CCCCCC;
+    width: 50%;
+    margin: 10px 25%;
+}
+
+#form-select-issue-template{
+    float: right;
+    margin-right: 10px;
+}

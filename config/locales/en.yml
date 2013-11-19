@@ -1,0 +1,17 @@
+# English strings go here for Rails i18n
+en:
+  label_new_issue_template: "New issue template"
+  notice_issue_template_successfully_created: "New issue template successfully created!"
+  button_save_issue_template: "Save this template"
+  field_template_title: "Template name"
+  template_is_enabled: "Template enabled"
+  label_issue_templates: "Issue templates"
+  no_issue_templates_for_this_project: "There is no issue template for this project"
+  field_updated_at: "Last update"
+  label_enabled: "Enabled"
+  id: "Id"
+  label_new_templates: "New template"
+  label_edit_issue_template: "Edit template"
+  notice_issue_template_successfully_updated: "The template has been updated"
+  choose_a_template: "Select a template"
+  show_templates: "All templates"

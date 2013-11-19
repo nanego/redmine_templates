@@ -1,0 +1,11 @@
+// Update all fields with template data
+$.each($('#issue-form').serializeArray(), function(i, field) {
+  <% @issue_template.attributes.each do |attr_name, attr_value|  %>
+    if (field.name == "<%= "issue[#{attr_name}]" %>"){
+      $('[name="' + field.name + '"]').val("<%= attr_value %>");
+    }
+  <% end %>
+});
+
+// Show or hide some fields based on the new selected tracker, project or status
+updateIssueFrom("<%= escape_javascript project_issue_form_path(@project, :id => @issue, :format => 'js') %>")
