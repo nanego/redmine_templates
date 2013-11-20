@@ -13,3 +13,29 @@
     float: right;
     margin-right: 10px;
 }
+
+.template_box{
+    border: 1px dashed #d3d3d3;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.template_tracker{
+  margin: 0 0 5px 0;
+}
+
+.template_id{
+    width: 100px;
+}
+.template_subject{
+    width: auto;
+}
+.template_title{
+    width: 250px;
+}
+.template_author, .template_update{
+    width: 160px;
+}
+.template_enable{
+    width: 50px;
+}

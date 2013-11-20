@@ -26,12 +26,12 @@
     <table class="list issues">
       <thead>
       <tr>
-        <th><%= l(:id) %></th>
-        <th><%= l(:field_template_title) %></th>
-        <th><%= l(:field_subject) %></th>
-        <th><%= l(:field_author) %></th>
-        <th><%= l(:field_updated_at) %></th>
-        <th><%= l(:label_enabled) %></th>
+        <th class="template_id"><%= l(:id) %></th>
+        <th class="template_title"><%= l(:field_template_title) %></th>
+        <th class="template_subject"><%= l(:field_subject) %></th>
+        <th class="template_author"><%= l(:field_author) %></th>
+        <th class="template_update"><%= l(:field_updated_at) %></th>
+        <th class="template_enable"><%= l(:label_enabled) %></th>
         <% if authorize_for("issue_templates", "edit") %>
           <th><%=l(:button_sort)%></th>
         <% end %>
@@ -40,12 +40,17 @@
       <tbody>
       <% @template_map[tracker].each do |issue_template| %>
         <tr class="<%= cycle("odd", "even") %> issue_template issue">
-          <td><%= link_to h(issue_template.id),  {:controller => 'issue_templates',
-                                                  :action => 'edit', :id => issue_template.id, :project_id => @project.id}, {:title => issue_template.template_title } %></td>
-          <td><%= link_to h(issue_template.template_title),  {:controller => 'issue_templates',
-                                                     :action => 'edit', :id => issue_template.id, :project_id => @project.id}, {:title => issue_template.template_title } %></td>
-          <td><%=h issue_template.subject %></td>
-          <td><%=h issue_template.author %></td>
+          <% link_to_edition = Proc.new do |label, title|
+            link_to label, {:controller => 'issue_templates',
+                            :action => 'edit',
+                            :id => issue_template.id,
+                            :project_id => @project.id
+                            }, {:title => title }
+            end %>
+          <td><%= link_to_edition.call h(issue_template.id), issue_template.template_title %></td>
+          <td><%= link_to_edition.call h(issue_template.template_title), issue_template.template_title %></td>
+          <td><%= link_to_edition.call h(issue_template.subject), issue_template.subject %></td>
+          <td><%= h issue_template.author %></td>
           <td><%= format_time(issue_template.updated_at)%> </td>
           <td class="center"><%= checked_image issue_template.template_enabled? %></td>
         </tr>
