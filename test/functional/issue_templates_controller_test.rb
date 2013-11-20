@@ -43,12 +43,20 @@ class IssueTemplatesControllerTest < ActionController::TestCase
     should "succeed and update the first template" do
       post :create, :issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template" }
       template = IssueTemplate.last
-      put :update, :id => template.id, issue_template: { subject: "Modified subject" }
+      assert_no_difference('IssueTemplate.count') do
+        put :update, :id => template.id, issue_template: { subject: "Modified subject" }
+      end
       assert_redirected_to issue_templates_path(project_id: template.project_id)
       template.reload
       assert_match /updated/, flash[:notice]
       assert_equal "Modified subject", template.subject
+      #assert_equal 1, template.project_id
+      #assert_equal 2, template.tracker_id
+      #assert_equal 6, template.priority_id
+      #assert_equal 1, template.category_id
     end
   end
+
+
 
 end

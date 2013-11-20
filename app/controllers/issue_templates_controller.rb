@@ -31,6 +31,7 @@ class IssueTemplatesController < ApplicationController
         }
       end
     else
+      # puts @issue_template.errors.full_messages
       @priorities = IssuePriority.active
       respond_to do |format|
         format.html { render :action => :new }
@@ -52,6 +53,7 @@ class IssueTemplatesController < ApplicationController
       @priorities = IssuePriority.active
       render action: :edit
     end
+
   end
 
   def index

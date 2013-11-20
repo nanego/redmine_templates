@@ -19,7 +19,4 @@ Redmine::Plugin.register :redmine_templates do
   project_module :issue_templates do
     permission :create_issue_templates, {:issue_templates => [:new, :create]}
   end
-
-  menu :project_menu, :redmine_templates, {:controller => 'issue_templates', action: 'new'}, :caption => 'V', :before => :gantt, :param => :project_id
-
 end
