@@ -15,3 +15,6 @@ en:
   notice_issue_template_successfully_updated: "The template has been updated"
   choose_a_template: "Select a template"
   show_templates: "All templates"
+  issue_is_private: "Private issue"
+  notice_issue_template_successfully_deleted: "The template has been deleted"
+  template_has_been_applied: "The template has been applied"

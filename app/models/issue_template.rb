@@ -47,4 +47,11 @@ class IssueTemplate < ActiveRecord::Base
     Project.all(:conditions => Project.allowed_to_condition(User.current, :add_issues))
   end
 
+  def assignable_users
+    users = project.assignable_users
+    users << author if author
+    users << assigned_to if assigned_to
+    users.uniq.sort
+  end
+
 end

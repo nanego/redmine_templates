@@ -29,6 +29,7 @@
 }
 .template_subject{
     width: auto;
+    max-width: 300px;
 }
 .template_title{
     width: 250px;
@@ -38,4 +39,8 @@
 }
 .template_enable{
     width: 50px;
+}
+
+.box.header {
+    background-color: #edf3fe;
 }

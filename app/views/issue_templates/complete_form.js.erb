@@ -9,3 +9,13 @@ $.each($('#issue-form').serializeArray(), function(i, field) {
 
 // Show or hide some fields based on the new selected tracker, project or status
 updateIssueFrom("<%= escape_javascript project_issue_form_path(@project, :id => @issue, :format => 'js') %>")
+
+// Reset select after applying a template
+$('#select_issue_template')[0].selectedIndex = 0;
+
+// Notice the user after applying a template
+var $notice = $('<div class="flash notice" id="flash_notice"><%= l("template_has_been_applied") %></div>')
+$notice.insertBefore( ".box" );
+$notice.delay(3000).fadeOut(100);
+
+

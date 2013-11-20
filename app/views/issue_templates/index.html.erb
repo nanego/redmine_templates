@@ -32,15 +32,15 @@
         <th class="template_author"><%= l(:field_author) %></th>
         <th class="template_update"><%= l(:field_updated_at) %></th>
         <th class="template_enable"><%= l(:label_enabled) %></th>
-        <% if authorize_for("issue_templates", "edit") %>
-          <th><%=l(:button_sort)%></th>
-        <% end %>
+        <th></th>
       </tr>
       </thead>
       <tbody>
       <% @template_map[tracker].each do |issue_template| %>
         <tr class="<%= cycle("odd", "even") %> issue_template issue">
           <% link_to_edition = Proc.new do |label, title|
+            size_max = 40
+            label = "#{label.first(size_max)}..." if label.size > size_max
             link_to label, {:controller => 'issue_templates',
                             :action => 'edit',
                             :id => issue_template.id,
@@ -53,8 +53,15 @@
           <td><%= h issue_template.author %></td>
           <td><%= format_time(issue_template.updated_at)%> </td>
           <td class="center"><%= checked_image issue_template.template_enabled? %></td>
+          <td class="buttons">
+            <% if true  #User.current.allowed_to?(:manage_categories, @project) %>
+              <%= link_to l(:button_edit), edit_issue_template_path(id: issue_template.id, project_id: @project.id), :class => 'icon icon-edit' %>
+              <%= delete_link issue_template_path(issue_template) %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
+      <% reset_cycle %>
       </tbody>
     </table>
   </div>

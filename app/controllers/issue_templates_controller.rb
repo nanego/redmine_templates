@@ -1,6 +1,6 @@
 class IssueTemplatesController < ApplicationController
 
-  before_filter :find_project, only: [:init, :index, :complete_form]
+  before_filter :find_project, only: [:init, :index, :complete_form, :edit]
 
   def init
     @issue_template = IssueTemplate.new(params[:issue])
@@ -70,6 +70,17 @@ class IssueTemplatesController < ApplicationController
 
   def complete_form
     @issue_template = IssueTemplate.find(params[:template])
+  end
+
+  def destroy
+    @issue_template = IssueTemplate.find(params[:id])
+    @issue_template.destroy
+    respond_to do |format|
+      format.html {
+        flash[:notice] = l(:notice_issue_template_successfully_deleted)
+        redirect_to issue_templates_path(project_id: @issue_template.project.id)
+      }
+    end
   end
 
   private

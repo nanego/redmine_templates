@@ -2,14 +2,8 @@
 
   <%= error_messages_for 'issue_template' %>
 
-  <div class="box tabular">
-    <div id="all_attributes">
-
-      <%= f.hidden_field :project_id, value: @issue_template.project.id %>
-
-      <p class="pull-right-with-marging">
-        <%= f.check_box :template_enabled, :no_label => true %><label class="inline" for="issue_template_is_enabled" id="issue_template_is_enabled"><%= l(:template_is_enabled) %></label>
-      </p>
+  <div class="box tabular header">
+    <div id="template_attributes">
 
       <p>
         <%= f.text_field :template_title, :size => 80, :maxlength => 255, :required => true %>
@@ -17,10 +11,18 @@
 
       <p><%= f.select :project_id, project_tree_options_for_select(@issue_template.allowed_target_projects, :selected => @issue_template.project), {:required => true} %></p>
 
-      <div class="separator"></div>
+      <p>
+        <%= f.check_box :template_enabled, :no_label => true %><label class="inline" for="issue_template_is_enabled" id="issue_template_is_enabled"><%= l(:template_is_enabled) %></label>
+      </p>
+
+    </div>
+  </div>
+
+  <div class="box tabular">
+    <div id="issue_attributes">
 
       <p class="pull-right-with-marging">
-        <%= f.check_box :is_private, :no_label => true %><label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:field_is_private) %></label>
+        <%= f.check_box :is_private, :no_label => true %><label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:issue_is_private) %></label>
       </p>
 
       <p><%= f.select :tracker_id, @issue_template.project.trackers.collect {|t| [t.name, t.id]}, {:required => true} %></p>
@@ -48,6 +50,8 @@
             <p><%= f.select :status_id, (IssueStatus.all.collect {|p| [p.name, p.id]}), {:required => true} %></p>
 
             <p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), {:required => true}, :disabled => false %></p>
+
+            <p><%= f.select :assigned_to_id, principals_options_for_select(@issue_template.assignable_users, @issue_template.assigned_to), :include_blank => true, :required => false %></p>
 
             <p><%= f.select :category_id, (@issue_template.project.issue_categories.collect {|c| [c.name, c.id]}), :include_blank => true, :required => false %>
               <%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
