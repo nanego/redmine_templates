@@ -1,5 +1,5 @@
 # encoding: utf-8
-
+require File.dirname(__FILE__) + '/../../helpers/issue_templates_helper'
 include IssueTemplatesHelper
 
 Deface::Override.new :virtual_path  => 'issues/new',
