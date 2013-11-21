@@ -1,5 +1,7 @@
 class IssueTemplate < ActiveRecord::Base
 
+  acts_as_customizable
+
   belongs_to :project
   belongs_to :tracker
   belongs_to :status, :class_name => 'IssueStatus', :foreign_key => 'status_id'
@@ -34,8 +36,8 @@ class IssueTemplate < ActiveRecord::Base
                   :due_date,
                   :done_ratio,
                   :estimated_hours,
-                  # :custom_field_values,
-                  # :custom_fields,
+                  :custom_field_values,
+                  :custom_fields,
                   :lock_version,
                   :status_id,
                   :assigned_to_id,
@@ -53,5 +55,57 @@ class IssueTemplate < ActiveRecord::Base
     users << assigned_to if assigned_to
     users.uniq.sort
   end
+
+  # Overrides Redmine::Acts::Customizable::InstanceMethods#available_custom_fields
+  def available_custom_fields
+    (project && tracker) ? (project.all_issue_custom_fields & tracker.custom_fields.all) : []
+  end
+
+  # Returns the custom_field_values that can be edited by the given user
+  def editable_custom_field_values(user=nil)
+    custom_field_values.reject do |value|
+      read_only_attribute_names(user).include?(value.custom_field_id.to_s)
+    end
+  end
+
+  # Returns the names of attributes that are read-only for user or the current user
+  # For users with multiple roles, the read-only fields are the intersection of
+  # read-only fields of each role
+  # The result is an array of strings where sustom fields are represented with their ids
+  def read_only_attribute_names(user=nil)
+    workflow_rule_by_attribute(user).reject {|attr, rule| rule != 'readonly'}.keys
+  end
+
+  # Returns a hash of the workflow rule by attribute for the given user
+  def workflow_rule_by_attribute(user=nil)
+    return @workflow_rule_by_attribute if @workflow_rule_by_attribute && user.nil?
+
+    user_real = user || User.current
+    roles = user_real.admin ? Role.all : user_real.roles_for_project(project)
+    return {} if roles.empty?
+
+    result = {}
+    workflow_permissions = WorkflowPermission.where(:tracker_id => tracker_id, :old_status_id => status_id, :role_id => roles.map(&:id)).all
+    if workflow_permissions.any?
+      workflow_rules = workflow_permissions.inject({}) do |h, wp|
+        h[wp.field_name] ||= []
+        h[wp.field_name] << wp.rule
+        h
+      end
+      workflow_rules.each do |attr, rules|
+        next if rules.size < roles.size
+        uniq_rules = rules.uniq
+        if uniq_rules.size == 1
+          result[attr] = uniq_rules.first
+        else
+          result[attr] = 'required'
+        end
+      end
+    end
+    @workflow_rule_by_attribute = result if user.nil?
+    result
+  end
+
+  # TODO : Cleanup last methods
 
 end

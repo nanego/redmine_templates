@@ -1,10 +1,12 @@
 class IssueTemplatesController < ApplicationController
 
+  helper :custom_fields
+  include CustomFieldsHelper
+
   before_filter :find_project, only: [:init, :index, :complete_form, :edit]
 
   def init
-    @issue_template = IssueTemplate.new(params[:issue])
-    @issue_template.project = @project
+    @issue_template = IssueTemplate.new(params[:issue].merge({project_id: params[:project_id]}))
     @issue_template.author ||= User.current
 
     @priorities = IssuePriority.active
@@ -31,7 +33,6 @@ class IssueTemplatesController < ApplicationController
         }
       end
     else
-      # puts @issue_template.errors.full_messages
       @priorities = IssuePriority.active
       respond_to do |format|
         format.html { render :action => :new }
@@ -68,8 +69,15 @@ class IssueTemplatesController < ApplicationController
    end
   end
 
+  # Updates the template form when changing the project, status or tracker on template creation/update
+  def update_form
+    @issue_template = IssueTemplate.new(params[:issue_template])
+    @priorities = IssuePriority.active
+  end
+
+  # Complete issue form when applying a template on a new issue
   def complete_form
-    @issue_template = IssueTemplate.find(params[:template])
+    @issue_template = IssueTemplate.find(params[:id])
   end
 
   def destroy

@@ -1,21 +1,42 @@
-// Update all fields with template data
-$.each($('#issue-form').serializeArray(), function(i, field) {
-  <% @issue_template.attributes.each do |attr_name, attr_value|  %>
+// Update all standard fields with template data
+<% @issue_template.attributes.each do |attr_name, attr_value|  %>
+  $.each($('#issue-form').serializeArray(), function(i, field) {
     if (field.name == "<%= "issue[#{attr_name}]" %>"){
       $('[name="' + field.name + '"]').val("<%= attr_value %>");
     }
+  });
+<% end %>
+
+// Show or hide some fields based on the new selected tracker, project or status, then update custom fields
+updateForm("<%= escape_javascript project_issue_form_path(@project, :id => @issue, :format => 'js') %>").done(updateCustomFieldsValues);
+
+
+function updateForm(url) {
+  return $.ajax({
+    url: url,
+    type: 'post',
+    data: $('#issue-form').serialize()
+  });
+}
+
+function updateCustomFieldsValues(data) {
+
+  // Update all custom fields with template data
+  <% @issue_template.editable_custom_field_values.each do |custom_value|  %>
+    $.each($('#issue-form').serializeArray(), function(i, field) {
+      if (field.name == "<%= "issue[custom_field_values][#{custom_value.custom_field_id}]" %>"){
+        $('[name="' + field.name + '"]').val("<%= custom_value.value %>");
+        $('[name="' + field.name + '"]').prop('checked', <%= custom_value.value.to_i > 0 ? 'true' : 'false' %>)
+      }
+    });
   <% end %>
-});
 
-// Show or hide some fields based on the new selected tracker, project or status
-updateIssueFrom("<%= escape_javascript project_issue_form_path(@project, :id => @issue, :format => 'js') %>")
+  // Reset select after applying a template
+  $('#select_issue_template')[0].selectedIndex = 0;
 
-// Reset select after applying a template
-$('#select_issue_template')[0].selectedIndex = 0;
-
-// Notice the user after applying a template
-var $notice = $('<div class="flash notice" id="flash_notice"><%= l("template_has_been_applied") %></div>')
-$notice.insertBefore( ".box" );
-$notice.delay(3000).fadeOut(100);
-
+  // Notice the user after applying a template
+  var $notice = $('<div class="flash notice" id="flash_notice"><%= l("template_has_been_applied") %></div>').fadeIn(200);
+  $notice.insertBefore( ".box" );
+  $notice.delay(3000).fadeOut(300);
+}
 

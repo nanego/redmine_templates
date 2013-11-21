@@ -9,7 +9,8 @@
         <%= f.text_field :template_title, :size => 80, :maxlength => 255, :required => true %>
       </p>
 
-      <p><%= f.select :project_id, project_tree_options_for_select(@issue_template.allowed_target_projects, :selected => @issue_template.project), {:required => true} %></p>
+      <p><%= f.select :project_id, project_tree_options_for_select(@issue_template.allowed_target_projects, :selected => @issue_template.project), {:required => true},
+                      :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
 
       <p>
         <%= f.check_box :template_enabled, :no_label => true %><label class="inline" for="issue_template_is_enabled" id="issue_template_is_enabled"><%= l(:template_is_enabled) %></label>
@@ -25,7 +26,8 @@
         <%= f.check_box :is_private, :no_label => true %><label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:issue_is_private) %></label>
       </p>
 
-      <p><%= f.select :tracker_id, @issue_template.project.trackers.collect {|t| [t.name, t.id]}, {:required => true} %></p>
+      <p><%= f.select :tracker_id, @issue_template.project.trackers.collect {|t| [t.name, t.id]}, {:required => true},
+                      :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
 
       <p><%= f.text_field :subject, :size => 80, :maxlength => 255, :required => true %></p>
 
@@ -40,14 +42,15 @@
                           :no_label => true %>
         <% end %>
       </p>
-      <%= wikitoolbar_for 'issue_description' %>
+      <%= wikitoolbar_for 'issue_template_description' %>
 
       <div id="attributes" class="attributes">
 
         <div class="splitcontent">
           <div class="splitcontentleft">
 
-            <p><%= f.select :status_id, (IssueStatus.all.collect {|p| [p.name, p.id]}), {:required => true} %></p>
+            <p><%= f.select :status_id, (IssueStatus.all.collect {|p| [p.name, p.id]}), {:required => true},
+                            :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
 
             <p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), {:required => true}, :disabled => false %></p>
 
@@ -73,6 +76,20 @@
 
             <p><%= f.select :done_ratio, ((0..10).to_a.collect {|r| ["#{r*10} %", r*10] }), :required => false %></p>
 
+          </div>
+        </div>
+
+        <div class="splitcontent">
+          <div class="splitcontentleft">
+            <% i = 0 %>
+            <% split_on = (@issue_template.custom_field_values.size / 2.0).ceil - 1 %>
+            <% @issue_template.editable_custom_field_values.each do |value| %>
+              <p><%= custom_field_tag_with_label :issue_template, value, :required => false %></p>
+              <% if i == split_on -%>
+                </div><div class="splitcontentright">
+              <% end -%>
+              <% i += 1 -%>
+            <% end -%>
           </div>
         </div>
 
