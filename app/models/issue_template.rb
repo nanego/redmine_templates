@@ -11,7 +11,9 @@ class IssueTemplate < ActiveRecord::Base
   belongs_to :priority, :class_name => 'IssuePriority', :foreign_key => 'priority_id'
   belongs_to :category, :class_name => 'IssueCategory', :foreign_key => 'category_id'
 
-  validates_presence_of :subject, :tracker, :author, :project, :status, :template_title
+  has_and_belongs_to_many :projects
+
+  validates_presence_of :template_title, :subject, :tracker, :author, :project, :status, :projects
 
   validates_length_of :subject, :maximum => 255
   # validates_inclusion_of :done_ratio, :in => 0..100
@@ -20,7 +22,8 @@ class IssueTemplate < ActiveRecord::Base
   validates :due_date, :date => true
   # validate :validate_issue, :validate_required_fields
 
-  attr_accessible :project_id,
+  attr_accessible :project_ids,
+                  :project_id,
                   :tracker_id,
                   :subject,
                   :description,

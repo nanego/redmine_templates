@@ -18,3 +18,4 @@ en:
   issue_is_private: "Private issue"
   notice_issue_template_successfully_deleted: "The template has been deleted"
   template_has_been_applied: "The template has been applied"
+  field_project_ids: "Projects"

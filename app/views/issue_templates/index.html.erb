@@ -41,7 +41,7 @@
           <% link_to_edition = Proc.new do |label, title|
             size_max = 40
             label = "#{label.first(size_max)}..." if label.size > size_max
-            link_to label, {:controller => 'issue_templates',
+            link_to label.html_safe, {:controller => 'issue_templates',
                             :action => 'edit',
                             :id => issue_template.id,
                             :project_id => @project.id

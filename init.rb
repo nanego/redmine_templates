@@ -1,5 +1,6 @@
 require 'redmine'
 require 'redmine_templates/hooks'
+require 'redmine_templates/redmine_core_patch'
 
 # Little hack for deface in redmine:
 # - redmine plugins are not railties nor engines, so deface overrides are not detected automatically

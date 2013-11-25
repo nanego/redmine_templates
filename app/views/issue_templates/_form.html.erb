@@ -5,17 +5,27 @@
   <div class="box tabular header">
     <div id="template_attributes">
 
-      <p>
-        <%= f.text_field :template_title, :size => 80, :maxlength => 255, :required => true %>
-      </p>
+      <div class="splitcontent">
 
-      <p><%= f.select :project_id, project_tree_options_for_select(@issue_template.allowed_target_projects, :selected => @issue_template.project), {:required => true},
-                      :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
+        <div class="splitcontentleft">
+          <p>
+            <%= f.text_field :template_title, :size => 80, :maxlength => 255, :required => true %>
+          </p>
+          <%= f.hidden_field :project_id, :value => @project.id %>
+          <%= f.hidden_field :id, :value => @issue_template.id %>
+          <p>
+            <%= f.check_box :template_enabled, :no_label => true %><label class="inline" for="issue_template_is_enabled" id="issue_template_is_enabled"><%= l(:template_is_enabled) %></label>
+          </p>
+        </div>
 
-      <p>
-        <%= f.check_box :template_enabled, :no_label => true %><label class="inline" for="issue_template_is_enabled" id="issue_template_is_enabled"><%= l(:template_is_enabled) %></label>
-      </p>
+        <div class="splitcontentright">
+          <div class="select_projects">
+            <%= f.select :project_ids, project_tree_options_for_select(@issue_template.allowed_target_projects, :selected => @issue_template.projects), {:required => true},
+                        {:onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')", :multiple => true, :size => 10 } %>
+          </div>
+        </div>
 
+      </div>
     </div>
   </div>
 

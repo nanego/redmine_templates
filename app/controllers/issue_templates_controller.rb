@@ -6,7 +6,10 @@ class IssueTemplatesController < ApplicationController
   before_filter :find_project, only: [:init, :index, :complete_form, :edit]
 
   def init
-    @issue_template = IssueTemplate.new(params[:issue].merge({project_id: params[:project_id]}))
+    params[:issue].merge!({project_id: params[:project_id]}) if params[:issue]
+    @issue_template = IssueTemplate.new(params[:issue])
+    @issue_template.project = @project
+    @issue_template.projects = [@project]
     @issue_template.author ||= User.current
 
     @priorities = IssuePriority.active
@@ -29,7 +32,7 @@ class IssueTemplatesController < ApplicationController
       respond_to do |format|
         format.html {
           flash[:notice] = l(:notice_issue_template_successfully_created)
-          redirect_to issue_templates_path(project_id: @issue_template.project.id)
+          redirect_to issue_templates_path(project_id: @issue_template.project_id)
         }
       end
     else
@@ -47,7 +50,7 @@ class IssueTemplatesController < ApplicationController
       respond_to do |format|
         format.html {
           flash[:notice] = l(:notice_issue_template_successfully_updated)
-          redirect_to issue_templates_path(project_id: @issue_template.project.id)
+          redirect_to issue_templates_path(project_id: @issue_template.project_id)
         }
       end
     else
@@ -58,11 +61,10 @@ class IssueTemplatesController < ApplicationController
   end
 
   def index
-   tracker_ids = IssueTemplate.where('project_id = ?', @project.id).pluck(:tracker_id)
+   tracker_ids = @project.get_issue_templates.select(:tracker_id).map(&:tracker_id).uniq
    @template_map = Hash::new
    tracker_ids.each do |tracker_id|
-     templates = IssueTemplate.where('project_id = ? AND tracker_id = ?',
-                                     @project.id, tracker_id)
+     templates = @project.get_issue_templates.where("tracker_id = ?", tracker_id)
      if templates.any?
        @template_map[Tracker.find(tracker_id)] = templates
      end
@@ -71,7 +73,12 @@ class IssueTemplatesController < ApplicationController
 
   # Updates the template form when changing the project, status or tracker on template creation/update
   def update_form
-    @issue_template = IssueTemplate.new(params[:issue_template])
+    if params[:issue_template][:id]
+      @issue_template = IssueTemplate.find(params[:id])
+      @issue_template.assign_attributes(params[:issue_template])
+    else
+      @issue_template = IssueTemplate.new(params[:issue_template])
+    end
     @priorities = IssuePriority.active
   end
 
@@ -86,7 +93,7 @@ class IssueTemplatesController < ApplicationController
     respond_to do |format|
       format.html {
         flash[:notice] = l(:notice_issue_template_successfully_deleted)
-        redirect_to issue_templates_path(project_id: @issue_template.project.id)
+        redirect_to(:back)
       }
     end
   end

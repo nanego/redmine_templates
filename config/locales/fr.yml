@@ -1,10 +1,11 @@
 # French strings go here for Rails i18n
 fr:
+  project_module_issue_templates: "Modèles de demande"
   label_new_issue_template: "Nouveau modèle de demande"
   notice_issue_template_successfully_created: "Nouveau modèle de demande enregistré."
   button_save_issue_template: "Enregistrer ce modèle"
   field_template_title: "Nom du modèle"
-  template_is_enabled: "Actif"
+  template_is_enabled: "Actif (décocher pour suspendre l'utilisation du modèle)"
   label_issue_templates: "Modèles de demande"
   no_issue_templates_for_this_project: "Il n'y a aucun modèle pour ce projet"
   field_updated_at: "Dernière modification"
@@ -13,8 +14,9 @@ fr:
   label_new_templates: "Créer un nouveau modèle"
   label_edit_issue_template: "Modification du modèle"
   notice_issue_template_successfully_updated: "Modèle mis à jour"
-  choose_a_template: "Sélectionnez un modèle"
+  choose_a_template: "Sélectionner un modèle"
   show_templates: "Voir tous les modèles"
   issue_is_private: "Demande privée"
   notice_issue_template_successfully_deleted: "Le modèle a été supprimé"
   template_has_been_applied: "Le modèle a été appliqué"
+  field_project_ids: "Projets"

@@ -44,3 +44,14 @@
 .box.header {
     background-color: #edf3fe;
 }
+
+form#issue-template-form #issue_template_template_title {
+    width: 350px;
+}
+form#issue-template-form .select_projects{
+    margin: 0;
+    padding: 3px 0 3px 0;
+    padding-left: 50px;
+    min-height: 1.8em;
+    clear: left;
+}
