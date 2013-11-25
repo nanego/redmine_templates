@@ -11,7 +11,7 @@
           <p>
             <%= f.text_field :template_title, :size => 80, :maxlength => 255, :required => true %>
           </p>
-          <%= f.hidden_field :project_id, :value => @project.id %>
+          <%= f.hidden_field :project_id, :value => (@project.try(:id) || @issue_template.project_id) %>
           <%= f.hidden_field :id, :value => @issue_template.id %>
           <p>
             <%= f.check_box :template_enabled, :no_label => true %><label class="inline" for="issue_template_is_enabled" id="issue_template_is_enabled"><%= l(:template_is_enabled) %></label>

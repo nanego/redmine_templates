@@ -1,5 +1,6 @@
 # English strings go here for Rails i18n
 en:
+  project_module_issue_templates: "Issue templates"
   label_new_issue_template: "New issue template"
   notice_issue_template_successfully_created: "New issue template successfully created!"
   button_save_issue_template: "Save this template"
@@ -19,3 +20,4 @@ en:
   notice_issue_template_successfully_deleted: "The template has been deleted"
   template_has_been_applied: "The template has been applied"
   field_project_ids: "Projects"
+  permission_create_issue_templates: "Manage templates"

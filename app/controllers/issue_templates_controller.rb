@@ -73,8 +73,8 @@ class IssueTemplatesController < ApplicationController
 
   # Updates the template form when changing the project, status or tracker on template creation/update
   def update_form
-    if params[:issue_template][:id]
-      @issue_template = IssueTemplate.find(params[:id])
+    unless params[:issue_template][:id].blank?
+      @issue_template = IssueTemplate.find(params[:issue_template][:id])
       @issue_template.assign_attributes(params[:issue_template])
     else
       @issue_template = IssueTemplate.new(params[:issue_template])
