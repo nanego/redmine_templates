@@ -52,6 +52,10 @@ class IssueTemplate < ActiveRecord::Base
     Project.all(:conditions => Project.allowed_to_condition(User.current, :add_issues))
   end
 
+  def disabled_projects
+    Project.all - Project.includes(:enabled_modules).where("enabled_modules.name" => :issue_templates)
+  end
+
   def assignable_users
     users = project.assignable_users
     users << author if author

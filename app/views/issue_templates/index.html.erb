@@ -52,9 +52,11 @@
           <td><%= link_to_edition.call h(issue_template.subject), issue_template.subject %></td>
           <td><%= h issue_template.author %></td>
           <td><%= format_time(issue_template.updated_at)%> </td>
-          <td class="center"><%= checked_image issue_template.template_enabled? %></td>
+          <td class="center" id="image_enabled_<%= issue_template.id %>">
+            <%= render "enable_form", issue_template: issue_template %>
+          </td>
           <td class="buttons">
-            <% if true  #User.current.allowed_to?(:manage_categories, @project) %>
+            <% if true  #User.current.allowed_to?(:manage_templates, @project) %>
               <%= link_to l(:button_edit), edit_issue_template_path(id: issue_template.id, project_id: @project.id), :class => 'icon icon-edit' %>
               <%= delete_link issue_template_path(issue_template) %>
             <% end %>

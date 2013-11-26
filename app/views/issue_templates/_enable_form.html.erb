@@ -1,0 +1,6 @@
+<%=
+  link_to image_tag((issue_template.template_enabled? ? "checked_checkbox.png" : "unchecked_checkbox.png"), :plugin => :redmine_templates, :size => '16x16'),
+          enable_issue_template_path(issue_template),
+          :method => 'post',
+          :remote => true
+%>

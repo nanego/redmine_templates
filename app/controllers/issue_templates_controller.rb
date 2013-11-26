@@ -98,6 +98,11 @@ class IssueTemplatesController < ApplicationController
     end
   end
 
+  def enable
+    @issue_template = IssueTemplate.find(params[:id])
+    @issue_template.template_enabled = @issue_template.template_enabled?
+  end
+
   private
 
     def find_project

@@ -8,7 +8,11 @@ $(document).ready(function() {
     });
 
     $('#select_issue_template').on('change', function() {
-        $('#form-select-issue-template').submit();
+        if ($(this).val().indexOf("issue_templates") > -1) {
+            window.location.href=$(this).val(); // Click on "Manage templates"
+        }else{
+            $('#form-select-issue-template').submit();
+        };
     });
 
 });
