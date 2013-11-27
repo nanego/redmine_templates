@@ -7,7 +7,7 @@ fr:
   field_template_title: "Nom du modèle"
   template_is_enabled: "Actif (décocher pour suspendre l'utilisation du modèle)"
   label_issue_templates: "Modèles de demande"
-  no_issue_templates_for_this_project: "Il n'y a aucun modèle pour ce projet"
+  no_issue_templates_for_this_project: "Il n'y a aucun modèle associé à ce projet"
   field_updated_at: "Dernière modification"
   label_enabled: "Actif"
   id: "Identifiant"
@@ -21,3 +21,4 @@ fr:
   template_has_been_applied: "Le modèle a été appliqué"
   field_project_ids: "Projets"
   permission_create_issue_templates: "Créer et modifier les modèles"
+  show_subprojects_templates: "Modèles appliqués aux sous-projets"

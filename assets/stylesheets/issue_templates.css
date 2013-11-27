@@ -20,6 +20,10 @@
     margin-bottom: 10px;
 }
 
+.template_box table.list{
+    margin-top: 10px;
+}
+
 .template_tracker{
   margin: 0 0 5px 0;
 }

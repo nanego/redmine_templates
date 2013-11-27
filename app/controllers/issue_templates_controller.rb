@@ -61,14 +61,7 @@ class IssueTemplatesController < ApplicationController
   end
 
   def index
-   tracker_ids = @project.get_issue_templates.select(:tracker_id).map(&:tracker_id).uniq
-   @template_map = Hash::new
-   tracker_ids.each do |tracker_id|
-     templates = @project.get_issue_templates.where("tracker_id = ?", tracker_id)
-     if templates.any?
-       @template_map[Tracker.find(tracker_id)] = templates
-     end
-   end
+   @templates = @project.get_issue_templates
   end
 
   # Updates the template form when changing the project, status or tracker on template creation/update
@@ -100,7 +93,8 @@ class IssueTemplatesController < ApplicationController
 
   def enable
     @issue_template = IssueTemplate.find(params[:id])
-    @issue_template.template_enabled = @issue_template.template_enabled?
+    @issue_template.template_enabled = !@issue_template.template_enabled?
+    @issue_template.save
   end
 
   private
