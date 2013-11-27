@@ -80,6 +80,7 @@ class IssueTemplatesController < ApplicationController
   # Complete issue form when applying a template on a new issue
   def complete_form
     @issue_template = IssueTemplate.find(params[:id])
+    @track_changes = params[:track_changes]
   end
 
   def destroy

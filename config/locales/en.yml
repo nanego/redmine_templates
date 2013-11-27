@@ -21,3 +21,8 @@ en:
   template_has_been_applied: "The template has been applied"
   field_project_ids: "Projects"
   permission_create_issue_templates: "Manage templates"
+  show_subprojects_templates: "Subprojects"
+  warning: "Warning"
+  warning_all_changes_will_be_overwritten: "If you apply this template, all current modification will be overwritten. <BR/>Are you sure ?"
+  apply_template: "Apply the template"
+  cancel: "Cancel"

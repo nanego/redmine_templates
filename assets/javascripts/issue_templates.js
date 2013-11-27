@@ -14,6 +14,9 @@ $(document).ready(function() {
             $('#form-select-issue-template').submit();
         };
     });
+    $('#issue-form :input').change(function(){
+        $('#track_changes').val('true');
+    });
 
 });
 

@@ -22,3 +22,7 @@ fr:
   field_project_ids: "Projets"
   permission_create_issue_templates: "Créer et modifier les modèles"
   show_subprojects_templates: "Modèles appliqués aux sous-projets"
+  warning: "Avertissement"
+  warning_all_changes_will_be_overwritten: "Si vous appliquez le modèle, toutes les modifications en cours seront perdues. <BR/>Etes-vous sûr ?"
+  apply_template: "Appliquer le modèle"
+  cancel: "Annuler"

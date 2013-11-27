@@ -33,6 +33,7 @@ Deface::Override.new :virtual_path  => 'issues/new',
   <% if @template_map.size > 0 %>
     <%= form_tag issue_templates_complete_form_path, :method => :post, remote: true, :id => "form-select-issue-template" do %>
       <%= hidden_field_tag :project_id, @project.id %>
+      <%= hidden_field_tag :track_changes, false %>
       <%= select_tag :id, grouped_templates_for_select(@template_map, @project), :prompt=>l("choose_a_template"), :id => "select_issue_template" %>
     <% end %>
   <% end %>'
