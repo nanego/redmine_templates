@@ -3,7 +3,8 @@ class IssueTemplatesController < ApplicationController
   helper :custom_fields
   include CustomFieldsHelper
 
-  before_filter :find_project, only: [:init, :index, :complete_form, :edit]
+  before_filter :find_project, only: [:init, :complete_form, :edit]
+  before_filter :find_optional_project, only: [:index]
 
   def init
     params[:issue].merge!({project_id: params[:project_id]}) if params[:issue]
@@ -61,7 +62,8 @@ class IssueTemplatesController < ApplicationController
   end
 
   def index
-   @templates = @project.get_issue_templates
+    @project ||= Project.where(parent_id: nil).first
+    @templates = @project.get_issue_templates
   end
 
   # Updates the template form when changing the project, status or tracker on template creation/update
@@ -105,6 +107,12 @@ class IssueTemplatesController < ApplicationController
       rescue ActiveRecord::RecordNotFound
         render_404
       end
+    end
+
+    def find_optional_project
+      @project = Project.find(params[:project_id]) unless params[:project_id].blank?
+    rescue ActiveRecord::RecordNotFound
+      render_404
     end
 
 end

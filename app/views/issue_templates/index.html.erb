@@ -6,7 +6,7 @@
                             :class => 'icon icon-add', :method => :post) %>
 </div>
 
-<h2 class="template"><%=h "#{l(:label_issue_templates)}" %></h2>
+<h2 class="template"><%=h "#{l(:label_issue_templates)} : #{@project}" %></h2>
 
 <% if @notice -%>
   <div class="flash notice"><%= @notice -%></div>
