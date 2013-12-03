@@ -105,6 +105,7 @@ class IssueTemplatesController < ApplicationController
     def find_project
       begin
         @project ||= Project.find(params[:project_id])
+        check_if_module_is_enabled
       rescue ActiveRecord::RecordNotFound
         render_404
       end
@@ -115,5 +116,12 @@ class IssueTemplatesController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       render_404
     end
+
+  def check_if_module_is_enabled
+    unless @project.module_enabled?("issue_templates")
+      flash[:error] = l(:notice_issue_template_module_is_not_enabled)
+      redirect_to(:back)
+    end
+  end
 
 end

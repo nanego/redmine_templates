@@ -26,3 +26,4 @@ fr:
   warning_all_changes_will_be_overwritten: "Si vous appliquez le modèle, toutes les modifications en cours seront perdues. <BR/>Etes-vous sûr ?"
   apply_template: "Appliquer le modèle"
   cancel: "Annuler"
+  notice_issue_template_module_is_not_enabled: "Le module 'Modèles de demandes' n'est pas actif pour ce projet"
