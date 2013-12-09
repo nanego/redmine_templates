@@ -4,6 +4,6 @@ Rails.application.routes.draw do
   match 'issue_templates/update_form', :controller => 'issue_templates', :action => 'update_form', :via => [:put, :post], :as => 'issue_template_form'
   post 'issue_templates/:id/enable' => "issue_templates#enable", :as => :enable_issue_template
 
-  resources :issue_templates, except: [:show]
+  resources :issue_templates, except: [:show, :new]
 
 end

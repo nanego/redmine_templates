@@ -3,8 +3,8 @@ class IssueTemplatesController < ApplicationController
   helper :custom_fields
   include CustomFieldsHelper
 
-  before_filter :find_project, only: [:init, :edit]
-  before_filter :find_optional_project, only: [:index, :new]
+  before_filter :find_project, only: [:init]
+  before_filter :find_optional_project, only: [:index, :new, :edit]
 
   def init
     params[:issue].merge!({project_id: params[:project_id]}) if params[:issue]
@@ -12,6 +12,7 @@ class IssueTemplatesController < ApplicationController
     @issue_template.project = @project
     @issue_template.projects = [@project]
     @issue_template.author ||= User.current
+    @issue_template.template_title = @issue_template.subject
 
     @priorities = IssuePriority.active
     render :new
@@ -62,8 +63,11 @@ class IssueTemplatesController < ApplicationController
   end
 
   def index
-    @project ||= Project.where(parent_id: nil).first
-    @templates = @project.get_issue_templates
+    if @project
+      @templates = @project.get_issue_templates
+    else
+      @templates = IssueTemplate.order("tracker_id").all
+    end
   end
 
   # Updates the template form when changing the project, status or tracker on template creation/update
@@ -99,7 +103,6 @@ class IssueTemplatesController < ApplicationController
     def find_project
       begin
         @project ||= Project.find(params[:project_id])
-        check_if_module_is_enabled
       rescue ActiveRecord::RecordNotFound
         render_404
       end
@@ -110,12 +113,5 @@ class IssueTemplatesController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       render_404
     end
-
-  def check_if_module_is_enabled
-    unless @project.module_enabled?("issue_templates")
-      flash[:error] = l(:notice_issue_template_module_is_not_enabled)
-      redirect_to(:back)
-    end
-  end
 
 end

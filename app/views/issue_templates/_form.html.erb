@@ -20,7 +20,7 @@
 
         <div class="splitcontentright">
           <div class="select_projects">
-            <%= f.select :project_ids, project_tree_options(@issue_template.allowed_target_projects, :selected => @issue_template.projects, :disabled => @issue_template.disabled_projects), {:required => true},
+            <%= f.select :project_ids, project_tree_options(@issue_template.allowed_target_projects, :selected => @issue_template.projects), {:required => true},
                         {:multiple => true, :size => 10 } %>
           </div>
         </div>

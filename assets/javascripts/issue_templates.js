@@ -6,3 +6,10 @@ function updateIssueTemplateFrom(url) {
         data: $('#issue-template-form').serialize()
     });
 }
+
+jQuery(document).ready(function($) {
+    $(".list_templates_projects_names").hover(function () {
+        var className = $(this).attr('class').split(' ')[0]; // get first class
+        $('.' + className).toggleClass("hover");
+    });
+});

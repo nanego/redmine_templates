@@ -21,7 +21,7 @@ fr:
   template_has_been_applied: "Le modèle '%{name}' a été appliqué"
   field_project_ids: "Projets"
   permission_create_issue_templates: "Créer et modifier les modèles"
-  show_subprojects_templates: "Modèles appliqués aux sous-projets"
+  show_subprojects_templates: "Sous-projets"
   warning: "Avertissement"
   warning_all_changes_will_be_overwritten: "Si vous appliquez le modèle, toutes les modifications en cours seront perdues. <BR/>Etes-vous sûr ?"
   apply_template: "Appliquer le modèle"

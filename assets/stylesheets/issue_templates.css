@@ -59,3 +59,14 @@ form#issue-template-form .select_projects{
     min-height: 1.8em;
     clear: left;
 }
+
+.list_templates_projects_names{
+    padding: 2px 4px;
+}
+.list_templates_projects_names.hover{
+    background-color: #468847;
+    color: #ffffff;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
