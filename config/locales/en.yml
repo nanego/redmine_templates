@@ -18,7 +18,7 @@ en:
   show_templates: "All templates"
   issue_is_private: "Private issue"
   notice_issue_template_successfully_deleted: "The template has been deleted"
-  template_has_been_applied: "The template has been applied"
+  template_has_been_applied: "Template '%{name}' has been applied"
   field_project_ids: "Projects"
   permission_create_issue_templates: "Manage templates"
   show_subprojects_templates: "Subprojects"

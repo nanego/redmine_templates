@@ -31,10 +31,27 @@ Deface::Override.new :virtual_path  => 'issues/new',
     end
   %>
   <% if @project.module_enabled?("issue_templates") && @template_map.size > 0 %>
-    <%= form_tag issue_templates_complete_form_path, :method => :post, remote: true, :id => "form-select-issue-template" do %>
+    <%= form_tag issue_templates_path, :id => "form-select-issue-template" do %>
       <%= hidden_field_tag :project_id, @project.id %>
       <%= hidden_field_tag :track_changes, false %>
       <%= select_tag :id, grouped_templates_for_select(@template_map, @project), :prompt=>l("choose_a_template"), :id => "select_issue_template" %>
     <% end %>
   <% end %>'
+end
+
+Deface::Override.new :virtual_path  => 'issues/new',
+                     :name          => 'autocomplete-new-issue-from-url-template',
+                     :insert_after  => '#preview' do
+  '
+  <%
+    @issue_template = IssueTemplate.find_by_id(params[:template_id]) if params[:template_id] && (begin Integer(params[:template_id]) ; true end rescue false)
+  %>
+  <script type="text/javascript">
+    <%= render(:partial => "issue_templates/load_select_js_functions.js.erb") %>
+    <% if @issue_template %>
+      <%= render(:partial => "issue_templates/load_update_functions.js.erb") %>
+      startUpdate();
+    <% end %>
+  </script>
+  '
 end

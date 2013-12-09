@@ -3,8 +3,8 @@ class IssueTemplatesController < ApplicationController
   helper :custom_fields
   include CustomFieldsHelper
 
-  before_filter :find_project, only: [:init, :complete_form, :edit]
-  before_filter :find_optional_project, only: [:index]
+  before_filter :find_project, only: [:init, :edit]
+  before_filter :find_optional_project, only: [:index, :new]
 
   def init
     params[:issue].merge!({project_id: params[:project_id]}) if params[:issue]
@@ -75,12 +75,6 @@ class IssueTemplatesController < ApplicationController
       @issue_template = IssueTemplate.new(params[:issue_template])
     end
     @priorities = IssuePriority.active
-  end
-
-  # Complete issue form when applying a template on a new issue
-  def complete_form
-    @issue_template = IssueTemplate.find(params[:id])
-    @track_changes = params[:track_changes]
   end
 
   def destroy
