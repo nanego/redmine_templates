@@ -1,0 +1,44 @@
+<script type="text/javascript">
+  $("#issue-template-form").submit(function(e) {
+    var self = this;
+    e.preventDefault();
+
+    $.ajax({
+      url: '<%= issue_templates_similar_templates_path %>',
+      type: 'post',
+      dataType: 'json',
+      data: $('#issue-template-form').serialize()
+    }).done(function(data) {
+          if(data.templates.length > 0){
+            content = ""
+            $.each(data.templates, function(i,data)
+            {
+              content += "<a target='_blank' href='"+window.location.protocol + "//" + window.location.host + "/issue_templates/"+ data.issue_template.id +"/edit'>"+data.issue_template.subject+"</a><br>";
+            });
+            $('<div></div>').appendTo('body')
+                .html('<div><%= l("similar_templates_already_exist") %> <br>'+content+'</div>')
+                .dialog({
+                  modal: true, title: '<%= l("warning") %>', zIndex: 10000, autoOpen: true,
+                  width: 'auto', resizable: false,
+                  buttons: {
+                    '<%= l("button_save_issue_template") %>': function () {
+                      self.submit();
+                      $(this).dialog("close");
+                    },
+                    '<%= l("cancel") %>': function () {
+                      $(this).dialog("close");
+                    }
+                  },
+                  close: function (event, ui) {
+                    $(this).remove();
+                  }
+                });
+            $('button').focus();
+          }else{
+            self.submit();
+          }
+        });
+
+    return false; //is superfluous, but I put it here as a fallback
+  });
+</script>

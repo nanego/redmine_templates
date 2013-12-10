@@ -1,4 +1,4 @@
-<%= labelled_form_for @issue_template, :html => {:id => 'issue-template-form'} do |f| %>
+<%= labelled_form_for @issue_template, :html => {:id => 'issue-template-form', :name=> 'issue-template-form_name'} do |f| %>
 
   <%= error_messages_for 'issue_template' %>
 
@@ -115,5 +115,7 @@
   <%= submit_tag l(:button_save_issue_template) %>
 
   <%= javascript_tag "$('#issue_template_template_title').focus();" %>
+
+  <%= render 'valid_similar_existing_templates' if @issue_template.new_record? %>
 
 <% end %>

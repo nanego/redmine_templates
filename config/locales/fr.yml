@@ -3,7 +3,7 @@ fr:
   project_module_issue_templates: "Modèles de demande"
   label_new_issue_template: "Nouveau modèle de demande"
   notice_issue_template_successfully_created: "Nouveau modèle de demande enregistré."
-  button_save_issue_template: "Enregistrer ce modèle"
+  button_save_issue_template: "Enregistrer le modèle"
   field_template_title: "Nom du modèle"
   template_is_enabled: "Actif (décocher pour suspendre l'utilisation du modèle)"
   label_issue_templates: "Modèles de demande"
@@ -27,3 +27,4 @@ fr:
   apply_template: "Appliquer le modèle"
   cancel: "Annuler"
   notice_issue_template_module_is_not_enabled: "Le module 'Modèles de demandes' n'est pas actif pour ce projet"
+  similar_templates_already_exist: "Ce nouveau modèle présente des ressemblances avec les modèles suivants :"

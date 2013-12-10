@@ -7,9 +7,12 @@ function updateIssueTemplateFrom(url) {
     });
 }
 
-jQuery(document).ready(function($) {
+$(document).ready(function($) {
     $(".list_templates_projects_names").hover(function () {
         var className = $(this).attr('class').split(' ')[0]; // get first class
         $('.' + className).toggleClass("hover");
     });
+
+
 });
+

@@ -98,6 +98,23 @@ class IssueTemplatesController < ApplicationController
     @issue_template.save
   end
 
+  def similar_templates
+    @new_template = IssueTemplate.new(params[:issue_template])
+    @templates = IssueTemplate.all
+    @similar_templates = []
+    #compare subjects
+    @templates.each do |t|
+      if @new_template.subject.similar(t.subject) > 50
+        @similar_templates << t
+      end
+    end
+    respond_to do |format|
+      format.json {
+        render json: {:templates => @similar_templates}
+      }
+    end
+  end
+
   private
 
     def find_project
