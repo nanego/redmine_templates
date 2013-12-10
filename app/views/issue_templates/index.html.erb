@@ -6,7 +6,7 @@
                             :class => 'icon icon-add', :method => :post) if @project %>
 </div>
 
-<h2 class="template"><%=h "#{l(:label_issue_templates)} : #{@project}" %></h2>
+<h2 class="template"><%=h "#{l(:label_issue_templates)}" %></h2>
 
 <% if @notice -%>
   <div class="flash notice"><%= @notice -%></div>
@@ -46,8 +46,8 @@
           <td><%= link_to_edition.call h(issue_template.tracker.name), issue_template.tracker.name %></td>
           <td><%= link_to_edition.call h(issue_template.template_title), issue_template.template_title %></td>
           <td><%= link_to_edition.call h(issue_template.subject), issue_template.subject %></td>
-          <td><% issue_template.projects.each do |project| %>
-                  <%= link_to project.name, issue_templates_path("project_id" => project.id), class: "project_id_#{project.id} list_templates_projects_names" %>
+          <td class="template_projects"><% issue_template.projects.each do |project| %>
+                  <%= link_to project.name.gsub(/ /,"&nbsp;").html_safe, issue_templates_path("project_id" => project.id), class: "project_id_#{project.id} list_templates_projects_names #{@project && @project==project ? "current" : ""}" %>
               <% end %>
           </td>
           <td class="center image_enabled_<%= issue_template.id %>">
@@ -69,16 +69,3 @@
   </div>
 
 <% end %>
-
-<% if @project && !@project.children.blank? %>
-  <BR/>
-  <h2><%=h "#{l(:show_subprojects_templates)}" %></h2>
-<% end %>
-
-<% @project.children.each do |subproject| %>
-  <% unless @templates.blank? && subproject.children.blank? %>
-    <div style="margin-left: 20px">
-      <H4><%= link_to "#{subproject.name}", issue_templates_path("project_id" => subproject.id) %></H4>
-    </div>
-  <% end %>
-<% end if @project %>
