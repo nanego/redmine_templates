@@ -63,11 +63,8 @@ class IssueTemplatesController < ApplicationController
   end
 
   def index
-    #if @project
     #  @templates = @project.get_issue_templates
-    #else
-      @templates = IssueTemplate.order("tracker_id").all
-    #end
+    @templates = IssueTemplate.order("tracker_id").all
   end
 
   # Updates the template form when changing the project, status or tracker on template creation/update

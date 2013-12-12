@@ -1,0 +1,51 @@
+<h3 class="title"><%=l(:field_project).pluralize%></h3>
+
+<div class="actions_links">
+  <%= link_to l("select_all"), '#', id: "link_select_all", :onclick=> "toggle_selection()" %>
+</div>
+
+<div class="columns" id="project_nested_list">
+  <%= render_project_nested_lists(@issue_template.allowed_target_projects|@issue_template.projects) do |project|
+    content_tag('label',
+                check_box_tag(
+                    'project_ids[]',
+                    project.id,
+                    @issue_template != nil && @issue_template.projects.include?(project),
+                    disabled: @issue_template.allowed_target_projects.include?(project) ? false : true,
+                    :class => ("inactive" unless @issue_template.allowed_target_projects.include?(project))
+                ) + ' ' + h(project.name), :class => ("inactive" unless @issue_template.allowed_target_projects.include?(project))
+    )
+  end %>
+</div>
+
+<p class="buttons">
+  <%= submit_tag l(:button_apply), :name => nil, :onclick => "updateSelectedProjects();hideModal(this);", :type => 'button', :id=> 'button_apply_projects' %>
+</p>
+
+<script type="text/javascript">
+
+  function updateSelectedProjects() {
+    $("select#issue_template_project_ids option").each(function() { this.selected = ""; });
+    $("input:checkbox[name='project_ids[]']:checked").each(function()
+    {
+      $("#issue_template_project_ids option[value=" + $(this).val() +"]").attr("selected","selected") ;
+    });
+  }
+
+  function toggle_selection(){
+    if($("a#link_select_all").text()=='<%= l("select_all") %>'){
+      $("input:checkbox[name='project_ids[]']").each(function()
+      {
+        $(this).attr("checked","checked") ;
+      });
+      $("a#link_select_all").text('<%= l("select_none") %>')
+    }else{
+      $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
+      {
+        $(this).attr("checked",false) ;
+      });
+      $("a#link_select_all").text('<%= l("select_all") %>')
+    }
+  }
+
+</script>

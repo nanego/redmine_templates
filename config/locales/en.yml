@@ -27,3 +27,8 @@ en:
   apply_template: "Apply the template"
   cancel: "Cancel"
   notice_issue_template_module_is_not_enabled: "The issue template module is not enabled for this project"
+  similar_templates_already_exist: "Similar templates already exist :"
+  other: "other"
+  project: "project"
+  select_none: "Unselect all projects"
+  select_all: "Select all projects"

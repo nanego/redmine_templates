@@ -19,10 +19,18 @@
         </div>
 
         <div class="splitcontentright">
-          <div class="select_projects">
-            <%= f.select :project_ids, project_tree_options(@issue_template.allowed_target_projects, :selected => @issue_template.projects), {:required => true},
-                        {:multiple => true, :size => 10 } %>
-          </div>
+            <div class="select_projects" id="select_projects">
+              <%= f.select :project_ids, project_tree_options(@issue_template.allowed_target_projects|@issue_template.projects, :selected => @issue_template.projects), {:required => true},
+                          {:multiple => true, :size => 10, disabled: "true"} %>
+              <%= link_to "Modifier", '#', :onclick => 'showModal("ajax-modal", "1000px");$("#button_apply_projects").focus();' %>
+
+              <script type="text/javascript">
+                $(document).ready(function(){
+                  $('#ajax-modal').html('<%= escape_javascript(render :partial => 'issue_templates/modal_select_projects') %>');
+                });
+              </script>
+            </div>
+
         </div>
 
       </div>
@@ -115,6 +123,12 @@
   <%= submit_tag l(:button_save_issue_template) %>
 
   <%= javascript_tag "$('#issue_template_template_title').focus();" %>
+
+  <script type="text/javascript">
+    $('#issue-template-form').bind('submit', function() {
+      $(this).find(':input').removeAttr('disabled');
+    });
+  </script>
 
   <%= render 'valid_similar_existing_templates' if @issue_template.new_record? %>
 
