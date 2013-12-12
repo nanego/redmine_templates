@@ -1,7 +1,10 @@
 <h3 class="title"><%=l(:field_project).pluralize%></h3>
 
 <div class="actions_links">
-  <%= link_to l("select_all"), '#', id: "link_select_all", :onclick=> "toggle_selection()" %>
+  Sélection :
+  <%= link_to l("select_all"), '#', id: "link_select_all", :onclick=> "select_all()" %>
+  |
+  <%= link_to l("select_none"), '#', id: "link_select_all", :onclick=> "select_none()" %>
 </div>
 
 <div class="columns" id="project_nested_list">
@@ -26,26 +29,30 @@
 
   function updateSelectedProjects() {
     $("select#issue_template_project_ids option").each(function() { this.selected = ""; });
+    var htmlContent = "";
     $("input:checkbox[name='project_ids[]']:checked").each(function()
     {
-      $("#issue_template_project_ids option[value=" + $(this).val() +"]").attr("selected","selected") ;
+      $("#issue_template_project_ids option[value=" + $(this).val() +"]").attr("selected","selected");
+    });
+    $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
+    {
+      htmlContent += "<span class=\"list_templates_projects_names\">"+ $(this).closest('label').text() + "</span>";
+    });
+    $("#my_projects").html(htmlContent);
+  }
+
+  function select_all(){
+    $("input:checkbox[name='project_ids[]']").each(function()
+    {
+      $(this).attr("checked","checked") ;
     });
   }
 
-  function toggle_selection(){
-    if($("a#link_select_all").text()=='<%= l("select_all") %>'){
-      $("input:checkbox[name='project_ids[]']").each(function()
-      {
-        $(this).attr("checked","checked") ;
-      });
-      $("a#link_select_all").text('<%= l("select_none") %>')
-    }else{
-      $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
-      {
-        $(this).attr("checked",false) ;
-      });
-      $("a#link_select_all").text('<%= l("select_all") %>')
-    }
+  function select_none(){
+    $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
+    {
+      $(this).attr("checked",false) ;
+    });
   }
 
 </script>

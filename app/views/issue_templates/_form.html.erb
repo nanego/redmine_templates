@@ -21,8 +21,34 @@
         <div class="splitcontentright">
             <div class="select_projects" id="select_projects">
               <%= f.select :project_ids, project_tree_options(@issue_template.allowed_target_projects|@issue_template.projects, :selected => @issue_template.projects), {:required => true},
-                          {:multiple => true, :size => 10, disabled: "true"} %>
-              <%= link_to "Modifier", '#', :onclick => 'showModal("ajax-modal", "1000px");$("#button_apply_projects").focus();' %>
+                          {:multiple => true, :size => 10, style: "display:none;"} %>
+              <%
+                 nb_other_projects = 0
+                 nb_visible_projects = 0
+              %>
+              <span id="my_projects">
+                <% @issue_template.projects.each do |project| %>
+                  <% if @issue_template.allowed_target_projects.include?(project) %>
+                    <%= content_tag("span", project.name.gsub(/ /,"&nbsp;").html_safe, class: "list_templates_projects_names") %>
+                    <% nb_visible_projects += 1 %>
+                  <% else %>
+                    <% nb_other_projects += 1 %>
+                  <% end %>
+                <% end %>
+              </span>
+              <% if nb_other_projects > 0 %>
+              <span class="list_templates_other_projects">
+                <% if nb_visible_projects>0 %>
+                  <%= l("support.array.sentence_connector") %>
+                  <%= pluralize(nb_other_projects, l("other")) %>
+                  <%= nb_other_projects>1 ? l("project").pluralize : l("project") %>
+                <% else %>
+                  <%= pluralize(nb_other_projects, l("project")) %>
+                <% end %>
+              </span>
+              <% end %>
+              <br>
+              <%= link_to "Modifier", '#', id:"link_update_project_list", :onclick => 'showModal("ajax-modal", "1000px");$("#button_apply_projects").focus();' %>
 
               <script type="text/javascript">
                 $(document).ready(function(){

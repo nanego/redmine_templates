@@ -30,5 +30,5 @@ fr:
   similar_templates_already_exist: "Ce nouveau modèle présente des ressemblances avec les modèles suivants :"
   other: "autre"
   project: "projet"
-  select_none: "Déselectionner tous les projets"
-  select_all: "Sélectionner tous les projets"
+  select_none: "Aucun"
+  select_all: "Tous"

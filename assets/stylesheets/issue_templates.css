@@ -85,12 +85,12 @@ form#issue-template-form .select_projects{
     border: 1px solid #d3d3d3;
     line-height: 24px;
 }
-.list_templates_projects_names.current{
+a.list_templates_projects_names.current{
     color: #ffffff;
     background-color: #707070;
     border: 1px solid #707070;
 }
-.list_templates_projects_names.hover{
+a.list_templates_projects_names.hover{
     color: #ffffff;
     background-color: darkgrey;
     text-decoration: none;
@@ -124,4 +124,8 @@ form#issue-template-form .select_projects{
     margin-bottom: 10px;
     padding-bottom: 5px;
     border-bottom: 1px solid #d3d3d3;
+}
+
+#link_update_project_list{
+    margin-left: 55px;
 }
