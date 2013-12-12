@@ -20,6 +20,10 @@ table#templates_list td, table#templates_list th{
 table#templates_list td.center, table#templates_list th.center{
     text-align: center;
 }
+table#templates_list td div{
+    max-height: 110px;
+    overflow: auto;
+}
 
 .template_box{
     border: 1px dashed #d3d3d3;
@@ -74,6 +78,7 @@ form#issue-template-form .select_projects{
 
 #select_projects{
     max-height: 150px;
+    overflow: auto;
 }
 
 .list_templates_projects_names{
@@ -127,5 +132,5 @@ a.list_templates_projects_names.hover{
 }
 
 #link_update_project_list{
-    margin-left: 55px;
+    margin-left: 50px;
 }

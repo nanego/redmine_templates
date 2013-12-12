@@ -25,10 +25,12 @@
               <%
                  nb_other_projects = 0
                  nb_visible_projects = 0
+                 template_projects = @issue_template.projects.all
+                 allowed_projects = @issue_template.allowed_target_projects
               %>
               <span id="my_projects">
-                <% @issue_template.projects.each do |project| %>
-                  <% if @issue_template.allowed_target_projects.include?(project) %>
+                <% template_projects.each do |project| %>
+                  <% if allowed_projects.include?(project) %>
                     <%= content_tag("span", project.name.gsub(/ /,"&nbsp;").html_safe, class: "list_templates_projects_names") %>
                     <% nb_visible_projects += 1 %>
                   <% else %>
@@ -47,15 +49,14 @@
                 <% end %>
               </span>
               <% end %>
-              <br>
-              <%= link_to "Modifier", '#', id:"link_update_project_list", :onclick => 'showModal("ajax-modal", "1000px");$("#button_apply_projects").focus();' %>
-
-              <script type="text/javascript">
-                $(document).ready(function(){
-                  $('#ajax-modal').html('<%= escape_javascript(render :partial => 'issue_templates/modal_select_projects') %>');
-                });
-              </script>
             </div>
+          <%= link_to "Modifier", '#', id:"link_update_project_list", :onclick => 'showModal("ajax-modal", "1000px");$("#button_apply_projects").focus();' %>
+
+          <script type="text/javascript">
+            $(document).ready(function(){
+              $('#ajax-modal').html('<%= escape_javascript(render :partial => 'issue_templates/modal_select_projects') %>');
+            });
+          </script>
 
         </div>
 

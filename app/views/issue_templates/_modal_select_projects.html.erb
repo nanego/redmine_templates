@@ -9,17 +9,17 @@
 
 <div class="columns" id="project_nested_list">
   <% template_projects = @issue_template.projects.all
-     allowed_projets =  @issue_template.allowed_target_projects
+     allowed_projects =  @issue_template.allowed_target_projects
   %>
-  <%= render_project_nested_lists(allowed_projets|template_projects) do |project|
+  <%= render_project_nested_lists(allowed_projects|template_projects) do |project|
     content_tag('label',
                 check_box_tag(
                     'project_ids[]',
                     project.id,
                     @issue_template != nil && template_projects.include?(project),
-                    disabled: allowed_projets.include?(project) ? false : true,
-                    :class => ("inactive" unless allowed_projets.include?(project))
-                ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projets.include?(project))
+                    disabled: allowed_projects.include?(project) ? false : true,
+                    :class => ("inactive" unless allowed_projects.include?(project))
+                ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
     )
   end %>
 </div>
