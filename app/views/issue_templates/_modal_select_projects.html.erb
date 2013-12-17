@@ -1,27 +1,46 @@
-<h3 class="title"><%=l(:field_project).pluralize%></h3>
+<% template_projects = @issue_template.projects.all
+   allowed_projects =  @issue_template.allowed_target_projects
+   custom_fields = CustomField.select("id, name").where(:is_filter => true, :type => "ProjectCustomField").where("name IN (?)", ["Domaine", "Type", "Implantation"]) # hard coded TODO add plugin-params to select which custom field to retrieve
+   options_for_selects = {}
+   custom_fields.each do |field|
+     options_for_selects.merge!(field.name.parameterize => [])
+   end
 
-<div class="actions_links">
+   nested_projects_list = render_project_nested_lists(allowed_projects|template_projects) do |project|
+     custom_fields_data = {}
+     custom_fields.each do |f|
+       value = project.custom_field_value(f)
+       custom_fields_data.merge!(f.name.parameterize => value)
+       options_for_selects[f.name.parameterize] << value unless options_for_selects[f.name.parameterize].include?(value) || value==""
+     end
+     content_tag('label',
+       check_box_tag(
+           'project_ids[]',
+           project.id,
+           @issue_template != nil && template_projects.include?(project),
+           disabled: allowed_projects.include?(project) ? false : true,
+           :class => ("inactive" unless allowed_projects.include?(project)),
+           data: custom_fields_data
+       ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
+     )
+   end
+%>
+
+  <h3 class="title"><%=l(:field_project).pluralize%></h3>
+
+  <div class="actions_links">
   Sélection :
   <%= link_to l("select_all"), '#', id: "link_select_all", :onclick=> "select_all()" %>
   |
   <%= link_to l("select_none"), '#', id: "link_select_all", :onclick=> "select_none()" %>
+  <% custom_fields.each do |field| %>
+    |
+    <%= select_tag field.name.parameterize, options_for_select(options_for_selects[field.name.parameterize]), :prompt=>field.name, :id => "select_#{field.name.parameterize}", :class => "select_box_custom_field_value", :onchange=> "select_from_custom_field('#{field.name.parameterize}')" %>
+  <% end %>
 </div>
 
 <div class="columns" id="project_nested_list">
-  <% template_projects = @issue_template.projects.all
-     allowed_projects =  @issue_template.allowed_target_projects
-  %>
-  <%= render_project_nested_lists(allowed_projects|template_projects) do |project|
-    content_tag('label',
-                check_box_tag(
-                    'project_ids[]',
-                    project.id,
-                    @issue_template != nil && template_projects.include?(project),
-                    disabled: allowed_projects.include?(project) ? false : true,
-                    :class => ("inactive" unless allowed_projects.include?(project))
-                ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
-    )
-  end %>
+  <%= nested_projects_list %>
 </div>
 
 <p class="buttons">
@@ -56,6 +75,15 @@
     {
       $(this).attr("checked",false) ;
     });
+  }
+
+  function select_from_custom_field(id) {
+    select_none();
+    $("input:checkbox[name='project_ids[]']:checkbox[data-"+id+"='"+ $("#select_" + id).val() +"']").each(function()
+    {
+      $(this).attr("checked","checked") ;
+    });
+    $(".select_box_custom_field_value").val('');
   }
 
 </script>
