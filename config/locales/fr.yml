@@ -32,3 +32,5 @@ fr:
   project: "projet"
   select_none: "Aucun"
   select_all: "Tous"
+  Selection: "Sélection"
+  available_custom_fields: "Filtres de sélection des projets"

@@ -1,6 +1,6 @@
 <% template_projects = @issue_template.projects.all
    allowed_projects =  @issue_template.allowed_target_projects
-   custom_fields = CustomField.select("id, name").where(:is_filter => true, :type => "ProjectCustomField").where("name IN (?)", ["Domaine", "Type", "Implantation"]) # hard coded TODO add plugin-params to select which custom field to retrieve
+   custom_fields = CustomField.select("id, name").where(:type => "ProjectCustomField").where("name IN (?)", Setting.plugin_redmine_templates['custom_fields'])
    options_for_selects = {}
    custom_fields.each do |field|
      options_for_selects.merge!(field.name.parameterize => [])
@@ -29,7 +29,7 @@
   <h3 class="title"><%=l(:field_project).pluralize%></h3>
 
   <div class="actions_links">
-  Sélection :
+  <%= l("Selection") %> :
   <%= link_to l("select_all"), '#', id: "link_select_all", :onclick=> "select_all()" %>
   |
   <%= link_to l("select_none"), '#', id: "link_select_all", :onclick=> "select_none()" %>
@@ -83,7 +83,7 @@
     {
       $(this).attr("checked","checked") ;
     });
-    $(".select_box_custom_field_value").val('');
+    $(".select_box_custom_field_value").prop('selectedIndex',0);
   }
 
 </script>
