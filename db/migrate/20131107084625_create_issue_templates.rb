@@ -27,5 +27,6 @@ class CreateIssueTemplates < ActiveRecord::Migration
     add_index :issue_templates, :project_id
     add_index :issue_templates, :tracker_id
     add_index :issue_templates, :author_id
+    add_index :issue_templates, :template_title, :unique => true
   end
 end

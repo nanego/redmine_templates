@@ -26,7 +26,8 @@ module IssueTemplatesHelper
 
     container.map do |element|
       html_attributes = option_html_attributes(element)
-      text = element.template_title
+      text = "#{element.template_title.first(40)}..." if element.template_title.size > 40
+      text ||= element.template_title
       value = element.id
       selected_attribute = ' selected="selected"' if option_value_selected?(value, selected)
       disabled_attribute = ' disabled="disabled"' if disabled && option_value_selected?(value, disabled)

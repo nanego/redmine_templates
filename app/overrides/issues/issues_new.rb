@@ -21,10 +21,14 @@ Deface::Override.new :virtual_path  => 'issues/new',
                      :original => '73b386964fd80827b5bedf659dd2048791f20713',
                      :insert_before  => 'h2' do
   '<%
-    tracker_ids = @project.get_issue_templates.select(:tracker_id).map(&:tracker_id).uniq
+    tracker_ids = @project.get_issue_templates.select(:tracker_id).where("template_enabled = ?", true).map(&:tracker_id).uniq
     @template_map = Hash::new
     tracker_ids.each do |tracker_id|
-      templates = @project.get_issue_templates.where("tracker_id = ?", tracker_id)
+      if Setting.plugin_redmine_templates["disable_templates"]
+        templates = @project.get_issue_templates.where("tracker_id = ? AND template_enabled = ?", tracker_id, true)
+      else
+        templates = @project.get_issue_templates.where("tracker_id = ?", tracker_id)
+      end
       if templates.any?
         @template_map[Tracker.find(tracker_id)] = templates
       end

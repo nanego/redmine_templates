@@ -9,11 +9,11 @@
       dataType: 'json',
       data: $('#issue-template-form').serialize()
     }).done(function(data) {
-          if(data.templates.length > 0){
+          if(data.length > 0){
             content = ""
-            $.each(data.templates, function(i,data)
+            $.each(data, function(i,data)
             {
-              content += "<a target='_blank' href='"+window.location.protocol + "//" + window.location.host + "/issue_templates/"+ data.issue_template.id +"/edit'>"+data.issue_template.subject+"</a><br>";
+              content += "<a target='_blank' href='"+window.location.protocol + "//" + window.location.host + "/issue_templates/"+ data.id +"/edit'>"+data.similarity + "% => " +data.subject+" ["+data.tracker+"]"+(data.description != "" ? " : "+ data.description.substring(0,40) : "")+"</a><br>";
             });
             $('<div></div>').appendTo('body')
                 .html('<div><%= l("similar_templates_already_exist") %> <br>'+content+'</div>')

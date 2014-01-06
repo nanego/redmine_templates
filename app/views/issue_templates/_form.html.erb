@@ -13,9 +13,11 @@
           </p>
           <%= f.hidden_field :project_id, :value => (@project.try(:id) || @issue_template.project_id) %>
           <%= f.hidden_field :id, :value => @issue_template.id %>
-          <p>
-            <%= f.check_box :template_enabled, :no_label => true %><label class="inline" for="issue_template_is_enabled" id="issue_template_is_enabled"><%= l(:template_is_enabled) %></label>
-          </p>
+          <% if Setting.plugin_redmine_templates['disable_templates'] %>
+            <p>
+              <%= f.check_box :template_enabled, :no_label => true %><label class="inline" for="issue_template_is_enabled" id="issue_template_is_enabled"><%= l(:template_is_enabled) %></label>
+            </p>
+          <% end %>
         </div>
 
         <div class="splitcontentright">
@@ -25,7 +27,7 @@
               <%
                  nb_other_projects = 0
                  nb_visible_projects = 0
-                 template_projects = @issue_template.projects.all
+                 template_projects = @issue_template.projects
                  allowed_projects = @issue_template.allowed_target_projects
               %>
               <span id="my_projects">
@@ -39,18 +41,22 @@
                 <% end %>
               </span>
               <% if nb_other_projects > 0 %>
-              <span class="list_templates_other_projects">
-                <% if nb_visible_projects>0 %>
-                  <%= l("support.array.sentence_connector") %>
-                  <%= pluralize(nb_other_projects, l("other")) %>
+                <span class="list_templates_other_projects">
+                  <% if nb_visible_projects>0 %>
+                    <span class="and_x_other_projects"><%= l("support.array.sentence_connector") %></span>
+                    <%= nb_other_projects %>
+                    <span class="and_x_other_projects"><%= nb_other_projects>1 ? l("other").pluralize : l("other") %></span>
+                  <% else %>
+                    <span class="and_x_other_projects" style="display: none;"><%= l("support.array.sentence_connector") %></span>
+                    <%= nb_other_projects %>
+                    <span class="and_x_other_projects" style="display: none;"><%= nb_other_projects>1 ? l("other").pluralize : l("other") %></span>
+                  <% end %>
                   <%= nb_other_projects>1 ? l("project").pluralize : l("project") %>
-                <% else %>
-                  <%= pluralize(nb_other_projects, l("project")) %>
-                <% end %>
-              </span>
+                </span>
               <% end %>
             </div>
-          <%= link_to "Modifier", '#', id:"link_update_project_list", :onclick => 'showModal("ajax-modal", "1000px");$("#button_apply_projects").focus();' %>
+
+          <%= link_to l("modify_projects"), '#', id:"link_update_project_list", :onclick => 'showModal("ajax-modal", "1000px");$("#button_apply_projects").focus();' %>
 
           <script type="text/javascript">
             $(document).ready(function(){

@@ -101,13 +101,28 @@ class IssueTemplatesController < ApplicationController
     @similar_templates = []
     #compare subjects
     @templates.each do |t|
-      if @new_template.subject.similar(t.subject) > 50
-        @similar_templates << t
+      sims = []
+      taux = 0
+      sims << @new_template.subject.similar(t.subject)
+      sims << (@new_template.tracker_id == t.tracker_id ? 100.0 : 0.0)
+      sims << @new_template.description.similar(t.description) unless t.description.blank?
+      sims.each do |sim|
+        taux += sim
+      end
+      taux = taux / sims.size
+      if taux > 61.0
+        @similar_templates << {:id => t.id,
+                                :subject => t.subject,
+                                :description => t.description,
+                                :tracker => t.tracker.name,
+                                :similarity => Integer(taux)
+                              }
       end
     end
+    @similar_templates.sort! { |a,b| b[:similarity] <=> a[:similarity] }
     respond_to do |format|
       format.json {
-        render json: {:templates => @similar_templates}
+        render json: @similar_templates.to_json
       }
     end
   end

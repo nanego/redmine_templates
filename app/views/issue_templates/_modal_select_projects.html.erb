@@ -1,4 +1,4 @@
-<% template_projects = @issue_template.projects.all
+<% template_projects = @issue_template.projects
    allowed_projects =  @issue_template.allowed_target_projects
    custom_fields = CustomField.select("id, name").where(:type => "ProjectCustomField").where("name IN (?)", Setting.plugin_redmine_templates['custom_fields'])
    options_for_selects = {}
@@ -8,10 +8,12 @@
 
    nested_projects_list = render_project_nested_lists(allowed_projects|template_projects) do |project|
      custom_fields_data = {}
-     custom_fields.each do |f|
-       value = project.custom_field_value(f)
-       custom_fields_data.merge!(f.name.parameterize => value)
-       options_for_selects[f.name.parameterize] << value unless options_for_selects[f.name.parameterize].include?(value) || value==""
+     if allowed_projects.include?(project)
+       custom_fields.each do |f|
+         value = project.custom_field_value(f)
+         custom_fields_data.merge!(f.name.parameterize => value)
+         options_for_selects[f.name.parameterize] << value unless options_for_selects[f.name.parameterize].include?(value) || value==""
+       end
      end
      content_tag('label',
        check_box_tag(
@@ -39,8 +41,10 @@
   <% end %>
 </div>
 
-<div class="columns" id="project_nested_list">
-  <%= nested_projects_list %>
+<div class="projects_container">
+  <div class="columns" id="project_nested_list">
+    <%= nested_projects_list %>
+  </div>
 </div>
 
 <p class="buttons">
@@ -61,6 +65,11 @@
       htmlContent += "<span class=\"list_templates_projects_names\">"+ $(this).closest('label').text() + "</span>";
     });
     $("#my_projects").html(htmlContent);
+    if (htmlContent == ""){
+      $(".and_x_other_projects").css("display", "none");
+    } else{
+      $(".and_x_other_projects").css("display","inline");
+    }
   }
 
   function select_all(){

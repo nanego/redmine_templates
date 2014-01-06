@@ -27,7 +27,9 @@
         <th class="template_id"><%= l(:field_tracker) %></th>
         <th class="template_subject"><%= l(:field_subject) %></th>
         <th class="template_projects"><%= l(:field_project).pluralize %></th>
-        <th class="center template_enable"><%= l(:label_enabled) %></th>
+        <% if Setting.plugin_redmine_templates['disable_templates'] %>
+          <th class="center template_enable"><%= l(:label_enabled) %></th>
+        <% end %>
         <th></th>
       </tr>
       </thead>
@@ -56,7 +58,11 @@
               %>
               <% template_projects.each do |project| %>
                   <% if allowed_projects.include?(project) %>
-                    <%= link_to project.name.gsub(/ /,"&nbsp;").html_safe, issue_templates_path("project_id" => project.id), class: "project_id_#{project.id} list_templates_projects_names #{@project && @project==project ? "current" : ""}" %>
+                    <%= link_to project.name.gsub(/ /,"&nbsp;").html_safe,
+                                "#",
+                                class: "project_id_#{project.id} list_templates_projects_names #{@project && @project==project ? "current" : ""}",
+                                :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project.id}\").toggleClass('current')"
+                    %>
                     <% nb_visible_projects += 1 %>
                   <% else %>
                     <% nb_other_projects += 1 %>
@@ -75,15 +81,19 @@
               <% end %>
             </div>
           </td>
-          <td class="center image_enabled_<%= issue_template.id %>">
-            <%= render "enable_form", issue_template: issue_template %>
-          </td>
+          <% if Setting.plugin_redmine_templates['disable_templates'] %>
+            <td class="center image_enabled_<%= issue_template.id %>">
+              <%= render "enable_form", issue_template: issue_template %>
+            </td>
+          <% end %>
           <td class="buttons">
             <% if true  #User.current.allowed_to?(:manage_templates, project) %>
               <%= link_to l(:button_edit), edit_issue_template_path(id: issue_template.id
               #, project_id: project.id
               ), :class => 'icon icon-edit' %>
-              <%= delete_link issue_template_path(issue_template) %>
+              <% if (issue_template.projects-User.current.projects).empty? %>
+                <%= delete_link issue_template_path(issue_template) %>
+              <% end %>
             <% end %>
           </td>
         </tr>
