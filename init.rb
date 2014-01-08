@@ -18,5 +18,6 @@ Redmine::Plugin.register :redmine_templates do
   url 'https://github.com/nanego/redmine_issue_templates'
   requires_redmine :version_or_higher => '2.2.0'
   permission :create_issue_templates, {:issue_templates => [:init, :new, :create, :edit, :update, :index, :destroy]}
-  settings :partial => 'settings/redmine_plugin_templates_settings'
+  settings :default => { 'custom_fields' => [], 'disable_templates' => false},
+           :partial => 'settings/redmine_plugin_templates_settings'
 end

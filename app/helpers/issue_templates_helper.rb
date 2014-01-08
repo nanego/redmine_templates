@@ -6,7 +6,7 @@ module IssueTemplatesHelper
     grouped_options = grouped_options.sort if grouped_options.is_a?(Hash)
 
     grouped_options.each do |group|
-      body << content_tag(:optgroup, templates_options_for_select(group[1], project, selected_key), :label => group[0])
+      body << templates_options_for_select(group[0], group[1], project, selected_key)
     end
 
     if User.current.admin? || User.current.allowed_to?(:create_issue_templates, project)
@@ -17,7 +17,7 @@ module IssueTemplatesHelper
     body.html_safe
   end
 
-  def templates_options_for_select(container, project, selected = nil )
+  def templates_options_for_select(tracker, container, project, selected = nil )
     return container if String === container
 
     selected, disabled = extract_selected_and_disabled(selected).map do | r |
@@ -31,7 +31,7 @@ module IssueTemplatesHelper
       value = element.id
       selected_attribute = ' selected="selected"' if option_value_selected?(value, selected)
       disabled_attribute = ' disabled="disabled"' if disabled && option_value_selected?(value, disabled)
-      %(<option value="#{ERB::Util.html_escape(new_project_issue_url(project_id: project.id, template_id: value))}"#{selected_attribute}#{disabled_attribute}#{html_attributes}>#{ERB::Util.html_escape(text)}</option>)
+      %(<option value="#{ERB::Util.html_escape(new_project_issue_url(project_id: project.id, template_id: value))}"#{selected_attribute}#{disabled_attribute}#{html_attributes}>[#{ERB::Util.html_escape(tracker)}] #{ERB::Util.html_escape(text)}</option>)
     end.join("\n").html_safe
 
   end
