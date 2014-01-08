@@ -10,13 +10,13 @@
            options << f.name
          end
       %>
-      <%= select_tag "settings[custom_fields]", options_for_select(options, Setting.plugin_redmine_templates['custom_fields']), :id => "settings_custom_fields", :multiple => true, :size => 10 %>
+      <%= select_tag "settings[custom_fields]", options_for_select(options, Setting['plugin_redmine_templates']['custom_fields']), :id => "settings_custom_fields", :multiple => true, :size => 10 %>
     </td>
   </tr>
   <tr>
     <th style="text-align: right;"><%= l("setting_disable_templates") %> :</th>
     <td>
-      <%= check_box_tag "settings[disable_templates]", "disable_templates", Setting.plugin_redmine_templates['disable_templates'] %>
+      <%= check_box_tag "settings[disable_templates]", "disable_templates", Setting["plugin_redmine_templates"]["disable_templates"] %>
     </td>
   </tr>
   </tbody>

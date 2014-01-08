@@ -27,7 +27,7 @@
         <th class="template_id"><%= l(:field_tracker) %></th>
         <th class="template_subject"><%= l(:field_subject) %></th>
         <th class="template_projects"><%= l(:field_project).pluralize %></th>
-        <% if Setting.plugin_redmine_templates['disable_templates'] %>
+        <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
           <th class="center template_enable"><%= l(:label_enabled) %></th>
         <% end %>
         <th></th>
@@ -81,7 +81,7 @@
               <% end %>
             </div>
           </td>
-          <% if Setting.plugin_redmine_templates['disable_templates'] %>
+          <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
             <td class="center image_enabled_<%= issue_template.id %>">
               <%= render "enable_form", issue_template: issue_template %>
             </td>

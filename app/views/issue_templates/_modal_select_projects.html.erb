@@ -1,6 +1,6 @@
 <% template_projects = @issue_template.projects
    allowed_projects =  @issue_template.allowed_target_projects
-   custom_fields = CustomField.select("id, name").where(:type => "ProjectCustomField").where("name IN (?)", Setting.plugin_redmine_templates['custom_fields'])
+   custom_fields = CustomField.select("id, name").where(:type => "ProjectCustomField").where("name IN (?)", Setting["plugin_redmine_templates"]['custom_fields'])
    options_for_selects = {}
    custom_fields.each do |field|
      options_for_selects.merge!(field.name.parameterize => [])
