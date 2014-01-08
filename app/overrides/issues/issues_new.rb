@@ -45,7 +45,8 @@ end
 
 Deface::Override.new :virtual_path  => 'issues/new',
                      :name          => 'autocomplete-new-issue-from-url-template',
-                     :insert_after  => '#preview' do
+                     :insert_after  => '#preview',
+                     :original => 'bcfa1ba4130d1a98d6dc7f126d897cfd5bda13fc' do
   '
   <%
     @issue_template = IssueTemplate.find_by_id(params[:template_id]) if params[:template_id] && (begin Integer(params[:template_id]) ; true end rescue false)
