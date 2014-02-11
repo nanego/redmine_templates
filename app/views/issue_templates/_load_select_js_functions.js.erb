@@ -1,6 +1,9 @@
-$('#select_issue_template').on('change', function() {
-  if ($(this).val().indexOf("issue_templates") > -1) {
-    window.location.href=$(this).val(); // Click on "Manage templates"
+$('#select_issue_template').on('change', function(e) {
+  e.preventDefault();
+  window.onbeforeunload = null;
+  var newURL = $(this).val();
+  if (newURL.indexOf("issue_templates") > -1) {
+    window.location.href=newURL; // Click on "Manage templates"
   }else{
     // $('#form-select-issue-template').submit();
     if ( $('#track_changes').val()=="true" ){
@@ -11,10 +14,11 @@ $('#select_issue_template').on('change', function() {
             width: 'auto', resizable: false,
             buttons: {
               "<%= l("apply_template") %>": function () {
-                window.location.href=$(this).val();
+                window.location.href=newURL;
                 $(this).dialog("close");
               },
               "<%= l("cancel") %>": function () {
+                resetTemplateSelectBox();
                 $(this).dialog("close");
               }
             },
@@ -24,7 +28,7 @@ $('#select_issue_template').on('change', function() {
             }
           });
     } else {
-      window.location.href=$(this).val();
+      window.location.href=newURL;
     }
   };
 });
