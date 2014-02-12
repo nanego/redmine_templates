@@ -3,7 +3,7 @@ function startUpdate() {
   <% @issue_template.attributes.each do |attr_name, attr_value|  %>
   $.each($('#issue-form').serializeArray(), function(i, field) {
     if (field.name == "<%= escape_javascript("issue[#{attr_name}]") %>"){
-      $('[name="' + field.name + '"]').val("<%= escape_javascript(attr_value.to_s) %>");
+      $('[name="' + field.name + '"]').val("<%= raw(escape_javascript(attr_value.to_s)) %>");
     }
   });
   <% end %>
