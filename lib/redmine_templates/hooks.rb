@@ -6,7 +6,9 @@ module RedmineTemplates
     end
 
     # adds a link in the sidebar of the main issue page
-    #(based on the redmine_better_crossprojects plugin)
-    render_on :view_cross_sidebar_time_entries_bottom, :partial => 'hooks/view_issues_sidebar_queries_bottom'
+    render_on :view_issues_sidebar_queries_bottom, :partial => 'hooks/view_sidebar_manage_templates'
+    # + based on the redmine_better_crossprojects plugin --> TODO Add default hook to cross sidebar in the better cross projects plugin
+    render_on :view_cross_sidebar_time_entries_bottom, :partial => 'hooks/view_sidebar_manage_templates'
+
   end
 end
