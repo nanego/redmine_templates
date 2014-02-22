@@ -2,6 +2,15 @@ require File.expand_path('../../test_helper', __FILE__)
 
 class IssueTemplatesControllerTest < ActionController::TestCase
 
+  # NB: setting a specific fixture_path here prevents us from declaring
+  # explicitly all needed fixtures because Rails only have one fixture
+  # directory. As we don't declare all fixtures explicitly, 1/ we cannot
+  # run this test file alone and 2/ it may break depending on which other
+  # tests ran before.
+  #
+  # TODO(jbbarth): see if we can remove this line and copy this fixture file
+  # in the core's test/fixtures/ directory when we prepare the test database.
+  # This is what I generally do in other plugins but there may be better ideas.
   self.fixture_path = File.dirname(__FILE__) + "/../fixtures/"
   fixtures :issue_templates
 
