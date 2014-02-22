@@ -33,7 +33,7 @@ class IssueTemplatesControllerTest < ActionController::TestCase
 
   context "POST create" do
     should "succeed and assign a new template" do
-      post :create, :issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template" }
+      post :create, :issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", project_ids: [1] }
       assert_redirected_to issue_templates_path(project_id: 1)
       assert_equal "New issue template successfully created!", flash[:notice]
       assert_equal "New issue", IssueTemplate.last.try(:subject)
@@ -50,7 +50,7 @@ class IssueTemplatesControllerTest < ActionController::TestCase
 
   context "PUT update" do
     should "succeed and update the first template" do
-      post :create, :issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template" }
+      post :create, :issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", project_ids: [1] }
       template = IssueTemplate.last
       assert_no_difference('IssueTemplate.count') do
         put :update, :id => template.id, issue_template: { subject: "Modified subject" }
