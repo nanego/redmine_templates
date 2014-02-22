@@ -5,7 +5,7 @@ one:
   status_id: 1
   subject: "Template sample title"
   tracker_id: 1
-  template_title: "Template title"
+  template_title: "Template title one"
 two:
   id: 2
   author_id: 1
@@ -13,4 +13,4 @@ two:
   status_id: 1
   subject: "Second sample"
   tracker_id: 3
-  template_title: "Template title"
+  template_title: "Template title two"
