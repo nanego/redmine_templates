@@ -1,7 +1,8 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class IssueTest < ActiveSupport::TestCase
-  fixtures :projects, :users, :members, :member_roles, :roles
+  fixtures :projects, :users, :members, :member_roles, :roles,
+           :trackers, :issue_statuses
 
   include Redmine::I18n
 
