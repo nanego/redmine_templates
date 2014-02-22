@@ -21,6 +21,7 @@ class IssueTemplatesTest < ActionController::IntegrationTest
                                              :template_title => "new template",
                                              :template_enabled => true,
                                              :project_id => '1',
+                                             :project_ids => ['1'],
                                              :status_id => '1'}
 
     # find created template
