@@ -1,7 +1,7 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class IssueTemplatesTest < ActionController::IntegrationTest
-  fixtures :users
+  fixtures :users, :projects, :trackers, :issue_statuses
 
   # create a template
   def test_add_issue_template
