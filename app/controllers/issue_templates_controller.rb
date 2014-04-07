@@ -29,6 +29,7 @@ class IssueTemplatesController < ApplicationController
   def create
     @issue_template = IssueTemplate.new(params[:issue_template])
     @issue_template.author ||= User.current
+    @issue_template.usage = 0
 
     if @issue_template.save
       respond_to do |format|

@@ -47,7 +47,8 @@ class IssueTemplate < ActiveRecord::Base
                   :assigned_to_id,
                   :fixed_version_id,
                   :done_ratio,
-                  :lock_version
+                  :lock_version,
+                  :usage
 
   def allowed_target_projects
     Project.all(:conditions => Project.allowed_to_condition(User.current, :add_issues))
