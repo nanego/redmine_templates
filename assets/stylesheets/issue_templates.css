@@ -1,3 +1,7 @@
+#admin-menu a.issue-templates {
+    background-image: url(../images/duplicate.png);
+}
+
 .pull-right-with-marging {
     float: right;
     margin-right: 1em;
