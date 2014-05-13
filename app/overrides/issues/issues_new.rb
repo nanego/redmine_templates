@@ -53,9 +53,9 @@ Deface::Override.new :virtual_path  => 'issues/new',
     @issue_template.increment!(:usage) if @issue_template
   %>
   <script type="text/javascript">
-    <%= render(:partial => "issue_templates/load_select_js_functions.js.erb") %>
+    <%= render(:partial => "issue_templates/load_select_js_functions", :handlers => [:erb], :formats => [:js]) %>
     <% if @issue_template %>
-      <%= render(:partial => "issue_templates/load_update_functions.js.erb") %>
+      <%= render(:partial => "issue_templates/load_update_functions", :handlers => [:erb], :formats => [:js]) %>
       startUpdate();
     <% end %>
   </script>
