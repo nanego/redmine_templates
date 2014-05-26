@@ -7,7 +7,7 @@ Project.send(:include, PatchingProjectModel)
 
 Deface::Override.new :virtual_path  => 'issues/new',
                      :name          => 'add-save-template-button-to-issues-new',
-                     :insert_after  => 'code[erb-loud]:contains("preview_link")',
+                     :insert_after  => 'erb[loud]:contains("preview_link")',
                      :text          => '<% if User.current.admin? || User.current.allowed_to?(:create_issue_templates, @project) %>
                                         <%= link_to "Enregistrer en tant que template",
                                             "#",
@@ -18,8 +18,7 @@ Deface::Override.new :virtual_path  => 'issues/new',
 
 Deface::Override.new :virtual_path  => 'issues/new',
                      :name          => 'add-template-selection-to-issues-new',
-                     :original => '73b386964fd80827b5bedf659dd2048791f20713',
-                     :insert_before  => 'h2' do
+                     :insert_before  => 'erb[loud]:contains("title")' do
   '<%
     tracker_ids = @project.get_issue_templates.select(:tracker_id).where("template_enabled = ?", true).map(&:tracker_id).uniq
     @template_map = Hash::new
