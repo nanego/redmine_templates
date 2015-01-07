@@ -27,7 +27,9 @@ function updateCustomFieldsValues(data) {
   $.each($('#issue-form').serializeArray(), function(i, field) {
     if (field.name == "<%= "issue[custom_field_values][#{custom_value.custom_field_id}]" %>"){
       $('[name="' + field.name + '"]').val("<%= custom_value.value %>");
-      $('[name="' + field.name + '"]').prop('checked', <%= custom_value.value.to_i > 0 ? 'true' : 'false' %>)
+      <% unless custom_value.value.to_a %>
+        $('[name="' + field.name + '"]').prop('checked', <%= custom_value.value.to_i > 0 ? 'true' : 'false' %>);
+      <% end %>
     }
   });
   <% end %>
