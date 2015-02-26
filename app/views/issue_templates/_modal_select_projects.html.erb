@@ -58,8 +58,9 @@
     var htmlContent = "";
     $("input:checkbox[name='project_ids[]']:checked").each(function()
     {
-      $("#issue_template_project_ids option[value=" + $(this).val() +"]").attr("selected","selected");
+      $("#issue_template_project_ids option[value=" + $(this).val() +"]").prop("selected",true);
     });
+
     $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
     {
       htmlContent += "<span class=\"list_templates_projects_names\">"+ $(this).closest('label').text() + "</span>";
