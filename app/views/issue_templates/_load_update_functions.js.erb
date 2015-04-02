@@ -31,6 +31,28 @@ function updateCustomFieldsValues(data) {
         $('[name="' + field.name + '"]').prop('checked', <%= custom_value.value.to_i > 0 ? 'true' : 'false' %>);
       <% end %>
     }
+    if (field.name == "<%= "issue[custom_field_values][#{custom_value.custom_field_id}][]" %>"){
+      <% if custom_value.value.to_a %>
+
+        // checkboxes
+        $('[name="'+field.name+'"]').each(function (index){
+          elem = $('[name="'+field.name+'"]')[index];
+          if ($.inArray(elem.value, '<%= custom_value.value.to_a.join(',') %>'.split(",") ) >= 0) {
+            $('[name="' + elem.name + '"][value='+elem.value+']').prop('checked', 'true');
+          }
+        });
+
+        // select multivalue
+        $('select[name="'+field.name+'"] option').each(function (index){
+          elem = $('select[name="'+field.name+'"] option')[index];
+          if ($.inArray(elem.value, '<%= custom_value.value.to_a.join(',') %>'.split(",") ) >= 0) {
+            $('select[name="'+field.name+'"] option[value='+elem.value+']').prop('selected', 'true');
+          }
+        });
+
+      <% end %>
+    }
+
   });
   <% end %>
 
