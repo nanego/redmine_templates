@@ -21,8 +21,8 @@ class CreateIssueTemplates < ActiveRecord::Migration
       t.integer :done_ratio, :default => 0, :null => false
       t.float :estimated_hours
       t.boolean :is_private, :default => false, :null => false
-      t.timestamps :created_on
-      t.timestamps :update_on
+      t.timestamps :created_on, null: false
+      t.timestamps :update_on, null: false
     end
     add_index :issue_templates, :project_id
     add_index :issue_templates, :tracker_id
