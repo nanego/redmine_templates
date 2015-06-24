@@ -1,23 +1,23 @@
-require File.expand_path('../../test_helper', __FILE__)
+require "spec_helper"
 
-class IssueTest < ActiveSupport::TestCase
+describe "Issue" do
   fixtures :projects, :users, :members, :member_roles, :roles,
            :trackers, :issue_statuses
 
   include Redmine::I18n
 
-  def test_initialize
+  it "should initialize" do
     template = IssueTemplate.new
 
-    assert_equal 0, template.tracker_id
-    assert_equal 0, template.author_id
+    expect(template.tracker_id).to eq 0
+    expect(template.author_id).to eq 0
     assert_nil template.assigned_to_id
     assert_nil template.category_id
-    assert_equal 0, template.status_id
-    assert_equal 0, template.priority_id
+    expect(template.status_id).to eq 0
+    expect(template.priority_id).to eq 0
   end
 
-  def test_create
+  it "should create" do
     template = IssueTemplate.new(:project_id => 1,
                                  :tracker_id => 1,
                                  :status_id => 1,
@@ -30,10 +30,10 @@ class IssueTest < ActiveSupport::TestCase
     template.author_id = 2
     assert template.save
     template.reload
-    assert_equal 'test_create', template.subject
+    expect(template.subject).to eq 'test_create'
   end
 
-  def test_start_date_format_should_be_validated
+  it "should start date format should be validated" do
     set_language_if_valid 'en'
     ['2012', 'ABC', '2012-15-20'].each do |invalid_date|
       template = IssueTemplate.new(:project_id => 1,
@@ -46,11 +46,11 @@ class IssueTest < ActiveSupport::TestCase
                                    :start_date => invalid_date)
       template.author_id = 2
       assert !template.valid?
-      assert_include 'Start date is not a valid date', template.errors.full_messages, "No error found for invalid date #{invalid_date}"
+      expect(template.errors.full_messages).to include('Start date is not a valid date')
     end
   end
 
-  def test_due_date_format_should_be_validated
+  it "should due date format should be validated" do
     set_language_if_valid 'en'
     ['2012', 'ABC', '2012-15-20'].each do |invalid_date|
       template = IssueTemplate.new(:project_id => 1,
@@ -63,7 +63,7 @@ class IssueTest < ActiveSupport::TestCase
                                    :due_date => invalid_date)
       template.author_id = 2
       assert !template.valid?
-      assert_include 'Due date is not a valid date', template.errors.full_messages, "No error found for invalid date #{invalid_date}"
+      expect(template.errors.full_messages).to include('Due date is not a valid date')
     end
   end
 
