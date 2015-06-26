@@ -9,10 +9,13 @@ function startUpdate() {
   <% end %>
 
   // Show or hide some fields based on the new selected tracker, project or status, then update custom fields
-  updateForm("<%= escape_javascript project_issue_form_path(@project, :id => @issue, :format => 'js') %>").done(updateCustomFieldsValues);
+  updateIssueFrom('<%= escape_javascript update_issue_form_path(@project, @issue) %>').done(updateCustomFieldsValues);
 }
 
-function updateForm(url) {
+function updateIssueFrom(url) {
+  $('#all_attributes input, #all_attributes textarea, #all_attributes select').each(function(){
+    $(this).data('valuebeforeupdate', $(this).val());
+  });
   return $.ajax({
     url: url,
     type: 'post',
@@ -27,18 +30,18 @@ function updateCustomFieldsValues(data) {
   $.each($('#issue-form').serializeArray(), function(i, field) {
     if (field.name == "<%= "issue[custom_field_values][#{custom_value.custom_field_id}]" %>"){
       $('[name="' + field.name + '"]').val("<%= custom_value.value %>");
-      <% unless custom_value.value.to_a %>
+      <% unless custom_value.value.kind_of? Array %>
         $('[name="' + field.name + '"]').prop('checked', <%= custom_value.value.to_i > 0 ? 'true' : 'false' %>);
       <% end %>
     }
     if (field.name == "<%= "issue[custom_field_values][#{custom_value.custom_field_id}][]" %>"){
-      <% if custom_value.value.to_a %>
+      <% if custom_value.value.kind_of? Array %>
 
         // checkboxes
         $('[name="'+field.name+'"]').each(function (index){
           elem = $('[name="'+field.name+'"]')[index];
           if ($.inArray(elem.value, '<%= custom_value.value.to_a.join(',') %>'.split(",") ) >= 0) {
-            $('[name="' + elem.name + '"][value='+elem.value+']').prop('checked', 'true');
+            $('[name="' + elem.name + '"][value="'+elem.value+'"]').prop('checked', 'true');
           }
         });
 
@@ -46,7 +49,7 @@ function updateCustomFieldsValues(data) {
         $('select[name="'+field.name+'"] option').each(function (index){
           elem = $('select[name="'+field.name+'"] option')[index];
           if ($.inArray(elem.value, '<%= custom_value.value.to_a.join(',') %>'.split(",") ) >= 0) {
-            $('select[name="'+field.name+'"] option[value='+elem.value+']').prop('selected', 'true');
+            $('select[name="'+field.name+'"] option[value="'+elem.value+'"]').prop('selected', 'true');
           }
         });
 
