@@ -2,7 +2,7 @@
 function updateIssueTemplateFrom(url) {
     $.ajax({
         url: url,
-        type: 'post',
+        type: 'put',
         data: $('#issue-template-form').serialize()
     });
 }
