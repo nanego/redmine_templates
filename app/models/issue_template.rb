@@ -48,7 +48,8 @@ class IssueTemplate < ActiveRecord::Base
                   :fixed_version_id,
                   :done_ratio,
                   :lock_version,
-                  :usage
+                  :usage,
+                  :authorized_viewers
 
   def allowed_target_projects
     Project.where(Project.allowed_to_condition(User.current, :add_issues))
@@ -85,7 +86,7 @@ class IssueTemplate < ActiveRecord::Base
     workflow_rule_by_attribute(user).reject {|attr, rule| rule != 'readonly'}.keys
   end
 
-  # Returns a hash of the workflow rule by attribute for the given user
+  # Returns a hash of the workflow rule by attribute for the given user # TODO : Cleanup these methods
   def workflow_rule_by_attribute(user=nil)
     return @workflow_rule_by_attribute if @workflow_rule_by_attribute && user.nil?
 
@@ -115,6 +116,8 @@ class IssueTemplate < ActiveRecord::Base
     result
   end
 
-  # TODO : Cleanup last methods
+  def authorized_viewer_ids
+    "#{authorized_viewers}".split('|').reject(&:blank?).map(&:to_i)
+  end
 
 end

@@ -1,0 +1,19 @@
+<% viewers = @issue_template.authorized_viewer_ids %>
+
+<p id=involved-roles-form class=involved-roles>
+  <label><%= l(:label_involved_members) %></label>
+  <% Function.sorted.each do |function|
+    role_is_involved = viewers.include?(function.id)
+  %>
+    <% styles = role_is_involved ? 'involved' : '' %>
+
+    <span class="role <%= styles %>" data-role-id="<%= function.id %>">
+      <span class=status-icon><i class=fa-icon-ok></i><i class=fa-icon-remove></i></span>
+          <%= function.name %>
+    </span>
+
+<% end %>
+</p>
+
+
+<%= hidden_field_tag "issue_template[authorized_viewers]", "|#{viewers.join("|")}|", :id => "authorized_viewers" %>
