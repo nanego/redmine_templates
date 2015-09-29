@@ -25,7 +25,8 @@
   $(function() {
     if ((typeof $().select2) === 'function') {
       $('#settings_custom_fields').select2({
-        containerCss: {minWidth: '300px'}
+        containerCss: {width: '300px', minwidth: '300px'},
+        width: 'style'
       });
     }
   });
