@@ -8,7 +8,7 @@ Project.send(:include, PatchingProjectModel)
 Deface::Override.new :virtual_path  => 'issues/new',
                      :name          => 'add-save-template-button-to-issues-new',
                      :insert_after  => 'erb[loud]:contains("preview_link")',
-                     :text          => '<% if User.current.admin? || User.current.allowed_to?(:create_issue_templates, @project) %>
+                     :text          => '<% if @project.present? && (User.current.admin? || User.current.allowed_to?(:create_issue_templates, @project)) %>
                                         <%= link_to "Enregistrer en tant que template",
                                             "#",
                                             :id => "init_issue_template",
