@@ -1,6 +1,12 @@
 <% template_projects = @issue_template.projects
-   allowed_projects =  @issue_template.allowed_target_projects
-   custom_fields = CustomField.select("id, name").where(:type => "ProjectCustomField").where("name IN (?)", Setting["plugin_redmine_templates"]['custom_fields'])
+   allowed_projects =  @issue_template.allowed_target_projects.includes(:custom_values)
+   custom_fields = CustomField.select("id, name").where("type = ? AND name IN (?)", "ProjectCustomField", Setting["plugin_redmine_templates"]['custom_fields'])
+   concerned_projects_ids = (allowed_projects|template_projects).map(&:id)
+   custom_values = {}
+   CustomValue.where(customized_type: 'Project', customized_id: concerned_projects_ids, custom_field_id: custom_fields.map(&:id)).each do |v|
+     custom_values[v.customized_id] ||= {}
+     custom_values[v.customized_id][v.custom_field_id] = v.value
+   end
    options_for_selects = {}
    custom_fields.each do |field|
      options_for_selects.merge!(field.name.parameterize => [])
@@ -10,9 +16,16 @@
      custom_fields_data = {}
      if allowed_projects.include?(project)
        custom_fields.each do |f|
-         value = project.custom_field_value(f)
+         value = custom_values[project.id][f.id]
          custom_fields_data.merge!(f.name.parameterize => value)
-         options_for_selects[f.name.parameterize] << value unless options_for_selects[f.name.parameterize].include?(value) || value==""
+         if value.is_a?(Array)
+           value.each do |val|
+             options_for_selects[f.name.parameterize] << val unless val.blank? || options_for_selects[f.name.parameterize].include?(val)
+           end
+         else
+           options_for_selects[f.name.parameterize] << value unless value.blank? || options_for_selects[f.name.parameterize].include?(value)
+         end
+
        end
      end
      content_tag('label',
@@ -76,14 +89,17 @@
   function select_all(){
     $("input:checkbox[name='project_ids[]']").each(function()
     {
-      $(this).attr("checked","checked") ;
+      this.setAttribute("checked", "checked");
+      this.checked = true;
     });
   }
 
   function select_none(){
     $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
     {
-      $(this).attr("checked",false) ;
+      $(this).attr("checked", "");
+      $(this).removeAttr("checked");
+      $(this).checked = false;
     });
   }
 
@@ -92,6 +108,7 @@
     $("input:checkbox[name='project_ids[]']:checkbox[data-"+id+"='"+ $("#select_" + id).val() +"']").each(function()
     {
       $(this).attr("checked","checked") ;
+      this.checked = true;
     });
     $(".select_box_custom_field_value").prop('selectedIndex',0);
   }
