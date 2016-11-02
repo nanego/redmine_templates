@@ -70,7 +70,7 @@ form#issue-template-form #issue_template_template_title {
 form#issue-template-form .select_projects{
     margin: 0;
     padding: 3px 0 3px 0;
-    padding-left: 50px;
+    /* padding-left: 50px; */
     min-height: 1.8em;
     clear: left;
 }
@@ -87,7 +87,9 @@ form#issue-template-form .select_projects{
     border-radius: 4px;
     background: #ffffff;
     border: 1px solid #d3d3d3;
-    line-height: 24px;
+    /* line-height: 24px; */
+    margin: 1px 0 2px 0;
+    display: inline-block;
 }
 a.list_templates_projects_names.hover{
     color: #ffffff;
@@ -134,5 +136,5 @@ a.list_templates_projects_names.current{
 }
 
 #link_update_project_list{
-    margin-left: 50px;
+    /* margin-left: 50px; */
 }
