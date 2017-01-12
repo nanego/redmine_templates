@@ -8,11 +8,11 @@ Project.send(:include, PatchingProjectModel)
 Deface::Override.new :virtual_path  => 'issues/new',
                      :name          => 'add-save-template-button-to-issues-new',
                      :insert_after  => 'erb[loud]:contains("preview_link")',
-                     :text          => '<% if @project.present? && (User.current.admin? || User.current.allowed_to?(:create_issue_templates, @project)) %>
+                     :text          => '<% if @issue.project.present? && (User.current.admin? || User.current.allowed_to?(:create_issue_templates, @issue.project)) %>
                                         <%= link_to "Enregistrer en tant que template",
                                             "#",
                                             :id => "init_issue_template",
-                                            :"data-href" => init_issue_template_path(project_id: @project.id),
+                                            :"data-href" => init_issue_template_path(project_id: @issue.project.id),
                                             class: "icon icon-copy pull-right" %>
                                         <% end %>'
 
@@ -35,9 +35,9 @@ Deface::Override.new :virtual_path  => 'issues/new',
   %>
   <% if @template_map.size > 0 %>
     <%= form_tag issue_templates_path, :id => "form-select-issue-template" do %>
-      <%= hidden_field_tag :project_id, @project.id %>
+      <%= hidden_field_tag :project_id, @issue.project.id %>
       <%= hidden_field_tag :track_changes, false %>
-      <%= select_tag :id, grouped_templates_for_select(@template_map, @project), :prompt=>l("choose_a_template"), :id => "select_issue_template" %>
+      <%= select_tag :id, grouped_templates_for_select(@template_map, @issue.project), :prompt=>l("choose_a_template"), :id => "select_issue_template" %>
     <% end %>
   <% end %>'
 end
