@@ -37,3 +37,4 @@ fr:
   setting_disable_templates: "Pouvoir rendre inactif les modèles"
   modify_projects: "Modifier la liste"
   usage: "Usage"
+  apply_automatically: "Appliquer automatiquement aux projets correspondant au moins à un des critères suivants"

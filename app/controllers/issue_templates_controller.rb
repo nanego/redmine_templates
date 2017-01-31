@@ -48,13 +48,16 @@ class IssueTemplatesController < ApplicationController
 
   def update
     @issue_template = IssueTemplate.find(params[:id])
-
+    @issue_template.set_custom_fields(params[:issue_template][:custom_field_ids], params[:issue_template][:custom_field_values])
     if @issue_template.update_attributes(params[:issue_template])
-      respond_to do |format|
-        format.html {
-          flash[:notice] = l(:notice_issue_template_successfully_updated)
-          redirect_to issue_templates_path(project_id: @issue_template.project_id)
-        }
+      @issue_template.update_projects_through_custom_fields
+      if @issue_template.save
+        respond_to do |format|
+          format.html {
+            flash[:notice] = l(:notice_issue_template_successfully_updated)
+            redirect_to issue_templates_path(project_id: @issue_template.project_id)
+          }
+        end
       end
     else
       @priorities = IssuePriority.active

@@ -13,6 +13,9 @@ class IssueTemplate < ActiveRecord::Base
 
   has_and_belongs_to_many :projects
 
+  has_many :issue_templates_custom_fields
+  has_many :custom_fields, through: :issue_templates_custom_fields, source: :custom_field
+
   validates_presence_of :template_title, :subject, :tracker, :author, :project, :status, :projects
 
   validates_uniqueness_of :template_title
@@ -118,6 +121,31 @@ class IssueTemplate < ActiveRecord::Base
 
   def authorized_viewer_ids
     "#{authorized_viewers}".split('|').reject(&:blank?).map(&:to_i)
+  end
+
+  def set_custom_fields(cf_ids, cf_values)
+    self.issue_templates_custom_fields.delete_all
+    cf_ids.each do |cf_id|
+      if cf_values[cf_id].is_a?(Array)
+        cf_values[cf_id] = cf_values[cf_id].reject!(&:blank?).join(', ')
+      end
+      self.issue_templates_custom_fields.build(custom_field_id: cf_id, value: cf_values[cf_id]) if cf_id.present?
+    end if cf_ids.present?
+  end
+
+  def update_projects_through_custom_fields
+    custom_values = {}
+    open_projects_ids = self.allowed_target_projects.map(&:id)
+    CustomValue.where(customized_type: 'Project', customized_id: open_projects_ids,custom_field_id: self.custom_fields.map(&:id)).each do |v|
+      custom_values[v.custom_field_id] ||= {}
+      custom_values[v.custom_field_id][v.value] ||= []
+      custom_values[v.custom_field_id][v.value] << v.customized
+    end
+    self.issue_templates_custom_fields.each do |template_cf|
+      custom_values[template_cf.custom_field_id][template_cf.value].each do |project|
+        self.projects << project if self.projects.exclude? project
+      end
+    end
   end
 
 end
