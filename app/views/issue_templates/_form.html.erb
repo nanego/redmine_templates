@@ -64,6 +64,39 @@
             });
           </script>
 
+          <% @project_custom_fields = ProjectCustomField.sorted.to_a %>
+          <% unless @project_custom_fields.empty? %>
+            <fieldset class="box tabular" id="project_issue_custom_fields"><legend><%=l(:apply_automatically)%></legend>
+              <% @project_custom_fields.each do |custom_field| %>
+
+                <% custom_field_value = @issue_template.issue_templates_custom_fields.find_by_custom_field_id(custom_field.id)
+                   if custom_field_value.present?
+                     custom_field_values = custom_field_value.value.split(', ')
+                     if custom_field_values.size > 1
+                       custom_values = CustomFieldValue.new(custom_field: custom_field, value:custom_field_values)
+                     else
+                       custom_values = CustomFieldValue.new(custom_field: custom_field, value:custom_field_value.value)
+                     end
+                   else
+                     custom_values = CustomFieldValue.new(custom_field: custom_field, value: nil)
+                   end %>
+
+                <label class="floating">
+                  <%= check_box_tag 'issue_template[custom_field_ids][]', custom_field.id, (@issue_template.custom_fields.include? custom_field),
+                                    :disabled => (custom_field.is_for_all? ? "disabled" : nil),
+                                    :id => nil %>
+                  <%= custom_field_name_tag(custom_field) %>
+
+                  <%= custom_field.format.edit_tag self,
+                                                   custom_field_tag_id(:issue_template, custom_field),
+                                                   custom_field_tag_name(:issue_template, custom_field),
+                                                   custom_values,
+                                                   :class => "#{custom_field.field_format}_cf" %>
+                </label>
+              <% end %>
+            </fieldset>
+          <% end %>
+
         </div>
 
       </div>
