@@ -3,7 +3,7 @@ class IssueTemplatesController < ApplicationController
   helper :custom_fields
   include CustomFieldsHelper
 
-  before_filter :find_project, only: [:init]
+  before_filter :find_project, only: [:init, :exclude_templates_per_project]
   before_filter :find_optional_project, only: [:index, :new, :edit]
 
   def init
@@ -128,6 +128,25 @@ class IssueTemplatesController < ApplicationController
       format.json {
         render json: @similar_templates.to_json
       }
+    end
+  end
+
+  def exclude_templates_per_project
+    activated_templates_ids = params[:activated_templates_ids].present? ? params[:activated_templates_ids].map(&:to_i) : []
+    excluded_templates_ids = @project.get_issue_templates.map(&:id) - activated_templates_ids
+
+    @project.issue_template_exclusions.delete_all
+    excluded_templates_ids.each do |excluded_id|
+      @project.issue_template_exclusions.build(issue_template_id: excluded_id)
+    end
+
+    if @project.save
+      respond_to do |format|
+        format.html {
+          flash[:notice] = l(:notice_issue_templates_successfully_updated)
+          redirect_to settings_project_path(@project, :tab => 'templates')
+        }
+      end
     end
   end
 

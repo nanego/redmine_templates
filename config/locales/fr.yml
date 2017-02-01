@@ -14,6 +14,7 @@ fr:
   label_new_templates: "Créer un nouveau modèle"
   label_edit_issue_template: "Modification du modèle"
   notice_issue_template_successfully_updated: "Modèle mis à jour"
+  notice_issue_templates_successfully_updated: "Modèles mis à jour"
   choose_a_template: "Sélectionner un modèle"
   show_templates: "Gérer les modèles"
   issue_is_private: "Demande privée"
@@ -38,3 +39,4 @@ fr:
   modify_projects: "Modifier la liste"
   usage: "Usage"
   apply_automatically: "Appliquer automatiquement aux projets correspondant au moins à un des critères suivants"
+  template_activated: "Modèles activés"

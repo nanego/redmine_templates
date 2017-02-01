@@ -1,6 +1,10 @@
 require 'redmine'
 require 'redmine_templates/hooks'
-require 'redmine_templates/redmine_core_patch'
+
+ActionDispatch::Callbacks.to_prepare do
+  require 'redmine_templates/redmine_core_patch'
+  require 'redmine_templates/projects_helper_patch'
+end
 
 Redmine::Plugin.register :redmine_templates do
   name 'Redmine Issue Templates plugin'
