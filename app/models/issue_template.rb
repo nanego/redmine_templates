@@ -16,6 +16,8 @@ class IssueTemplate < ActiveRecord::Base
   has_many :issue_templates_custom_fields
   has_many :custom_fields, through: :issue_templates_custom_fields, source: :custom_field
 
+  has_many :issue_template_exclusions
+
   validates_presence_of :template_title, :subject, :tracker, :author, :project, :status, :projects
 
   validates_uniqueness_of :template_title
@@ -56,6 +58,10 @@ class IssueTemplate < ActiveRecord::Base
 
   def allowed_target_projects
     Project.where(Project.allowed_to_condition(User.current, :add_issues))
+  end
+
+  def to_s
+    template_title
   end
 
   def assignable_users

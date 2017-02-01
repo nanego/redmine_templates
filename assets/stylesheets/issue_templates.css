@@ -135,6 +135,6 @@ a.list_templates_projects_names.current{
     border-bottom: 1px solid #d3d3d3;
 }
 
-#link_update_project_list{
-    /* margin-left: 50px; */
+#project_issue_custom_fields{
+    margin-top: 10px;
 }
