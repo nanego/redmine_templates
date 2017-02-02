@@ -89,9 +89,6 @@
                   <%= link_to l(:button_edit), edit_issue_template_path(id: issue_template.id
                   #, project_id: project.id
                   ), :class => 'icon icon-edit' %>
-                  <% if User.current.admin || (issue_template.projects-User.current.projects).empty? %>
-                    <%= delete_link issue_template_path(issue_template) %>
-                  <% end %>
                 <% end %>
               </td>
             </tr>
