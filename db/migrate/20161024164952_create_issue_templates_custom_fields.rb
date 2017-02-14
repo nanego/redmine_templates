@@ -4,7 +4,7 @@ class CreateIssueTemplatesCustomFields < ActiveRecord::Migration
       t.belongs_to :issue_template
       t.belongs_to :custom_field
       t.string :value
-    end
+    end unless ActiveRecord::Base.connection.table_exists? :issue_templates_custom_fields
     add_index :issue_templates_custom_fields, ["custom_field_id", "issue_template_id"], :name=> :unique_issue_template_custom_field, :unique => true
     add_index :issue_templates_custom_fields, :issue_template_id
     add_index :issue_templates_custom_fields, :custom_field_id
