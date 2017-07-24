@@ -14,5 +14,7 @@ Redmine::Plugin.register :redmine_templates do
   permission :create_issue_templates, {:issue_templates => [:init, :new, :create, :edit, :update, :index, :destroy]}
   settings :default => { 'custom_fields' => [], 'disable_templates' => false},
            :partial => 'settings/redmine_plugin_templates_settings'
-  menu :admin_menu, :issue_templates, { :controller => 'issue_templates', :action => 'index' }, :caption => :label_issue_templates
+  menu :admin_menu, :issue_templates, { :controller => 'issue_templates', :action => 'index' },
+       :caption => :label_issue_templates,
+       :html => {:class => 'icon'}
 end
