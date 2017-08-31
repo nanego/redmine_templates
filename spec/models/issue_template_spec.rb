@@ -11,8 +11,8 @@ describe "Issue" do
 
     expect(template.tracker_id).to eq 0
     expect(template.author_id).to eq 0
-    assert_nil template.assigned_to_id
-    assert_nil template.category_id
+    expect(template.assigned_to_id).to be_nil
+    expect(template.category_id).to be_nil
     expect(template.status_id).to eq 0
     expect(template.priority_id).to eq 0
   end
