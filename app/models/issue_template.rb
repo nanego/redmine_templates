@@ -1,4 +1,5 @@
 class IssueTemplate < ActiveRecord::Base
+  include Redmine::SafeAttributes
 
   acts_as_customizable
 
@@ -23,7 +24,7 @@ class IssueTemplate < ActiveRecord::Base
   validates :due_date, :date => true
   # validate :validate_issue, :validate_required_fields
 
-  attr_accessible :project_ids,
+  safe_attributes :project_ids,
                   :project_id,
                   :tracker_id,
                   :subject,

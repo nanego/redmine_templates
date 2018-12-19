@@ -1,4 +1,4 @@
-class CreateIssueTemplatesProjects < ActiveRecord::Migration
+class CreateIssueTemplatesProjects < ActiveRecord::Migration[4.2]
   def change
     create_table :issue_templates_projects, :id => false do |t|
       t.belongs_to :issue_template

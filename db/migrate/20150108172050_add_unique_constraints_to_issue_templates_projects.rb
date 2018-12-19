@@ -1,4 +1,4 @@
-class AddUniqueConstraintsToIssueTemplatesProjects < ActiveRecord::Migration
+class AddUniqueConstraintsToIssueTemplatesProjects < ActiveRecord::Migration[4.2]
   def self.up
     IssueTemplate.all.each do |template|
       projects = template.projects.uniq

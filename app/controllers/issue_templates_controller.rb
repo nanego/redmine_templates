@@ -3,8 +3,8 @@ class IssueTemplatesController < ApplicationController
   helper :custom_fields
   include CustomFieldsHelper
 
-  before_filter :find_project, only: [:init]
-  before_filter :find_optional_project, only: [:index, :new, :edit]
+  before_action :find_project, only: [:init, :exclude_templates_per_project]
+  before_action :find_optional_project, only: [:index, :new, :edit]
 
   def init
     params[:issue].merge!({project_id: params[:project_id]}) if params[:issue]
@@ -27,7 +27,8 @@ class IssueTemplatesController < ApplicationController
   end
 
   def create
-    @issue_template = IssueTemplate.new(params[:issue_template])
+    @issue_template = IssueTemplate.new
+    @issue_template.safe_attributes = params[:issue_template]
     @issue_template.author ||= User.current
     @issue_template.usage = 0
 
@@ -48,8 +49,8 @@ class IssueTemplatesController < ApplicationController
 
   def update
     @issue_template = IssueTemplate.find(params[:id])
-
-    if @issue_template.update_attributes(params[:issue_template])
+    @issue_template.safe_attributes = params[:issue_template]
+    if @issue_template.save
       respond_to do |format|
         format.html {
           flash[:notice] = l(:notice_issue_template_successfully_updated)

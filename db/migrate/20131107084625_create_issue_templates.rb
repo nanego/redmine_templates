@@ -1,4 +1,4 @@
-class CreateIssueTemplates < ActiveRecord::Migration
+class CreateIssueTemplates < ActiveRecord::Migration[4.2]
   def change
     create_table :issue_templates do |t|
 
@@ -21,8 +21,7 @@ class CreateIssueTemplates < ActiveRecord::Migration
       t.integer :done_ratio, :default => 0, :null => false
       t.float :estimated_hours
       t.boolean :is_private, :default => false, :null => false
-      t.timestamps :created_on, null: false
-      t.timestamps :update_on, null: false
+      t.timestamps null: false
     end
     add_index :issue_templates, :project_id
     add_index :issue_templates, :tracker_id
