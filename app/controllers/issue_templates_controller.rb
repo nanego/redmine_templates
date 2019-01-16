@@ -8,7 +8,8 @@ class IssueTemplatesController < ApplicationController
 
   def init
     params[:issue].merge!({project_id: params[:project_id]}) if params[:issue]
-    @issue_template = IssueTemplate.new(params[:issue])
+    @issue_template = IssueTemplate.new
+    @issue_template.safe_attributes = params[:issue]
     @issue_template.project = @project
     @issue_template.projects = [@project]
     @issue_template.author ||= User.current

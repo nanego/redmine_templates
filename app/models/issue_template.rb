@@ -61,7 +61,7 @@ class IssueTemplate < ActiveRecord::Base
   end
 
   def assignable_users
-    users = project.assignable_users
+    users = project.assignable_users.to_a
     users << author if author
     users << assigned_to if assigned_to
     users.uniq.sort
