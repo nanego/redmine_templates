@@ -76,7 +76,8 @@ class IssueTemplatesController < ApplicationController
       @issue_template = IssueTemplate.find(params[:issue_template][:id])
       @issue_template.assign_attributes(params[:issue_template])
     else
-      @issue_template = IssueTemplate.new(params[:issue_template])
+      @issue_template = IssueTemplate.new
+      @issue_template.safe_attributes(params[:issue_template])
     end
     @priorities = IssuePriority.active
   end
@@ -99,7 +100,8 @@ class IssueTemplatesController < ApplicationController
   end
 
   def similar_templates
-    @new_template = IssueTemplate.new(params[:issue_template])
+    @new_template = IssueTemplate.new
+    @new_template.safe_attributes(params[:issue_template])
     @templates = IssueTemplate.all
     @similar_templates = []
     #compare subjects
