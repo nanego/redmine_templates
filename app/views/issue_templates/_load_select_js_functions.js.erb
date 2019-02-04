@@ -1,4 +1,4 @@
-$('#select_issue_template').on('change', function(e) {
+$('body').on('change', '#select_issue_template', function(e) {
   e.preventDefault();
   window.onbeforeunload = null;
   var newURL = $(this).val();
@@ -34,12 +34,12 @@ $('#select_issue_template').on('change', function(e) {
 });
 
 // New issue template button at the bottom of the new issue form
-$("a#init_issue_template").on("click", function(event){
+$('body').on("click", "a#init_issue_template", function(event){
   event.preventDefault();
   $('#issue-form').attr('action', $(this).attr('data-href') );
   $("#issue-form").submit();
 });
 
-$('#issue-form :input').change(function(){
+$('body').on('change', '#issue-form :input', function(){
   $('#track_changes').val('true');
 });

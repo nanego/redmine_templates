@@ -101,7 +101,7 @@ class IssueTemplatesController < ApplicationController
 
   def similar_templates
     @new_template = IssueTemplate.new
-    @new_template.safe_attributes(params[:issue_template])
+    @new_template.safe_attributes = params[:issue_template]
     @templates = IssueTemplate.all
     @similar_templates = []
     #compare subjects
