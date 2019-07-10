@@ -5,7 +5,8 @@
 #main-menu .menu-children {
     margin-left: -3px;
 }
-#main-menu li a {
+#main-menu .menu-children li a {
+    padding-top: 8px;
     margin: 0;
 }
 
