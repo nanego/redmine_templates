@@ -1,5 +1,3 @@
-<% templates = @project.get_issue_templates %>
-
 <fieldset class="box">
   <legend>Modèles disponibles pour ce projet</legend>
 
@@ -30,7 +28,7 @@
           </tr>
           </thead>
           <tbody>
-          <% templates.each do |issue_template| %>
+          <% @project.issue_templates.each do |issue_template| %>
             <tr class="issue_template issue">
               <% link_to_edition = Proc.new do |label, title|
                 size_max = 40

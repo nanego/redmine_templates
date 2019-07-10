@@ -66,7 +66,6 @@ class IssueTemplatesController < ApplicationController
   end
 
   def index
-    #  @templates = @project.get_issue_templates
     @templates = IssueTemplate.order("tracker_id").all
   end
 
