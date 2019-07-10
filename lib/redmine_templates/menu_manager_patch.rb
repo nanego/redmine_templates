@@ -10,7 +10,7 @@ module Redmine
               puts "project_menu.find(:new_issue_template_#{template.id}) : #{project_menu.find("new_issue_template_#{template.id}".to_sym).inspect}"
               unless project_menu.find("new_issue_template_#{template.id}".to_sym)
                 project_menu.push "new_issue_template_#{template.id}".to_sym,
-                                  new_project_issue_path(project_id: project.identifier, template_id: template.id),
+                                  { :controller => 'issues', :action => 'new', :template_id => template.id },
                                   :param => :project_id,
                                   :caption => "[#{template.tracker}] #{template.template_title}",
                                   :html => {:accesskey => Redmine::AccessKeys.key_for(:new_issue)},
