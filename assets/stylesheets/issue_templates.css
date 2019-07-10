@@ -9,6 +9,16 @@
     padding-top: 8px;
     margin: 0;
 }
+#main-menu .menu-children li a.new-issue-sub {
+    background-color: #f6f6f6;
+    font-style: italic;
+    color: #999999;
+}
+#main-menu .menu-children li a.new-issue-sub:hover, #main-menu .menu-children li a.new-issue-sub:focus {
+    background-color: #5CA306;
+    font-style: italic;
+    color: #fff;
+}
 
 .pull-right{float:right}
 .pull-right-with-marging {
