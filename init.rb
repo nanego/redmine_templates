@@ -22,3 +22,14 @@ Redmine::Plugin.register :redmine_templates do
        :caption => :label_issue_templates,
        :html => {:class => 'icon'}
 end
+
+Redmine::MenuManager.map :project_menu do |menu|
+  menu.push :new_issue_sub, { :controller => 'issues', :action => 'new', :copy_from => nil },
+            :param => :project_id,
+            :caption => :label_other_issue,
+            :html => { :accesskey => Redmine::AccessKeys.key_for(:new_issue) },
+            :if => Proc.new { |p| Issue.allowed_target_trackers(p).any? && p.present? && p.issue_templates.present? },
+            :permission => :add_issues,
+            :parent => :new_issue
+
+end
