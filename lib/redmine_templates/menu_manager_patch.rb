@@ -14,7 +14,7 @@ module Redmine
                                   :caption => Proc.new {|p| template.reload; "[#{template.tracker}] #{template.template_title}" },
                                   :html => {:accesskey => Redmine::AccessKeys.key_for(:new_issue)},
                                   :if => Proc.new {|p| Issue.allowed_target_trackers(p).any? &&
-                                      template.projects.include?(p)},
+                                      template.template_projects.include?(p)},
                                   :permission => :add_issues,
                                   :parent => :new_issue,
                                   :first => true

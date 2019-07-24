@@ -48,7 +48,7 @@
                   <%
                     nb_other_projects = 0
                     nb_visible_projects = 0
-                    template_projects = issue_template.projects.all
+                    template_projects = issue_template.template_projects.all
                     allowed_projects = issue_template.allowed_target_projects
                   %>
                   <% template_projects.each do |project| %>

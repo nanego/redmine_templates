@@ -1,4 +1,4 @@
-<% template_projects = @issue_template.projects
+<% template_projects = @issue_template.template_projects
    allowed_projects =  @issue_template.allowed_target_projects.includes(:custom_values)
    custom_fields = CustomField.select("id, name").where("type = ? AND name IN (?)", "ProjectCustomField", Setting["plugin_redmine_templates"]['custom_fields'])
    concerned_projects_ids = (allowed_projects|template_projects).map(&:id)
@@ -30,7 +30,7 @@
      end
      content_tag('label',
        check_box_tag(
-           'project_ids[]',
+           'template_project_ids[]',
            project.id,
            @issue_template != nil && template_projects.include?(project),
            disabled: allowed_projects.include?(project) ? false : true,
@@ -69,12 +69,12 @@
   function updateSelectedProjects() {
     $("select#issue_template_project_ids option").each(function() { this.selected = ""; });
     var htmlContent = "";
-    $("input:checkbox[name='project_ids[]']:checked").each(function()
+    $("input:checkbox[name='template_project_ids[]']:checked").each(function()
     {
       $("#issue_template_project_ids option[value=" + $(this).val() +"]").prop("selected",true);
     });
 
-    $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
+    $("input:checkbox[name='template_project_ids[]']:checked:not(.inactive)").each(function()
     {
       htmlContent += "<span class=\"list_templates_projects_names\">"+ $(this).closest('label').text() + "</span>";
     });
@@ -87,7 +87,7 @@
   }
 
   function select_all(){
-    $("input:checkbox[name='project_ids[]']").each(function()
+    $("input:checkbox[name='template_project_ids[]']").each(function()
     {
       this.setAttribute("checked", "checked");
       this.checked = true;
@@ -95,7 +95,7 @@
   }
 
   function select_none(){
-    $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
+    $("input:checkbox[name='template_project_ids[]']:checked:not(.inactive)").each(function()
     {
       $(this).attr("checked", "");
       $(this).removeAttr("checked");
@@ -105,7 +105,7 @@
 
   function select_from_custom_field(id) {
     select_none();
-    $("input:checkbox[name='project_ids[]']:checkbox[data-"+id+"='"+ $("#select_" + id).val() +"']").each(function()
+    $("input:checkbox[name='template_project_ids[]']:checkbox[data-"+id+"='"+ $("#select_" + id).val() +"']").each(function()
     {
       $(this).attr("checked","checked") ;
       this.checked = true;

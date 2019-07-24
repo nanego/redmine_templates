@@ -25,7 +25,7 @@ describe "Issue" do
                                  :description => 'IssueTest#test_create',
                                  :template_title => 'New title template',
                                  :template_enabled => true,
-                                 :project_ids => [1]
+                                 :template_project_ids => [1]
                                 )
     template.author_id = 2
     assert template.save

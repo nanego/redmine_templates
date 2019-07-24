@@ -11,7 +11,7 @@ class IssueTemplatesController < ApplicationController
     @issue_template = IssueTemplate.new
     @issue_template.safe_attributes = params[:issue]
     @issue_template.project = @project
-    @issue_template.projects = [@project]
+    @issue_template.template_projects = [@project]
     @issue_template.author ||= User.current
     @issue_template.template_title = @issue_template.subject
 

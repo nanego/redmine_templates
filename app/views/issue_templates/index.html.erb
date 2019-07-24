@@ -54,7 +54,7 @@
               <%
                  nb_other_projects = 0
                  nb_visible_projects = 0
-                 template_projects = issue_template.projects.all
+                 template_projects = issue_template.template_projects.all
                  allowed_projects = issue_template.allowed_target_projects
               %>
               <% template_projects.each do |project| %>
@@ -93,7 +93,7 @@
               <%= link_to l(:button_edit), edit_issue_template_path(id: issue_template.id
               #, project_id: project.id
               ), :class => 'icon icon-edit' %>
-              <% if User.current.admin || (issue_template.projects-User.current.projects).empty? %>
+              <% if User.current.admin || (issue_template.template_projects-User.current.projects).empty? %>
                 <%= delete_link issue_template_path(issue_template) %>
               <% end %>
             <% end %>

@@ -22,12 +22,12 @@
 
         <div class="splitcontentright">
             <div class="select_projects" id="select_projects">
-              <%= f.select :project_ids, project_tree_options(@issue_template.allowed_target_projects|@issue_template.projects, :selected => @issue_template.projects), {:required => true},
+              <%= f.select :template_project_ids, project_tree_options(@issue_template.allowed_target_projects|@issue_template.template_projects, :selected => @issue_template.template_projects), {:required => true},
                           {:multiple => true, :size => 10, style: "display:none;"} %>
               <%
                  nb_other_projects = 0
                  nb_visible_projects = 0
-                 template_projects = @issue_template.projects
+                 template_projects = @issue_template.template_projects
                  allowed_projects = @issue_template.allowed_target_projects
               %>
               <span id="my_projects">
@@ -152,6 +152,36 @@
 
     </div>
 
+    <% if Redmine::Plugin.installed?(:redmine_multiprojects_issue) %>
+
+      <p id="projects_form">
+        <% select_options = project_tree_options_for_select((@issue_template.allowed_target_projects|@issue_template.secondary_projects) - [@issue_template.project], :selected => [@issue_template.project]|@issue_template.secondary_projects) %>
+        <%= f.select :secondary_project_ids, select_options, {:required => true, :label => l("related_projects")},
+                     {:multiple => true, style: "display:none;"} %>
+        <%= render 'issues/projects_list', issue: @issue_template, selected_projects: @issue_template.secondary_projects %>
+        <%= link_to l('modify_projects'),
+                    plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue_template.id, :project_id => @issue_template.project.id, :select_tag_id => "issue_template_secondary_project_ids"),
+                    remote: true,
+                    id: "loadModalProjectsSelection",
+                    class: "load-modal-projects-selection" %>
+        <label id=answers-on-secondary-projects class="inline answers-on-secondary-projects" style="<%= "display:none;" if @issue_template.secondary_projects.none? %>">
+          <%= f.check_box :answers_on_secondary_projects, :no_label => true %>
+          <%= l(:field_answers_on_secondary_projects) %>
+        </label>
+      </p>
+
+      <script>
+          $("#loadModalProjectsSelection").click(function(e) {
+              var ids = $('#issue_template_secondary_project_ids').val();
+              if(ids==null) {
+                  ids=''
+              }
+              var sep = ($(this).attr('href').indexOf('?') != -1) ? '&' : '?';
+              $(this).attr('href', $(this).attr('href') + sep + 'project_ids=' + ids );
+          });
+      </script>
+
+    <% end %>
 
   </div>
 

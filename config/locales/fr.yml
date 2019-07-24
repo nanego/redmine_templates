@@ -19,7 +19,7 @@ fr:
   issue_is_private: "Demande privée"
   notice_issue_template_successfully_deleted: "Le modèle a été supprimé"
   template_has_been_applied: "Le modèle '%{name}' a été appliqué"
-  field_project_ids: "Projets"
+  field_template_project_ids: "Projets"
   permission_create_issue_templates: "Créer et modifier les modèles de demande"
   show_subprojects_templates: "Sous-projets"
   warning: "Avertissement"

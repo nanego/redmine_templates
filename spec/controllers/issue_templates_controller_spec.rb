@@ -26,7 +26,7 @@ describe IssueTemplatesController, type: :controller do
 
   context "POST create" do
     it "should succeed and assign a new template" do
-      post :create, params: {:issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", project_ids: [1] }}
+      post :create, params: {:issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] }}
       expect(response).to redirect_to(issue_templates_path(project_id: 1))
       expect(flash[:notice]).to eq "New issue template successfully created!"
       expect(IssueTemplate.last.try(:subject)).to eq "New issue"
@@ -43,7 +43,7 @@ describe IssueTemplatesController, type: :controller do
 
   context "PUT update" do
     it "should succeed and update the first template" do
-      post :create, params: {:issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", project_ids: [1] }}
+      post :create, params: {:issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] }}
       template = IssueTemplate.last
       assert_no_difference('IssueTemplate.count') do
         put :update, params: {:id => template.id, issue_template: { subject: "Modified subject" }}
@@ -76,7 +76,7 @@ describe IssueTemplatesController, type: :controller do
                                                   :template_title => "new template",
                                                   :template_enabled => true,
                                                   :project_id => '1',
-                                                  :project_ids => ['1'],
+                                                  :template_project_ids => ['1'],
                                                   :status_id => '1'}}
 
     # find created template

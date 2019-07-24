@@ -12,9 +12,11 @@ class IssueTemplate < ActiveRecord::Base
   belongs_to :priority, :class_name => 'IssuePriority', :foreign_key => 'priority_id'
   belongs_to :category, :class_name => 'IssueCategory', :foreign_key => 'category_id'
 
-  has_and_belongs_to_many :projects
+  has_and_belongs_to_many :template_projects, class_name: 'Project', join_table: 'issue_templates_projects'
 
-  validates_presence_of :template_title, :subject, :tracker, :author, :project, :status, :projects
+  has_and_belongs_to_many :secondary_projects, class_name: 'Project', join_table: 'multiprojects_issue_templates'
+
+  validates_presence_of :template_title, :subject, :tracker, :author, :project, :status, :template_projects
 
   validates_uniqueness_of :template_title
   validates_length_of :subject, :maximum => 255
@@ -24,7 +26,8 @@ class IssueTemplate < ActiveRecord::Base
   validates :due_date, :date => true
   # validate :validate_issue, :validate_required_fields
 
-  safe_attributes :project_ids,
+  safe_attributes :template_project_ids,
+                  :secondary_project_ids,
                   :project_id,
                   :tracker_id,
                   :subject,
