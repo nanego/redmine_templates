@@ -12,7 +12,6 @@ function startUpdate() {
 
     var secondary_projects = <%= @issue_template.secondary_projects.map(&:id).inspect %>;
     $.each(secondary_projects, function( index, value ) {
-        // alert( index + ": " + value );
         $("#issue_project_ids option[value=" + value +"]").prop("selected",true);
     });
 
