@@ -48,8 +48,12 @@ Deface::Override.new :virtual_path  => 'issues/new',
   '
   <%
     @issue_template = IssueTemplate.find_by_id(params[:template_id]) if params[:template_id] && (begin Integer(params[:template_id]) ; true end rescue false)
-    @issue_template.increment!(:usage) if @issue_template
+    if @issue_template
+      @issue_template.increment!(:usage)
+      @issue.issue_template = @issue_template
+    end
   %>
+  <%= f.hidden_field :issue_template_id %>
   <script type="text/javascript">
     <%= render(:partial => "issue_templates/load_select_js_functions", :handlers => [:erb], :formats => [:js]) %>
     <% if @issue_template %>

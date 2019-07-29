@@ -4,3 +4,8 @@ require_dependency File.expand_path('../../../app/models/issue_template', __FILE
 class Project
   has_and_belongs_to_many :issue_templates
 end
+
+class Issue
+  belongs_to :issue_template, optional: true
+  safe_attributes 'issue_template_id'
+end
