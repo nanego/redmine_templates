@@ -14,7 +14,7 @@ class IssueTemplatesController < ApplicationController
     @issue_template.template_projects = [@project]
     @issue_template.author ||= User.current
     @issue_template.template_title = @issue_template.subject
-    @issue_template.secondary_project_ids = params[:issue][:project_ids]
+    @issue_template.secondary_project_ids = params[:issue][:project_ids] if params[:issue]
 
     @priorities = IssuePriority.active
     render :new

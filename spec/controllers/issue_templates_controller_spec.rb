@@ -4,6 +4,8 @@ require "active_support/testing/assertions"
 describe IssueTemplatesController, type: :controller do
   include ActiveSupport::Testing::Assertions
 
+  render_views
+
   self.fixture_path = File.dirname(__FILE__) + "/../fixtures/"
   fixtures :issue_templates
 
