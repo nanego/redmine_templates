@@ -15,6 +15,7 @@ Redmine::Plugin.register :redmine_templates do
   url 'https://github.com/nanego/redmine_issue_templates'
   requires_redmine :version_or_higher => '2.5.0'
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
+  requires_redmine_plugin :redmine_base_stimulusjs, :version_or_higher => '1.1.1'
   permission :create_issue_templates, {:issue_templates => [:init, :new, :create, :edit, :update, :index, :destroy]}
   settings :default => { 'custom_fields' => [], 'disable_templates' => false},
            :partial => 'settings/redmine_plugin_templates_settings'

@@ -1,3 +1,5 @@
+<%# TODO Vérifier l'utilité de ce fichier ... %>
+
 <% template_projects = @issue_template.template_projects
    allowed_projects =  @issue_template.allowed_target_projects.includes(:custom_values)
    custom_fields = CustomField.select("id, name").where("type = ? AND name IN (?)", "ProjectCustomField", Setting["plugin_redmine_templates"]['custom_fields'])
@@ -41,7 +43,7 @@
    end
 %>
 
-  <h3 class="title"><%=l(:field_project).pluralize%></h3>
+  <h3 class="title"><%=l(:field_project).pluralize%> TEMPLATE</h3>
 
   <div class="actions_links">
   <%= l("Selection") %> :

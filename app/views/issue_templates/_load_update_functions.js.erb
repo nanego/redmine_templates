@@ -14,7 +14,7 @@ function startUpdate() {
     $.each(secondary_projects, function( index, value ) {
         $("#issue_project_ids option[value=" + value +"]").prop("selected",true);
     });
-    
+
   // Show or hide some fields based on the new selected tracker, project or status, then update custom fields
   updateIssueFrom('<%= escape_javascript update_issue_form_path(@project, @issue) %>').done(updateCustomFieldsValues);
 }

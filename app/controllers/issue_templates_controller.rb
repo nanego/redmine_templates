@@ -21,6 +21,9 @@ class IssueTemplatesController < ApplicationController
   end
 
   def new
+    @issue_template = IssueTemplate.new(custom_form: false)
+    @priorities = IssuePriority.active
+    @issue_template.project = @project if @project.present?
   end
 
   def edit
