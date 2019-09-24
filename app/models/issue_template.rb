@@ -130,4 +130,8 @@ class IssueTemplate < ActiveRecord::Base
     "#{authorized_viewers}".split('|').reject(&:blank?).map(&:to_i)
   end
 
+  def assigned_to_function_id
+    nil #TODO Make templates compatible with this functionality
+  end
+
 end

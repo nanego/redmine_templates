@@ -29,7 +29,7 @@ describe IssueTemplatesController, type: :controller do
   context "POST create" do
     it "should succeed and assign a new template" do
       post :create, params: {:issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] }}
-      expect(response).to redirect_to(issue_templates_path(project_id: 1))
+      expect(response).to redirect_to(issue_templates_path(project: 'ecookbook'))
       expect(flash[:notice]).to eq "New issue template successfully created!"
       expect(IssueTemplate.last.try(:subject)).to eq "New issue"
     end
@@ -50,7 +50,7 @@ describe IssueTemplatesController, type: :controller do
       assert_no_difference('IssueTemplate.count') do
         put :update, params: {:id => template.id, issue_template: { subject: "Modified subject" }}
       end
-      expect(response).to redirect_to(issue_templates_path(project_id: template.project_id))
+      expect(response).to redirect_to(issue_templates_path(project: template.project.identifier))
       template.reload
       assert_match /updated/, flash[:notice]
       expect(template.subject).to eq "Modified subject"
@@ -86,7 +86,7 @@ describe IssueTemplatesController, type: :controller do
     assert_kind_of IssueTemplate, template
 
     # check redirection
-    expect(response).to redirect_to(:controller => 'issue_templates', :action => 'index', :project_id => template.project_id)
+    expect(response).to redirect_to(:controller => 'issue_templates', :action => 'index', :project => template.project.identifier)
   end
 
 
