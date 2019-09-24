@@ -231,7 +231,7 @@
         <% file_name = "#{File.join(Redmine::Plugin.directory, 'redmine_templates')}/app/views/issues/_#{@issue_template.custom_form_path}.html.erb" %>
 
         <% if File.exist?(file_name) %>
-          <% @issue = @issue_template %>
+          <% @issue = Issue.new %>
           <% @issue.project == @issue_template.template_projects.first unless @issue.project %>
           <%= labelled_form_for @issue, :url => _project_issues_path(@project),
                                 :html => {:id => 'issue-form', :multipart => true} do |f| %>
