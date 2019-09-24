@@ -16,7 +16,7 @@ class IssueTemplate < ActiveRecord::Base
 
   has_and_belongs_to_many :secondary_projects, class_name: 'Project', join_table: 'multiprojects_issue_templates'
 
-  validates_presence_of :template_title, :subject, :tracker, :author, :project, :status, :template_projects
+  validates_presence_of :template_title, :tracker, :author, :status, :template_projects
 
   validates_uniqueness_of :template_title
   validates_length_of :subject, :maximum => 255
@@ -53,7 +53,9 @@ class IssueTemplate < ActiveRecord::Base
                   :done_ratio,
                   :lock_version,
                   :usage,
-                  :authorized_viewers
+                  :authorized_viewers,
+                  :custom_form,
+                  :custom_form_path
 
   def allowed_target_projects
     Project.where(Project.allowed_to_condition(User.current, :add_issues))
@@ -64,8 +66,11 @@ class IssueTemplate < ActiveRecord::Base
   end
 
   def assignable_users
-    users = []
-    users << project.assignable_users.to_a if project
+    if project
+      users = project.assignable_users.to_a
+    else
+      users = []
+    end
     users << author if author
     users << assigned_to if assigned_to
     users.uniq.sort

@@ -21,32 +21,24 @@ $(document).ready(function ($) {
     stimulus_application.register("template-form", class extends Stimulus.Controller {
 
         static get targets() {
-            return ["custom_form_radio_button", "custom_form_path_text_field"]
+            return ["custom_form_radio_button", "custom_form_path_text_field", "custom_form", "standard_form"]
         }
-
-        // initialize()
 
         connect() {
-            // this.load()
             this.toogleForm()
-        }
-
-        load(url, container) {
-            fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    container.innerHTML = html
-                })
         }
 
         toogleForm() {
             if (this.custom_form_radio_buttonTarget.checked) {
-                this.custom_form_path_text_fieldTarget.parentNode.style.display = 'none';
-            } else {
                 this.custom_form_path_text_fieldTarget.parentNode.style.display = 'block';
+                this.custom_formTarget.style.display = 'block'
+                this.standard_formTarget.style.display = 'none'
+            } else {
+                this.custom_form_path_text_fieldTarget.parentNode.style.display = 'none';
+                this.custom_formTarget.style.display = 'none'
+                this.standard_formTarget.style.display = 'block'
             }
         }
+
     })
 })();
-
-

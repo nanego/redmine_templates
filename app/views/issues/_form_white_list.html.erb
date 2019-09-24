@@ -1,0 +1,117 @@
+<%= labelled_fields_for :issue, @issue do |f| %>
+<%= call_hook(:view_issues_form_details_top, { :issue => @issue, :form => f }) %>
+
+<% if @issue.safe_attribute? 'tracker_id' %>
+  <p>
+    <%= f.select :tracker_id, Tracker.all.collect {|t| [t.name, t.id]},
+                 {:required => true} %>
+  </p>
+<% end %>
+
+<% if @issue.safe_attribute? 'subject' %>
+  <p>
+    <%= f.text_field :subject, :size => 80, :required => true,
+                     :style => "display:none" %>
+    <span id="subject_mirror"></span>
+  </p>
+<% end %>
+
+<!-- specific -->
+<fieldset id="simplified_form" style="margin-top:10px; margin-bottom:20px; padding:10px 0; background-color:#f4f4f9;">
+<p>
+  <label>Origine LISTE BLANCHE</label>
+  <%= text_field_tag :firewall_origin, "", :size => 50, :required => true %>
+  <em class=info>Une IP ou une plage IP. Exemple: 10.167.129.2, 10.167.131.0/24</em>
+</p>
+<p>
+  <label>Destination</label>
+  <%= text_field_tag :firewall_destination, "", :size => 50, :required => true %>
+  <em class=info>Une IP ou une plage IP. Exemple: 10.167.129.2, 10.167.131.0/24</em>
+</p>
+<p>
+  <label>Protocole</label>
+  <%= text_field_tag :firewall_protocol, "", :size => 30, :required => true %>
+  <em class=info>Protocole(s) ou port(s), préciser si TCP ou UDP. Exemple pour postgresql: port 5432/tcp</em>
+</p>
+<p>
+  <label>Explication</label>
+  <%= text_area_tag :firewall_reason, "", :size => "80x5" %>
+  <em class=info>Une explication sommaire du besoin ou de la raison</em>
+</p>
+<p>
+  <label>Validé?</label>
+  <%= check_box_tag :firewall_discussed, 0 %>
+  Déjà discuté avec Jean-Paul, Radja ou Joël
+</p>
+<p>
+  <label>Testé?</label>
+  <%= check_box_tag :firewall_tested, 0 %>
+  Merci de tester la connexion afin de laisser une trace dans les logs
+</p>
+</fieldset>
+<!-- /specific -->
+
+<% if @issue.safe_attribute? 'description' %>
+<p style="display:none">
+  <%= f.label_for_field :description, :required => true %>
+  <%= link_to_function image_tag('edit.png'), '$(this).hide(); $("#issue_description_and_toolbar").show()' unless @issue.new_record? %>
+  <%= content_tag 'span', :id => "issue_description_and_toolbar", :style => (@issue.new_record? ? nil : 'display:none') do %>
+    <%= f.text_area :description,
+                   :cols => 60,
+                   :rows => (@issue.description.blank? ? 10 : [[10, @issue.description.length / 50].max, 100].min),
+                   :accesskey => accesskey(:edit),
+                   :class => 'wiki-edit',
+                   :no_label => true %>
+  <% end %>
+</p>
+<%= wikitoolbar_for 'issue_description' %>
+<% end %>
+
+<div style="display:none">
+  <%= render :partial => 'issues/attributes' unless @issue_template.present? %>
+</div>
+
+<%= call_hook(:view_issues_form_details_bottom, { :issue => @issue, :form => f }) %>
+<% end %>
+
+<script type="text/javascript">
+  $(function() {
+    //hide useless parts
+    $("#watchers_form, #attachments_form").hide()
+    //fill in description automatically
+    $("#simplified_form").on("change", $("input,select"), function() {
+      var stemplate = $("#subject_template").html()
+      stemplate = stemplate.replace("<ORIGIN>", $("#firewall_origin").val())
+      stemplate = stemplate.replace("<DESTINATION>", $("#firewall_destination").val())
+      stemplate = stemplate.replace("<PROTOCOL>", $("#firewall_protocol").val())
+      $("#issue_subject").val(stemplate)
+      //reflect some choices in static content
+      $("#subject_mirror").html(stemplate)
+      //same for description
+      var dtemplate = $("#description_template").html()
+      dtemplate = dtemplate.replace("<ORIGIN>", $("#firewall_origin").val())
+      dtemplate = dtemplate.replace("<DESTINATION>", $("#firewall_destination").val())
+      dtemplate = dtemplate.replace("<PROTOCOL>", $("#firewall_protocol").val())
+      dtemplate = dtemplate.replace("<REASON>", $("#firewall_reason").val())
+      if ($("#firewall_discussed").is(":checked")) {
+        dtemplate = dtemplate+"\n\n_Cette demande a déjà été discutée avec Jean-Paul, Radja ou Joël._\n"
+      }
+      if ($("#firewall_tested").is(":checked")) {
+        dtemplate = dtemplate+"\n\n_Cette demande a déjà été testée._\n"
+      }
+      $("#issue_description").html(dtemplate)
+    })
+  })
+</script>
+<script id="subject_template" type="x-template">
+Modification firewall: de "<ORIGIN>" vers "<DESTINATION>" protocole "<PROTOCOL>"
+</script>
+<script id="description_template" type="x-template">
+Cette demande concerne l'ouverture du flux suivant:
+* origine: <ORIGIN>
+* destination: <DESTINATION>
+* protocole: <PROTOCOL>
+
+Explication:
+<REASON>
+</script>

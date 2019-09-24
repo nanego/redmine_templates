@@ -27,6 +27,7 @@
     <table class="list issues" id="templates_list">
       <thead>
       <tr>
+        <th class="template_icon"></th>
         <th class="template_title"><%= l(:field_template_title) %></th>
         <th class="template_id"><%= l(:field_tracker) %></th>
         <th class="template_subject"><%= l(:field_subject) %></th>
@@ -50,6 +51,7 @@
                                       # ,:project_id => project.id
             }, {:title => title }
           end %>
+          <td><%= image_tag 'icons8-form-50.png', plugin: 'redmine_templates' if issue_template.custom_form? %></td>
           <td><%= link_to_edition.call h(issue_template.template_title), issue_template.template_title %></td>
           <td><%= link_to_edition.call h(issue_template.tracker.name), issue_template.tracker.name %></td>
           <td><%= link_to_edition.call h(issue_template.subject), issue_template.subject %></td>

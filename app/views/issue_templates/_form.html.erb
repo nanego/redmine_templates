@@ -1,60 +1,63 @@
-<%= labelled_form_for @issue_template, :html => {id: 'issue-template-form',
-                                                 name: 'issue-template-form_name',
-                                                 'data-controller': "template-form"} do |f| %>
+<div data-controller="template-form">
 
-  <%= error_messages_for 'issue_template' %>
+  <%= labelled_form_for @issue_template, :html => {id: 'issue-template-form',
+                                                   name: 'issue-template-form_name'} do |f| %>
 
-  <div class="box tabular header">
-    <div id="template_attributes">
+    <%= error_messages_for 'issue_template' %>
 
-      <div class="splitcontent">
+    <div class="box tabular header">
+      <div id="template_attributes">
 
-        <div class="splitcontentleft">
-          <p>
-            <%= f.text_field :template_title, :size => 80, :maxlength => 255, :required => true %>
-          </p>
-          <%= f.hidden_field :project_id, :value => (@project.try(:id) || @issue_template.project_id) %>
-          <%= f.hidden_field :id, :value => @issue_template.id %>
-          <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
+        <div class="splitcontent">
+
+          <div class="splitcontentleft">
             <p>
-              <%= f.check_box :template_enabled, :no_label => true %>
-              <label class="inline" for="issue_template_is_enabled" id="issue_template_is_enabled"><%= l(:template_is_enabled) %></label>
+              <%= f.text_field :template_title, :size => 80, :maxlength => 255, :required => true %>
             </p>
-          <% end %>
-          <p>
-            <%= label :custom_form, 'Type de formulaire' %>
-            <%= f.radio_button :custom_form, false, :checked => !f.object.custom_form?, 'data-action': "template-form#toogleForm" %>
-            <%= f.label :custom_form, 'Standard', :value => false, class: "inline" %>
-            <br>
-            <%= f.radio_button :custom_form, true, :checked => f.object.custom_form?, 'data-action': "template-form#toogleForm", 'data-target': "template-form.custom_form_radio_button" %>
-            <%= f.label :custom_form, 'Sur mesure', :value => true, class: "inline" %>
-          </p>
-          <p>
-            <%= f.text_field :custom_form_path, :size => 80, :maxlength => 255, :required => false, 'data-target': "template-form.custom_form_path_text_field" %>
-          </p>
-        </div>
+            <%= f.hidden_field :project_id, :value => (@project.try(:id) || @issue_template.project_id) %>
+            <%= f.hidden_field :id, :value => @issue_template.id %>
+            <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
+              <p>
+                <%= f.check_box :template_enabled, :no_label => true %>
+                <label class="inline" for="issue_template_is_enabled" id="issue_template_is_enabled"><%= l(:template_is_enabled) %></label>
+              </p>
+            <% end %>
+            <p>
+              <%= label :custom_form, l('form_type') %>
+              <%= f.radio_button :custom_form, false, :checked => !f.object.custom_form?, 'data-action': "template-form#toogleForm" %>
+              <%= f.label :custom_form, 'Standard', :value => false, class: "inline" %>
+              <br>
+              <%= f.radio_button :custom_form, true, :checked => f.object.custom_form?, 'data-action': "template-form#toogleForm", 'data-target': "template-form.custom_form_radio_button" %>
+              <%= f.label :custom_form, 'Sur mesure', :value => true, class: "inline" %>
+            </p>
+            <p>
+              <%= f.text_field :custom_form_path, label: l('custom_form_path'), :size => 80, :maxlength => 255, :required => false,
+                               placeholder: "Ex: issues/form_white_list",
+                               'data-action': "template-form#reloadForm", 'data-target': "template-form.custom_form_path_text_field" %>
+            </p>
+          </div>
 
-        <div class="splitcontentright">
-          <div class="select_projects" id="select_projects">
-            <%= f.select :template_project_ids, project_tree_options(@issue_template.allowed_target_projects | @issue_template.template_projects, :selected => @issue_template.template_projects), {:required => true},
-                         {:multiple => true, :size => 10, style: "display:none;"} %>
-            <%
-              nb_other_projects = 0
-              nb_visible_projects = 0
-              template_projects = @issue_template.template_projects
-              allowed_projects = @issue_template.allowed_target_projects
-            %>
-            <span id="my_projects">
+          <div class="splitcontentright">
+            <div class="select_projects" id="select_projects">
+              <%= f.select :template_project_ids, project_tree_options(@issue_template.allowed_target_projects | @issue_template.template_projects, :selected => @issue_template.template_projects), {:required => true},
+                           {:multiple => true, :size => 10, style: "display:none;"} %>
+              <%
+                nb_other_projects = 0
+                nb_visible_projects = 0
+                template_projects = @issue_template.template_projects
+                allowed_projects = @issue_template.allowed_target_projects
+              %>
+              <span id="my_projects">
                 <% template_projects.each do |project| %>
                   <% if allowed_projects.include?(project) %>
                     <%= content_tag("span", project.name.gsub(/ /, "&nbsp;").html_safe, class: "list_templates_projects_names") %>
-                  <% nb_visible_projects += 1 %>
+                    <% nb_visible_projects += 1 %>
                   <% else %>
                     <% nb_other_projects += 1 %>
                   <% end %>
                 <% end %>
               </span>
-            <% if nb_other_projects > 0 %>
+              <% if nb_other_projects > 0 %>
                 <span class="list_templates_other_projects">
                   <% if nb_visible_projects > 0 %>
                     <span class="and_x_other_projects"><%= l("support.array.sentence_connector") %></span>
@@ -67,150 +70,179 @@
                   <% end %>
                   <%= nb_other_projects > 1 ? l("project").pluralize : l("project") %>
                 </span>
-            <% end %>
+              <% end %>
+            </div>
+
+            <%= link_to l("modify_projects"), '#', id: "link_update_project_list", :onclick => 'showModal("ajax-modal", "1000px");$("#button_apply_projects").focus();' %>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#ajax-modal').html('<%= escape_javascript(render :partial => 'issue_templates/modal_select_projects') %>');
+                });
+            </script>
+
           </div>
 
-          <%= link_to l("modify_projects"), '#', id: "link_update_project_list", :onclick => 'showModal("ajax-modal", "1000px");$("#button_apply_projects").focus();' %>
-
-          <script type="text/javascript">
-              $(document).ready(function () {
-                  $('#ajax-modal').html('<%= escape_javascript(render :partial => 'issue_templates/modal_select_projects') %>');
-              });
-          </script>
-
         </div>
-
       </div>
     </div>
-  </div>
 
-  <div class="box tabular">
-    <div id="issue_attributes">
+    <div class="box tabular" data-target="template-form.standard_form">
+      <div id="issue_attributes">
 
-      <p class="pull-right-with-marging">
-        <%= f.check_box :is_private, :no_label => true %>
-        <label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:issue_is_private) %></label>
-      </p>
+        <p class="pull-right-with-marging">
+          <%= f.check_box :is_private, :no_label => true %>
+          <label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:issue_is_private) %></label>
+        </p>
 
-      <p><%= f.select :tracker_id, Tracker.visible.collect {|t| [t.name, t.id]}, {:required => true},
-                      :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
+        <p><%= f.select :tracker_id, Tracker.visible.collect {|t| [t.name, t.id]}, {:required => true},
+                        :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
 
-      <%= render "limited_visibility_fields" if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
+        <%= render "limited_visibility_fields" if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
 
-      <p><%= f.text_field :subject, :size => 80, :maxlength => 255, :required => true %></p>
+        <p><%= f.text_field :subject, :size => 80, :maxlength => 255, :required => true %></p>
 
-      <p>
-        <%= f.label_for_field :description, :required => false %>
-        <%= content_tag 'span', :id => "issue_description_and_toolbar" do %>
-          <%= f.text_area :description,
-                          :cols => 60,
-                          :rows => (@issue_template.description.blank? ? 10 : [[10, @issue_template.description.length / 50].max, 100].min),
-                          :accesskey => accesskey(:edit),
-                          :class => 'wiki-edit',
-                          :no_label => true %>
-        <% end %>
-      </p>
-      <%= wikitoolbar_for 'issue_template_description' %>
+        <p>
+          <%= f.label_for_field :description, :required => false %>
+          <%= content_tag 'span', :id => "issue_description_and_toolbar" do %>
+            <%= f.text_area :description,
+                            :cols => 60,
+                            :rows => (@issue_template.description.blank? ? 10 : [[10, @issue_template.description.length / 50].max, 100].min),
+                            :accesskey => accesskey(:edit),
+                            :class => 'wiki-edit',
+                            :no_label => true %>
+          <% end %>
+        </p>
+        <%= wikitoolbar_for 'issue_template_description' %>
 
-      <div id="attributes" class="attributes">
+        <div id="attributes" class="attributes">
 
-        <div class="splitcontent">
-          <div class="splitcontentleft">
+          <div class="splitcontent">
+            <div class="splitcontentleft">
 
-            <p><%= f.select :status_id, (IssueStatus.all.collect {|p| [p.name, p.id]}), {:required => true},
-                            :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
+              <p><%= f.select :status_id, (IssueStatus.all.collect {|p| [p.name, p.id]}), {:required => true},
+                              :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
 
-            <p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), {:required => true}, :disabled => false %></p>
+              <p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), {:required => true}, :disabled => false %></p>
 
-            <p><%= f.select :assigned_to_id, principals_options_for_select(@issue_template.assignable_users, @issue_template.assigned_to), :include_blank => true, :required => false %></p>
+              <p><%= f.select :assigned_to_id, principals_options_for_select(@issue_template.assignable_users, @issue_template.assigned_to), :include_blank => true, :required => false %></p>
 
-            <p><%= f.select :category_id, (IssueCategory.all.collect {|c| [c.name, c.id]}), :include_blank => true, :required => false %>
-              <%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
-                          new_project_issue_category_path(@issue_template.project),
-                          :remote => true,
-                          :method => 'get',
-                          :title => l(:label_issue_category_new),
-                          :tabindex => 200) if User.current.allowed_to?(:manage_categories, @issue_template.project) %></p>
+              <p><%= f.select :category_id, (IssueCategory.all.collect {|c| [c.name, c.id]}), :include_blank => true, :required => false %>
+                <%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
+                            new_project_issue_category_path(@issue_template.project),
+                            :remote => true,
+                            :method => 'get',
+                            :title => l(:label_issue_category_new),
+                            :tabindex => 200) if User.current.allowed_to?(:manage_categories, @issue_template.project) %></p>
 
+            </div>
+
+            <div class="splitcontentright">
+
+              <p><%= f.text_field :start_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_start_date') %></p>
+
+              <p><%= f.text_field :due_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_due_date') %></p>
+
+              <p><%= f.text_field :estimated_hours, :size => 3, :disabled => false, :required => false %> <%= l(:field_hours) %></p>
+
+              <p><%= f.select :done_ratio, ((0..10).to_a.collect {|r| ["#{r * 10} %", r * 10]}), :required => false %></p>
+
+            </div>
           </div>
 
-          <div class="splitcontentright">
-
-            <p><%= f.text_field :start_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_start_date') %></p>
-
-            <p><%= f.text_field :due_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_due_date') %></p>
-
-            <p><%= f.text_field :estimated_hours, :size => 3, :disabled => false, :required => false %> <%= l(:field_hours) %></p>
-
-            <p><%= f.select :done_ratio, ((0..10).to_a.collect {|r| ["#{r * 10} %", r * 10]}), :required => false %></p>
-
-          </div>
-        </div>
-
-        <div class="splitcontent">
-          <div class="splitcontentleft">
-            <% i = 0 %>
-            <% split_on = (@issue_template.custom_field_values.size / 2.0).ceil - 1 %>
-            <% @issue_template.editable_custom_field_values.each do |value| %>
-              <p><%= custom_field_tag_with_label :issue_template, value, :required => false %></p>
-              <% if i == split_on -%>
-                </div>
-                <div class="splitcontentright">
+          <div class="splitcontent">
+            <div class="splitcontentleft">
+              <% i = 0 %>
+              <% split_on = (@issue_template.custom_field_values.size / 2.0).ceil - 1 %>
+              <% @issue_template.editable_custom_field_values.each do |value| %>
+                <p><%= custom_field_tag_with_label :issue_template, value, :required => false %></p>
+                <% if i == split_on -%>
+                  </div>
+                  <div class="splitcontentright">
+                <% end -%>
+                <% i += 1 -%>
               <% end -%>
-              <% i += 1 -%>
-            <% end -%>
-            </div>
-            </div>
+              </div>
+              </div>
 
-        <% include_calendar_headers_tags %>
+          <% include_calendar_headers_tags %>
+
+        </div>
 
       </div>
 
+      <% if Redmine::Plugin.installed?(:redmine_multiprojects_issue) %>
+
+        <p id="projects_form">
+          <% select_options = project_tree_options_for_select((@issue_template.allowed_target_projects | @issue_template.secondary_projects) - [@issue_template.project], :selected => [@issue_template.project] | @issue_template.secondary_projects) %>
+          <%= f.select :secondary_project_ids, select_options, {:required => true, :label => l("related_projects")},
+                       {:multiple => true, style: "display:none;"} %>
+          <%= render 'issues/projects_list', issue: @issue_template, selected_projects: @issue_template.secondary_projects %>
+          <%= link_to l('modify_projects'),
+                      plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue_template.id, :project_id => @issue_template.project.try(:id), :select_tag_id => "issue_template_secondary_project_ids"),
+                      remote: true,
+                      id: "loadModalProjectsSelection",
+                      class: "load-modal-projects-selection" %>
+          <label id=answers-on-secondary-projects class="inline answers-on-secondary-projects" style="<%= "display:none;" if @issue_template.secondary_projects.none? %>">
+            <%= f.check_box :answers_on_secondary_projects, :no_label => true %>
+            <%= l(:field_answers_on_secondary_projects) %>
+          </label>
+        </p>
+
+        <script>
+            $("#loadModalProjectsSelection").click(function (e) {
+                var ids = $('#issue_template_secondary_project_ids').val();
+                if (ids == null) {
+                    ids = ''
+                }
+                var sep = ($(this).attr('href').indexOf('?') != -1) ? '&' : '?';
+                $(this).attr('href', $(this).attr('href') + sep + 'project_ids=' + ids);
+            });
+        </script>
+
+      <% end %>
+
     </div>
 
-    <% if Redmine::Plugin.installed?(:redmine_multiprojects_issue) %>
+    <%= submit_tag l(:button_save_issue_template) %>
 
-      <p id="projects_form">
-        <% select_options = project_tree_options_for_select((@issue_template.allowed_target_projects | @issue_template.secondary_projects) - [@issue_template.project], :selected => [@issue_template.project] | @issue_template.secondary_projects) %>
-        <%= f.select :secondary_project_ids, select_options, {:required => true, :label => l("related_projects")},
-                     {:multiple => true, style: "display:none;"} %>
-        <%= render 'issues/projects_list', issue: @issue_template, selected_projects: @issue_template.secondary_projects %>
-        <%= link_to l('modify_projects'),
-                    plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue_template.id, :project_id => @issue_template.project.try(:id), :select_tag_id => "issue_template_secondary_project_ids"),
-                    remote: true,
-                    id: "loadModalProjectsSelection",
-                    class: "load-modal-projects-selection" %>
-        <label id=answers-on-secondary-projects class="inline answers-on-secondary-projects" style="<%= "display:none;" if @issue_template.secondary_projects.none? %>">
-          <%= f.check_box :answers_on_secondary_projects, :no_label => true %>
-          <%= l(:field_answers_on_secondary_projects) %>
-        </label>
-      </p>
+    <%= javascript_tag "$('#issue_template_template_title').focus();" %>
 
-      <script>
-          $("#loadModalProjectsSelection").click(function (e) {
-              var ids = $('#issue_template_secondary_project_ids').val();
-              if (ids == null) {
-                  ids = ''
-              }
-              var sep = ($(this).attr('href').indexOf('?') != -1) ? '&' : '?';
-              $(this).attr('href', $(this).attr('href') + sep + 'project_ids=' + ids);
-          });
-      </script>
+    <script type="text/javascript">
+        $('#issue-template-form').bind('submit', function () {
+            $(this).find(':input').removeAttr('disabled');
+        });
+    </script>
 
-    <% end %>
+    <%= render 'valid_similar_existing_templates' if @issue_template.new_record? %>
 
+  <% end %>
+
+
+
+  <div class="box tabular"
+       style="margin-top: 30px;"
+       data-target="template-form.custom_form">
+    <div id="custom_form">
+      <% if @issue_template.custom_form_path.present? %>
+
+        <div style="margin-bottom: 30px;">Aperçu du formulaire :</div>
+
+        <% file_name = "#{File.join(Redmine::Plugin.directory, 'redmine_templates')}/app/views/issues/_#{@issue_template.custom_form_path}.html.erb" %>
+
+        <% if File.exist?(file_name) %>
+          <% @issue = @issue_template %>
+          <%= labelled_form_for @issue, :url => _project_issues_path(@project),
+                                :html => {:id => 'issue-form', :multipart => true} do |f| %>
+            <%= render :partial => "issues/#{@issue_template.custom_form_path}", :locals => {:f => f} %>
+          <% end %>
+        <% else %>
+          <%= "Erreur de chargement du formulaire : #{@issue_template.custom_form_path}" %>
+        <% end %>
+
+      <% end %>
+    </div>
   </div>
 
-  <%= submit_tag l(:button_save_issue_template) %>
 
-  <%= javascript_tag "$('#issue_template_template_title').focus();" %>
-
-  <script type="text/javascript">
-      $('#issue-template-form').bind('submit', function () {
-          $(this).find(':input').removeAttr('disabled');
-      });
-  </script>
-
-  <%= render 'valid_similar_existing_templates' if @issue_template.new_record? %>
-
-<% end %>
+</div>

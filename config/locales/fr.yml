@@ -38,3 +38,5 @@ fr:
   modify_projects: "Modifier la liste"
   usage: "Usage"
   label_other_issue: "Demande libre"
+  custom_form_path: "Chemin vers le formulaire"
+  form_type: "Type de formulaire"

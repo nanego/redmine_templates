@@ -41,6 +41,9 @@ table#templates_list td div{
     max-height: 110px;
     overflow: auto;
 }
+table .template_icon{
+    width: 44px;
+}
 
 .template_box{
     border: 1px dashed #d3d3d3;

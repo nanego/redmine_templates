@@ -41,7 +41,11 @@ class IssueTemplatesController < ApplicationController
       respond_to do |format|
         format.html {
           flash[:notice] = l(:notice_issue_template_successfully_created)
-          redirect_to issue_templates_path(project_id: @issue_template.project_id)
+          if @issue_template.project.present?
+            redirect_to issue_templates_path(project: @issue_template.project)
+          else
+            redirect_to issue_templates_path
+          end
         }
       end
     else
@@ -59,7 +63,11 @@ class IssueTemplatesController < ApplicationController
       respond_to do |format|
         format.html {
           flash[:notice] = l(:notice_issue_template_successfully_updated)
-          redirect_to issue_templates_path(project_id: @issue_template.project_id)
+          if @issue_template.project.present?
+            redirect_to issue_templates_path(project: @issue_template.project)
+          else
+            redirect_to issue_templates_path
+          end
         }
       end
     else
@@ -70,7 +78,7 @@ class IssueTemplatesController < ApplicationController
   end
 
   def index
-    @templates = IssueTemplate.order("tracker_id").all
+    @templates = IssueTemplate.order("custom_form desc, tracker_id desc, usage desc").all
   end
 
   # Updates the template form when changing the project, status or tracker on template creation/update
