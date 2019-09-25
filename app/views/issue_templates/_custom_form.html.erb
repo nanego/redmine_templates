@@ -6,7 +6,8 @@
 
       <div style="margin-bottom: 30px;">Aperçu du formulaire :</div>
 
-      <% file_name = "#{File.join(Redmine::Plugin.directory, 'redmine_templates')}/app/views/issues/_#{@issue_template.custom_form_path}.html.erb" %>
+      <% # TODO Add plugin setting to config this path %>
+      <% file_name = "#{File.join(Redmine::Plugin.directory, 'redmine_scn')}/app/views/issues/_#{@issue_template.custom_form_path}.html.erb" %>
 
       <% if File.exist?(file_name) %>
         <% @issue = Issue.new(project: @issue_template.template_projects.first) %>
