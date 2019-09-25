@@ -1,0 +1,24 @@
+<div class="box tabular"
+     style="margin-top: 30px;"
+     data-target="template-form.custom_form">
+  <div id="custom_form">
+    <% if @issue_template.custom_form_path.present? %>
+
+      <div style="margin-bottom: 30px;">Aperçu du formulaire :</div>
+
+      <% file_name = "#{File.join(Redmine::Plugin.directory, 'redmine_templates')}/app/views/issues/_#{@issue_template.custom_form_path}.html.erb" %>
+
+      <% if File.exist?(file_name) %>
+        <% @issue = Issue.new(project: @issue_template.template_projects.first) %>
+        <%= form_for @issue, :url => '#' do |f| %>
+          <%= render :partial => "issues/#{@issue_template.custom_form_path}", :locals => {:f => f} %>
+        <% end %>
+      <% else %>
+        <%= "Erreur de chargement du formulaire : #{@issue_template.custom_form_path}" %>
+        <br>
+        Veuillez vérifier le nom du fichier.
+      <% end %>
+
+    <% end %>
+  </div>
+</div>

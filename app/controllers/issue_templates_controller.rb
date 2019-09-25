@@ -26,6 +26,13 @@ class IssueTemplatesController < ApplicationController
     @issue_template.project = @project if @project.present?
   end
 
+  def custom_form
+    # Show requested custom form
+    @priorities = IssuePriority.active
+    @issue_template = IssueTemplate.new(custom_form: true, custom_form_path: params[:path], template_projects: [Project.active.first])
+    render layout: false
+  end
+
   def edit
     @issue_template = IssueTemplate.find(params[:id])
     @priorities = IssuePriority.active

@@ -12,8 +12,6 @@ $(document).ready(function ($) {
         var className = $(this).attr('class').split(' ')[0]; // get first class
         $('.' + className).toggleClass("hover");
     });
-
-
 });
 
 // Template Form controller
@@ -26,6 +24,16 @@ $(document).ready(function ($) {
 
         connect() {
             this.toogleForm()
+        }
+
+        reloadForm(e) {
+            console.log(e.currentTarget.value)
+
+            fetch('/issue_templates/custom_form?path=' + e.currentTarget.value)
+                .then(response => response.text())
+                .then(html => {
+                    $('#custom_form_container')[0].innerHTML = html
+                })
         }
 
         toogleForm() {

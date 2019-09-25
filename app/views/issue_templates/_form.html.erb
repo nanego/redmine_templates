@@ -33,7 +33,8 @@
             <p>
               <%= f.text_field :custom_form_path, label: l('custom_form_path'), :size => 80, :maxlength => 255, :required => false,
                                placeholder: "Ex: issues/form_white_list",
-                               'data-action': "template-form#reloadForm", 'data-target': "template-form.custom_form_path_text_field" %>
+                               'data-action': "input->template-form#reloadForm",
+                               'data-target': "template-form.custom_form_path_text_field" %>
             </p>
           </div>
 
@@ -218,31 +219,8 @@
 
   <% end %>
 
-
-
-  <div class="box tabular"
-       style="margin-top: 30px;"
-       data-target="template-form.custom_form">
-    <div id="custom_form">
-      <% if @issue_template.custom_form_path.present? %>
-
-        <div style="margin-bottom: 30px;">Aperçu du formulaire :</div>
-
-        <% file_name = "#{File.join(Redmine::Plugin.directory, 'redmine_templates')}/app/views/issues/_#{@issue_template.custom_form_path}.html.erb" %>
-
-        <% if File.exist?(file_name) %>
-          <% @issue = Issue.new(project: @issue_template.template_projects.first) %>
-          <%= labelled_form_for @issue, :url => _project_issues_path(@project),
-                                :html => {:id => 'issue-form', :multipart => true} do |f| %>
-            <%= render :partial => "issues/#{@issue_template.custom_form_path}", :locals => {:f => f} %>
-          <% end %>
-        <% else %>
-          <%= "Erreur de chargement du formulaire : #{@issue_template.custom_form_path}" %>
-        <% end %>
-
-      <% end %>
-    </div>
+  <div id="custom_form_container">
+    <%= render 'custom_form' %>
   </div>
-
 
 </div>
