@@ -57,6 +57,10 @@ class IssueTemplate < ActiveRecord::Base
                   :custom_form,
                   :custom_form_path
 
+  def to_s
+    template_title
+  end
+
   def allowed_target_projects
     Project.where(Project.allowed_to_condition(User.current, :add_issues))
   end

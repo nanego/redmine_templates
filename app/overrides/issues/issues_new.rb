@@ -19,7 +19,8 @@ Deface::Override.new :virtual_path  => 'issues/new',
                      :name          => 'add-template-selection-to-issues-new',
                      :insert_before  => 'erb[loud]:contains("title")' do
   '<%
-    tracker_ids = @issue.project.issue_templates.select(:tracker_id).where("template_enabled = ?", true).map(&:tracker_id).uniq
+    allowed_trackers = @issue.allowed_target_trackers
+    tracker_ids = @issue.project.issue_templates.select(:tracker_id).where("tracker_id IN (?)", allowed_trackers.map(&:id)).where("template_enabled = ?", true).map(&:tracker_id).uniq
     @template_map = Hash::new
     tracker_ids.each do |tracker_id|
       if Setting["plugin_redmine_templates"]["disable_templates"]

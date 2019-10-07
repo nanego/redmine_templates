@@ -2,7 +2,7 @@
      style="margin-top: 30px;"
      data-target="template-form.custom_form">
   <div id="custom_form">
-    <% if @issue_template.custom_form_path.present? %>
+    <% if @issue_template.custom_form_path.present? && @issue_template.template_projects.present? %>
 
       <div style="margin-bottom: 30px;">Aperçu du formulaire :</div>
 

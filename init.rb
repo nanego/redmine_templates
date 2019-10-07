@@ -18,19 +18,23 @@ Redmine::Plugin.register :redmine_templates do
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
   requires_redmine_plugin :redmine_base_stimulusjs, :version_or_higher => '1.1.1'
   permission :create_issue_templates, {:issue_templates => [:init, :new, :create, :edit, :update, :index, :destroy]}
-  settings :default => { 'custom_fields' => [], 'disable_templates' => false},
+  settings :default => {'custom_fields' => [], 'disable_templates' => false},
            :partial => 'settings/redmine_plugin_templates_settings'
-  menu :admin_menu, :issue_templates, { :controller => 'issue_templates', :action => 'index' },
+  menu :admin_menu, :issue_templates, {:controller => 'issue_templates', :action => 'index'},
        :caption => :label_issue_templates,
        :html => {:class => 'icon'}
 end
 
 Redmine::MenuManager.map :project_menu do |menu|
-  menu.push :new_issue_sub, { :controller => 'issues', :action => 'new', :copy_from => nil },
+  menu.push :new_issue_sub, {:controller => 'issues', :action => 'new', :copy_from => nil},
             :param => :project_id,
             :caption => :label_other_issue,
-            :html => { :accesskey => Redmine::AccessKeys.key_for(:new_issue) },
-            :if => Proc.new { |p| Issue.allowed_target_trackers(p).any? && p.present? && p.issue_templates.present? },
+            :html => {:accesskey => Redmine::AccessKeys.key_for(:new_issue)},
+            :if => Proc.new {|p| Issue.allowed_target_trackers(p).any? &&
+                p.present? &&
+                p.issue_templates.present? &&
+                p.issue_templates.present? &&
+                (Issue.allowed_target_trackers(p) & p.issue_templates.map(&:tracker)).any?},
             :permission => :add_issues,
             :parent => :new_issue
 
