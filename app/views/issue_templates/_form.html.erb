@@ -14,6 +14,16 @@
             <p>
               <%= f.text_field :template_title, :size => 80, :maxlength => 255, :required => true %>
             </p>
+            <p>
+              <%= f.text_area :template_description, :maxlength => 1024 %>
+            </p>
+            <p>
+              <%= f.text_field :template_image, :size => 80, :maxlength => 255, placeholder: 'Ex: alert' %>
+              <span><%= link_to 'Liste des icones compatibles', 'https://octicons.github.com' %></span>
+            </p>
+            <p>
+              <%= f.check_box :show_on_overview, :no_label => false %>
+            </p>
             <%= f.hidden_field :project_id, :value => (@project.try(:id) || @issue_template.project_id) %>
             <%= f.hidden_field :id, :value => @issue_template.id %>
             <% if Setting["plugin_redmine_templates"]["disable_templates"] %>

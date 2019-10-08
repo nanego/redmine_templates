@@ -26,6 +26,8 @@ class IssueTemplate < ActiveRecord::Base
   validates :due_date, :date => true
   # validate :validate_issue, :validate_required_fields
 
+  scope :displayed_on_overview, -> {where(show_on_overview: true)}
+
   safe_attributes :template_project_ids,
                   :secondary_project_ids,
                   :project_id,
@@ -33,7 +35,10 @@ class IssueTemplate < ActiveRecord::Base
                   :subject,
                   :description,
                   :template_title,
+                  :template_description,
+                  :template_image,
                   :template_enabled,
+                  :show_on_overview,
                   :is_private,
                   :status_id,
                   :category_id,
@@ -86,7 +91,7 @@ class IssueTemplate < ActiveRecord::Base
   end
 
   # Returns the custom_field_values that can be edited by the given user
-  def editable_custom_field_values(user=nil)
+  def editable_custom_field_values(user = nil)
     custom_field_values.reject do |value|
       read_only_attribute_names(user).include?(value.custom_field_id.to_s)
     end
@@ -96,12 +101,12 @@ class IssueTemplate < ActiveRecord::Base
   # For users with multiple roles, the read-only fields are the intersection of
   # read-only fields of each role
   # The result is an array of strings where sustom fields are represented with their ids
-  def read_only_attribute_names(user=nil)
+  def read_only_attribute_names(user = nil)
     workflow_rule_by_attribute(user).reject {|attr, rule| rule != 'readonly'}.keys
   end
 
   # Returns a hash of the workflow rule by attribute for the given user # TODO : Cleanup these methods
-  def workflow_rule_by_attribute(user=nil)
+  def workflow_rule_by_attribute(user = nil)
     return @workflow_rule_by_attribute if @workflow_rule_by_attribute && user.nil?
 
     user_real = user || User.current
