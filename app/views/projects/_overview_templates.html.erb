@@ -1,22 +1,21 @@
 <% if @project.present? && @project.issue_templates.present? && (Issue.allowed_target_trackers(@project) & @project.issue_templates.displayed_on_overview.map(&:tracker)).any? %>
 
-  <% @project.issue_templates.displayed_on_overview.includes(:tracker).order('trackers.position desc, issue_templates.template_title desc').each do |template| %>
+  <div class="templates_cards">
 
-    <div class="templates_cards">
+    <% @project.issue_templates.displayed_on_overview.includes(:tracker).order('trackers.position desc, issue_templates.template_title desc').each do |template| %>
 
       <% if Issue.allowed_target_trackers(@project).include?(template.tracker) && template.template_projects.include?(@project) %>
-        <%= link_to new_project_issue_path(project_id: @project.id, template_id: template.id), class: "template_card" do %>
+        <%= link_to new_project_issue_path(project_id: @project.identifier, template_id: template.id), class: "template_card" do %>
           <div class="template-logo"><%= template.template_image.present? ? octicon(template.template_image, :height => 48, :class => "right left", :"aria-label" => "hi") : octicon('repo-template', :height => 48, :class => "right left", :"aria-label" => "hi") %></div>
           <div class="template-title"><%= template.template_title %></div>
           <% if template.template_description.present? %>
-            <div class="template-bar"></div>
             <div class="template-description"><%= template.template_description %></div>
           <% end %>
         <% end %>
       <% end %>
 
-    </div>
+    <% end %>
 
-  <% end %>
+  </div>
 
 <% end %>

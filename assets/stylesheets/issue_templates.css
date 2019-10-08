@@ -181,10 +181,6 @@ a.list_templates_projects_names.current {
 .templates_cards {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    display: -ms-flexbox;
-    -ms-flex-direction: row;
-    -ms-flex-wrap: wrap;
 }
 
 .template_card {
@@ -202,8 +198,9 @@ a.list_templates_projects_names.current {
     text-align: center;
     padding: 20px;
     margin-top: 20px;
-    width: 100%;
+    width: 50%;
     max-width: 450px;
+    margin-right: 15px;
 }
 
 .template_card .template-logo {
@@ -215,25 +212,17 @@ a.list_templates_projects_names.current {
 
 .template_card .template-title {
     margin: 10px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.template_card .template-bar {
-    background: linear-gradient(to left, #F76B1C, #FAD961);
-    height: 1px;
-    margin: 10px 0;
+    font-size: 14px;
 }
 
 .template_card .template-description {
-    font-size: 12px;
+    font-size: 11px;
     color: #4C4C4C;
     margin-top: 10px;
     margin-bottom: 0;
-    text-decoration: none !important;
 }
 
-a.template_card .template-description:hover {
+a.template_card:hover {
     text-decoration: none !important;
+    background-color: #FCF5C1;
 }
