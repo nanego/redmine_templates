@@ -181,6 +181,8 @@ a.list_templates_projects_names.current {
 .templates_cards {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 
 .template_card {
@@ -197,9 +199,8 @@ a.list_templates_projects_names.current {
     -ms-flex-direction: column;
     text-align: center;
     padding: 20px;
-    margin-top: 20px;
-    width: 50%;
-    max-width: 450px;
+    margin-bottom: 15px;
+    flex: 1 0 39%;
     margin-right: 15px;
 }
 
