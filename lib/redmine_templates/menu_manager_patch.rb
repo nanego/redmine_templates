@@ -11,7 +11,7 @@ module PluginTemplates
               project_menu.push "new_issue_template_#{template.id}".to_sym,
                                 {:controller => 'issues', :action => 'new', :template_id => template.id},
                                 :param => :project_id,
-                                :caption => Proc.new {|p| template.reload; "[#{template.tracker}] #{template.template_title}"},
+                                :caption => Proc.new {|p| template.reload; template.title_with_tracker},
                                 :html => {:accesskey => Redmine::AccessKeys.key_for(:new_issue)},
                                 :if => Proc.new {|project|
                                   Issue.allowed_target_trackers(project).include?(template.tracker) &&

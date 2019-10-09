@@ -211,6 +211,9 @@ a.list_templates_projects_names.current {
     margin: 0 auto;
 }
 
+.template_card .error {
+}
+
 .template_card .template-title {
     margin: 10px 0;
     font-size: 14px;

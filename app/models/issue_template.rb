@@ -66,6 +66,14 @@ class IssueTemplate < ActiveRecord::Base
     template_title
   end
 
+  def title_with_tracker
+    if template_title == tracker.name
+      "[#{tracker}]"
+    else
+      "[#{tracker}] #{template_title}"
+    end
+  end
+
   def allowed_target_projects
     Project.where(Project.allowed_to_condition(User.current, :add_issues))
   end
