@@ -66,21 +66,10 @@ function updateCustomFieldsValues(data) {
   });
   <% end %>
 
-  // Reset select box and tracker after applying a template
-  resetTemplateSelectBox();
-  $('#track_changes').val('false');
-  $('#issue-form :input').change(function(){
-    $('#track_changes').val('true');
-  });
-
   // Notice the user after applying a template
   var $notice = $('<div class="flash notice" id="flash_notice"><%= l("template_has_been_applied", :name => @issue_template.template_title) %></div>').fadeIn(200);
   $notice.insertBefore( ".box" );
   $notice.delay(3000).fadeOut(300);
 
   $('#issue_subject').focus();
-}
-
-function resetTemplateSelectBox() {
-  $('#select_issue_template')[0].selectedIndex = 0;
 }

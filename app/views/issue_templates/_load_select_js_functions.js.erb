@@ -1,45 +1,6 @@
-$('body').on('change', '#select_issue_template', function(e) {
-  e.preventDefault();
-  window.onbeforeunload = null;
-  var newURL = $(this).val();
-  if (newURL.indexOf("issue_templates") > -1) {
-    window.location.href=newURL; // Click on "Manage templates"
-  }else{
-    // $('#form-select-issue-template').submit();
-    if ( $('#track_changes').val()=="true" ){
-      $('<div></div>').appendTo('body')
-          .html('<div><%=l("warning_all_changes_will_be_overwritten").html_safe %></div>')
-          .dialog({
-            modal: true, title: '<%= l("warning") %>', zIndex: 10000, autoOpen: true,
-            width: 'auto', resizable: false,
-            buttons: {
-              "<%= l("apply_template") %>": function () {
-                window.location.href=newURL;
-                $(this).dialog("close");
-              },
-              "<%= l("cancel") %>": function () {
-                resetTemplateSelectBox();
-                $(this).dialog("close");
-              }
-            },
-            close: function (event, ui) {
-              resetTemplateSelectBox();
-              $(this).remove();
-            }
-          });
-    } else {
-      window.location.href=newURL;
-    }
-  }
-});
-
 // New issue template button at the bottom of the new issue form
 $('body').on("click", "a#init_issue_template", function(event){
   event.preventDefault();
   $('#issue-form').attr('action', $(this).attr('data-href') );
   $("#issue-form").submit();
-});
-
-$('body').on('change', '#issue-form :input', function(){
-  $('#track_changes').val('true');
 });

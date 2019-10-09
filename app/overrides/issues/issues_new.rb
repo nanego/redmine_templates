@@ -16,33 +16,6 @@ Deface::Override.new :virtual_path  => 'issues/new',
                                         <% end %>'
 
 Deface::Override.new :virtual_path  => 'issues/new',
-                     :name          => 'add-template-selection-to-issues-new',
-                     :insert_before  => 'erb[loud]:contains("title")' do
-  '<%
-    allowed_trackers = @issue.allowed_target_trackers
-    tracker_ids = @issue.project.issue_templates.select(:tracker_id).where("tracker_id IN (?)", allowed_trackers.map(&:id)).where("template_enabled = ?", true).map(&:tracker_id).uniq
-    @template_map = Hash::new
-    tracker_ids.each do |tracker_id|
-      if Setting["plugin_redmine_templates"]["disable_templates"]
-        templates = @issue.project.issue_templates.where("tracker_id = ? AND template_enabled = ?", tracker_id, true)
-      else
-        templates = @issue.project.issue_templates.where("tracker_id = ?", tracker_id)
-      end
-      if templates.any?
-        @template_map[Tracker.find(tracker_id)] = templates
-      end
-    end
-  %>
-  <% if @template_map.size > 0 %>
-    <%= form_tag issue_templates_path, :id => "form-select-issue-template" do %>
-      <%= hidden_field_tag :project_id, @issue.project.identifier %>
-      <%= hidden_field_tag :track_changes, false %>
-      <%= select_tag :id, grouped_templates_for_select(@template_map, @issue.project), :prompt=>l("choose_a_template"), :id => "select_issue_template" %>
-    <% end %>
-  <% end %>'
-end
-
-Deface::Override.new :virtual_path  => 'issues/new',
                      :name          => 'autocomplete-new-issue-from-url-template',
                      :insert_after  => 'erb[loud]:contains("submit_tag l(:button_create_and_continue)")',
                      :original => 'bcfa1ba4130d1a98d6dc7f126d897cfd5bda13fc' do

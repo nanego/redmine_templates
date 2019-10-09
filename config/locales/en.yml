@@ -14,7 +14,6 @@ en:
   label_new_templates: "New template"
   label_edit_issue_template: "Edit template"
   notice_issue_template_successfully_updated: "The template has been updated"
-  choose_a_template: "Select a template"
   show_templates: "All templates"
   issue_is_private: "Private issue"
   notice_issue_template_successfully_deleted: "The template has been deleted"

@@ -17,7 +17,6 @@ fr:
   label_new_templates: "Créer un nouveau modèle"
   label_edit_issue_template: "Modification du modèle"
   notice_issue_template_successfully_updated: "Modèle mis à jour"
-  choose_a_template: "Sélectionner un modèle"
   show_templates: "Gérer les modèles"
   issue_is_private: "Demande privée"
   notice_issue_template_successfully_deleted: "Le modèle a été supprimé"
