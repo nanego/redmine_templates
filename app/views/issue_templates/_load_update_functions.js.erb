@@ -1,15 +1,4 @@
 function startUpdate() {
-  // Update all standard fields with template data
-  <% @issue_template.attributes.each do |attr_name, attr_value|  %>
-    <% if attr_value.present? %>
-      $.each($('#issue-form').serializeArray(), function(i, field) {
-        if (field.name == "<%= escape_javascript("issue[#{attr_name}]") %>"){
-          $('[name="' + field.name + '"]').val("<%= raw(escape_javascript(attr_value.to_s)) %>");
-        }
-      });
-    <% end %>
-  <% end %>
-
   updateCustomFieldsValues()
 }
 
