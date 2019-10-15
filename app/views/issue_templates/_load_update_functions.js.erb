@@ -10,27 +10,10 @@ function startUpdate() {
     <% end %>
   <% end %>
 
-    var secondary_projects = <%= @issue_template.secondary_projects.map(&:id).inspect %>;
-    $.each(secondary_projects, function( index, value ) {
-        $("#issue_project_ids option[value=" + value +"]").prop("selected",true);
-    });
-
-  // Show or hide some fields based on the new selected tracker, project or status, then update custom fields
-  updateIssueFrom('<%= escape_javascript update_issue_form_path(@project, @issue) %>').done(updateCustomFieldsValues);
+  updateCustomFieldsValues()
 }
 
-function updateIssueFrom(url) {
-  $('#all_attributes input, #all_attributes textarea, #all_attributes select').each(function(){
-    $(this).data('valuebeforeupdate', $(this).val());
-  });
-  return $.ajax({
-    url: url,
-    type: 'post',
-    data: $('#issue-form').serialize()
-  });
-}
-
-function updateCustomFieldsValues(data) {
+function updateCustomFieldsValues() {
 
   // Update all custom fields with template data
   <% @issue_template.editable_custom_field_values.each do |custom_value|  %>
