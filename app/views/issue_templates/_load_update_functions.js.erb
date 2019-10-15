@@ -49,10 +49,5 @@ function updateCustomFieldsValues() {
   });
   <% end %>
 
-  // Notice the user after applying a template
-  var $notice = $('<div class="flash notice" id="flash_notice"><%= l("template_has_been_applied", :name => @issue_template.template_title) %></div>').fadeIn(200);
-  $notice.insertBefore( ".box" );
-  $notice.delay(3000).fadeOut(300);
-
   $('#issue_subject').focus();
 }
