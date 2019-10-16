@@ -67,6 +67,10 @@ class IssueTemplate < ActiveRecord::Base
     template_title
   end
 
+  def validate_custom_field_values
+    # Skip custom values validation when saving templates
+  end
+
   def title_with_tracker
     if template_title == tracker.name
       "[#{tracker}]"
