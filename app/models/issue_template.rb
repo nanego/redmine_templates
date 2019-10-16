@@ -60,7 +60,8 @@ class IssueTemplate < ActiveRecord::Base
                   :usage,
                   :authorized_viewers,
                   :custom_form,
-                  :custom_form_path
+                  :custom_form_path,
+                  :tracker_read_only
 
   def to_s
     template_title

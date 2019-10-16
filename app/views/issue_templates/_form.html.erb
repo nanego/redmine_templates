@@ -19,7 +19,10 @@
             </p>
             <p>
               <%= f.text_field :template_image, :size => 80, :maxlength => 255, placeholder: 'Ex: alert' %>
-              <span><%= link_to 'Liste des icones compatibles', 'https://octicons.github.com', target: '_blank' %></span>
+              <br><%= link_to 'Liste des icones compatibles', 'https://octicons.github.com', target: '_blank' %>
+            </p>
+            <p>
+              <%= f.check_box :tracker_read_only, :no_label => false %>
             </p>
             <p>
               <%= f.check_box :show_on_overview, :no_label => false %>
