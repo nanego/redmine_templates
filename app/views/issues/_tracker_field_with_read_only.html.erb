@@ -1,6 +1,5 @@
 <% if @issue.issue_template.present? && @issue.issue_template.tracker_read_only %>
   <%= f.select :tracker_id, trackers_options_for_select(@issue), {:required => true}, {style: "display:none;"} %>
-  <%= f.label_for_field :tracker_id, {:required => true} %>
   <span class="read-only"><%= @issue.tracker %></span>
 <% else %>
   <%= f.select :tracker_id, trackers_options_for_select(@issue), {:required => true},
