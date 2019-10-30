@@ -1,7 +1,10 @@
-<% if @issue.issue_template.present? && @issue.issue_template.tracker_read_only %>
-  <%= f.select :tracker_id, trackers_options_for_select(@issue), {:required => true}, {style: "display:none;"} %>
-  <span class="read-only"><%= @issue.tracker %></span>
+<% if @issue.persisted? || @issue.issue_template.blank? || (@issue.issue_template.present? && !@issue.issue_template.tracker_read_only) %>
+  <p>
+    <%= f.select :tracker_id, trackers_options_for_select(@issue), {:required => true},
+                 :onchange => "updateIssueFrom('#{escape_javascript update_issue_form_path(@project, @issue)}', this)" %>
+  </p>
 <% else %>
-  <%= f.select :tracker_id, trackers_options_for_select(@issue), {:required => true},
-               :onchange => "updateIssueFrom('#{escape_javascript update_issue_form_path(@project, @issue)}', this)" %>
+  <p style="display: none;">
+    <%= f.select :tracker_id, trackers_options_for_select(@issue), {:required => true} %>
+  </p>
 <% end %>

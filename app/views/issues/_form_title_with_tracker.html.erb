@@ -1,0 +1,5 @@
+<% if @issue.issue_template.present? && @issue.issue_template.tracker_read_only %>
+  <%= title("#{l(:label_issue_new)} : #{@issue.issue_template.tracker}") %>
+<% else %>
+  <%= title l(:label_issue_new) %>
+<% end %>

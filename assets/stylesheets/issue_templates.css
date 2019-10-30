@@ -98,10 +98,6 @@ table .template_icon {
     background-color: #edf3fe;
 }
 
-.box.tabular .read-only {
-    line-height: 2em;
-}
-
 form#issue-template-form #issue_template_template_title {
     width: 300px;
 }
