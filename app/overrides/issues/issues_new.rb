@@ -31,7 +31,11 @@ Deface::Override.new :virtual_path      => "issues/new",
     <% if @issue_template.present? && @issue_template.custom_form %>
       <%= render :partial => "issues/" + @issue_template.custom_form_path, :locals => {:f => f} %>
     <% else %>
-      <%= render :partial => "issues/form", :locals => {:f => f} %>
+      <% if Redmine::Plugin.installed?(:redmine_customize_core_fields) %>
+        <%= render :partial => "issues/customized_form", :locals => {:f => f} %>
+      <% else %>
+        <%= render :partial => "issues/form", :locals => {:f => f} %>
+      <% end %>
     <% end %>
   )
 end
