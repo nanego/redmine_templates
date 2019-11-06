@@ -16,7 +16,7 @@
             </div>
             <div class="template-title"><%= template.template_title %></div>
             <% if template.template_description.present? %>
-              <div class="template-description"><%= template.template_description %></div>
+              <div class="template-description"><%= textilizable template.template_description %></div>
             <% end %>
         <% end %>
       <% end %>

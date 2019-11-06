@@ -15,13 +15,6 @@
               <%= f.text_field :template_title, :size => 80, :maxlength => 255, :required => true %>
             </p>
             <p>
-              <%= f.text_area :template_description, :maxlength => 1024 %>
-            </p>
-            <p>
-              <%= f.text_field :template_image, :size => 80, :maxlength => 255, placeholder: 'Ex: alert' %>
-              <br><%= link_to 'Liste des icones compatibles', 'https://octicons.github.com', target: '_blank' %>
-            </p>
-            <p>
               <%= f.check_box :tracker_read_only, :no_label => false %>
             </p>
             <p>
@@ -96,6 +89,15 @@
             </script>
 
           </div>
+
+          <p>
+            <%= f.text_area :template_description, :maxlength => 1024, :class => 'wiki-edit' %>
+            <%= wikitoolbar_for 'issue_template_template_description' %>
+          </p>
+          <p>
+            <%= f.text_field :template_image, :size => 80, :maxlength => 255, placeholder: 'Ex: alert' %>
+            <br><%= link_to 'Liste des icones compatibles', 'https://octicons.github.com', target: '_blank' %>
+          </p>
 
         </div>
       </div>
