@@ -197,7 +197,6 @@ a.list_templates_projects_names.current {
     flex-direction: column;
     display: -ms-flexbox;
     -ms-flex-direction: column;
-    text-align: center;
     padding: 20px;
     margin-bottom: 15px;
     flex: 1 0 39%;
@@ -217,6 +216,7 @@ a.list_templates_projects_names.current {
 .template_card .template-title {
     margin: 10px 0;
     font-size: 14px;
+    text-align: center;
 }
 
 .template_card .template-description {
