@@ -14,7 +14,9 @@ class IssueTemplate < ActiveRecord::Base
 
   has_and_belongs_to_many :template_projects, class_name: 'Project', join_table: 'issue_templates_projects'
 
-  has_and_belongs_to_many :secondary_projects, class_name: 'Project', join_table: 'multiprojects_issue_templates'
+  if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+    has_and_belongs_to_many :secondary_projects, class_name: 'Project', join_table: 'multiprojects_issue_templates'
+  end
 
   validates_presence_of :template_title, :tracker, :author, :status, :template_projects
 

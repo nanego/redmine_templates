@@ -11,7 +11,9 @@ class IssuesController < ApplicationController
       if @issue_template.present?
         @issue.safe_attributes = @issue_template.attributes.slice(*Issue.attribute_names).merge(permitted_params_override)
         @issue.project = @project
-        @issue.projects = @issue_template.secondary_projects
+        if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+          @issue.projects = @issue_template.secondary_projects
+        end
         @issue.issue_template = @issue_template
         @issue_template.increment!(:usage)
       end

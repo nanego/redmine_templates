@@ -1,0 +1,6 @@
+one:
+  issue_template_id: 1
+  project_id: 2
+two:
+  issue_template_id: 2
+  project_id: 2
