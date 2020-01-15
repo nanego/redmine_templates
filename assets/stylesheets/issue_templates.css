@@ -201,6 +201,7 @@ a.list_templates_projects_names.current {
     margin-bottom: 15px;
     flex: 1 0 39%;
     margin-right: 15px;
+    cursor: pointer;
 }
 
 .template_card .template-logo {
@@ -226,7 +227,7 @@ a.list_templates_projects_names.current {
     margin-bottom: 0;
 }
 
-a.template_card:hover {
+.template_card:hover {
     text-decoration: none !important;
     background-color: #FCF5C1;
 }

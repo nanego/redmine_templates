@@ -6,8 +6,7 @@ describe ProjectsController, type: :controller do
 
   render_views
 
-  self.fixture_path = File.dirname(__FILE__) + "/../fixtures/"
-  fixtures :issue_templates
+  fixtures :issue_templates, :issue_templates_projects, :users
 
   before do
     @request.session[:user_id] = 1 #=> admin ; permissions are hard...
@@ -15,9 +14,10 @@ describe ProjectsController, type: :controller do
 
   context "POST copy project" do
     it "should copy available issue templates" do
+      source_project = Project.find(2)
       assert_difference 'Project.count' do
         post :copy, :params => {
-            :id => 1,
+            :id => source_project.id,
             :project => {
                 :name => 'Copy with templates',
                 :identifier => 'copy-with-templates'
@@ -25,10 +25,9 @@ describe ProjectsController, type: :controller do
             :only => %w(issues versions issue_templates)
         }
       end
-      project = Project.find('copy-with-templates')
-      source = Project.find(1)
-      assert_equal IssueTemplate.where(id: 1), project.issue_templates
-      assert_equal source.issue_templates.count, project.issue_templates.count, "All issue_templates were not copied"
+      new_project = Project.find('copy-with-templates')
+      assert_equal source_project.issue_templates, new_project.issue_templates, "All issue_templates were not copied"
+      assert_equal IssueTemplate.where(id: [1, 2]).to_a, new_project.issue_templates.to_a
     end
   end
 
