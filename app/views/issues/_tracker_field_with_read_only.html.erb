@@ -1,7 +1,14 @@
 <% if @issue.persisted? || @issue.issue_template.blank? || (@issue.issue_template.present? && !@issue.issue_template.tracker_read_only) %>
   <p>
-    <%= f.select :tracker_id, trackers_options_for_select(@issue), {:required => true},
-                 :onchange => "updateIssueFrom('#{escape_javascript update_issue_form_path(@project, @issue)}', this)" %>
+    <% if Redmine::VERSION.to_s > '4.1' %>
+      <%= f.select :tracker_id, trackers_options_for_select(@issue), {:required => true},
+                   :onchange => "updateIssueFrom('#{escape_javascript update_issue_form_path(@project, @issue)}', this)",
+                   :title => @issue.tracker.description %>
+      <%= content_tag 'a', l(:label_open_trackers_description), :class => 'icon-only icon-help', :title => l(:label_open_trackers_description), :onclick => "showModal('trackers_description', '500px'); return false;", :href => '#' if trackers_for_select(@issue).any? {|t| t.description.present?} %>
+    <% else %>
+      <%= f.select :tracker_id, trackers_options_for_select(@issue), {:required => true},
+                   :onchange => "updateIssueFrom('#{escape_javascript update_issue_form_path(@project, @issue)}', this)" %>
+    <% end %>
   </p>
 <% else %>
   <p style="display: none;">
