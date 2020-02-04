@@ -6,7 +6,6 @@ describe IssueTemplatesController, type: :controller do
 
   render_views
 
-  self.fixture_path = File.dirname(__FILE__) + "/../fixtures/"
   fixtures :issue_templates
 
   before do
