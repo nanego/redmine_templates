@@ -6,7 +6,7 @@ describe IssueTemplatesController, type: :controller do
 
   render_views
 
-  fixtures :issue_templates
+  fixtures :issue_templates, :projects, :users
 
   before do
     @request.session[:user_id] = 1 #=> admin ; permissions are hard...
