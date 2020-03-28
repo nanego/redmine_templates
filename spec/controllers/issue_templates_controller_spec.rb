@@ -74,14 +74,14 @@ describe IssueTemplatesController, type: :controller do
                                                   :done_ratio => "0",
                                                   :due_date => "",
                                                   :assigned_to_id => "",
-                                                  :template_title => "new template",
+                                                  :template_title => "Init new template",
                                                   :template_enabled => true,
                                                   :project_id => '1',
                                                   :template_project_ids => ['1'],
                                                   :status_id => '1'}}
 
     # find created template
-    template = IssueTemplate.find_by_template_title("new template")
+    template = IssueTemplate.find_by_template_title("Init new template")
     assert_kind_of IssueTemplate, template
 
     # check redirection
