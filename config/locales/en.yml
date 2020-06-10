@@ -6,6 +6,7 @@ en:
   button_save_issue_template: "Save this template"
   field_template_title: "Template name"
   field_tracker_read_only: "Tracker read only"
+  field_split_description: Split description field in multiple fields
   template_is_enabled: "Template enabled"
   label_issue_templates: "Issue templates"
   no_issue_templates_for_this_project: "There is no issue template for this project"

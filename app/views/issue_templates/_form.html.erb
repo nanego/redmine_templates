@@ -1,4 +1,4 @@
-<div data-controller="template-form">
+<div data-controller="template-form split-description">
 
   <%= labelled_form_for @issue_template, :html => {id: 'issue-template-form',
                                                    name: 'issue-template-form_name'} do |f| %>
@@ -19,6 +19,19 @@
             </p>
             <p>
               <%= f.check_box :show_on_overview, :no_label => false %>
+            </p>
+            <p data-target="template-form.split_description">
+              <%= label_tag :split_description, l(:field_split_description) %>
+              <%= check_box_tag :split_description, 1, false, 
+                                :data => { 
+                                  "action" => "split-description#toggleDescriptionSectionsField", 
+                                  "target" => "split-description.split_description_checkbox" 
+                                }
+              %>
+
+              <%= number_field_tag :split_description_number, "2", :min => 2, 
+                                    :data => { "target" => "split-description.split_description_number" }
+               %>
             </p>
             <%= f.hidden_field :project_id, :value => (@project.try(:id) || @issue_template.project_id) %>
             <%= f.hidden_field :id, :value => @issue_template.id %>
@@ -118,7 +131,7 @@
 
         <p><%= f.text_field :subject, :size => 80, :maxlength => 255, :required => true %></p>
 
-        <p>
+        <p data-target="split-description.description_field">
           <%= f.label_for_field :description, :required => false %>
           <%= content_tag 'span', :id => "issue_description_and_toolbar" do %>
             <%= f.text_area :description,
