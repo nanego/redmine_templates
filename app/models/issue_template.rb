@@ -12,6 +12,9 @@ class IssueTemplate < ActiveRecord::Base
   belongs_to :priority, :class_name => 'IssuePriority', :foreign_key => 'priority_id'
   belongs_to :category, :class_name => 'IssueCategory', :foreign_key => 'category_id'
 
+  has_many :sections, :class_name => "IssueTemplateDescriptionSection"
+  accepts_nested_attributes_for :sections
+
   has_and_belongs_to_many :template_projects, class_name: 'Project', join_table: 'issue_templates_projects'
 
   if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
