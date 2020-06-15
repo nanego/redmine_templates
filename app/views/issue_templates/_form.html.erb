@@ -30,7 +30,10 @@
               %>
 
               <%= number_field_tag :split_description_number, "2", :min => 2, 
-                                    :data => { "target" => "split-description.split_description_number" }
+                                    :data => { 
+                                      "target" => "split-description.split_description_number",
+                                      "action" => "split-description#populateDescriptionSections"
+                                    }
                %>
             </p>
             <%= f.hidden_field :project_id, :value => (@project.try(:id) || @issue_template.project_id) %>
@@ -144,18 +147,18 @@
         </p>
         <%= wikitoolbar_for 'issue_template_description' %>
 
-        <div id="attributes" class="attributes">
+        <span data-target="split-description.description_sections_fields" style="display: none;"></span>
+        <span data-target="split-description.description_section_form_template" style="display: none;">
+          <%= render :partial => "issue_templates/description_section_form", :locals => { f: f } %>  
+        </span>
 
+        <div id="attributes" class="attributes">
           <div class="splitcontent">
             <div class="splitcontentleft">
-
               <p><%= f.select :status_id, (IssueStatus.all.collect {|p| [p.name, p.id]}), {:required => true},
                               :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
-
               <p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), {:required => true}, :disabled => false %></p>
-
               <p><%= f.select :assigned_to_id, principals_options_for_select(@issue_template.assignable_users, @issue_template.assigned_to), :include_blank => true, :required => false %></p>
-
               <p><%= f.select :category_id, (IssueCategory.all.collect {|c| [c.name, c.id]}), :include_blank => true, :required => false %>
                 <%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
                             new_project_issue_category_path(@issue_template.project),
@@ -165,20 +168,13 @@
                             :tabindex => 200) if User.current.allowed_to?(:manage_categories, @issue_template.project) %></p>
 
             </div>
-
             <div class="splitcontentright">
-
               <p><%= f.text_field :start_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_start_date') %></p>
-
               <p><%= f.text_field :due_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_due_date') %></p>
-
               <p><%= f.text_field :estimated_hours, :size => 3, :disabled => false, :required => false %> <%= l(:field_hours) %></p>
-
               <p><%= f.select :done_ratio, ((0..10).to_a.collect {|r| ["#{r * 10} %", r * 10]}), :required => false %></p>
-
             </div>
           </div>
-
           <div class="splitcontent">
             <div class="splitcontentleft">
               <% i = 0 %>
@@ -193,11 +189,8 @@
               <% end -%>
               </div>
               </div>
-
           <% include_calendar_headers_tags %>
-
         </div>
-
       </div>
 
       <% if Redmine::Plugin.installed?(:redmine_multiprojects_issue) %>

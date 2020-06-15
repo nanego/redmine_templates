@@ -25,7 +25,7 @@ $(document).ready(function ($) {
                 "custom_form",
                 "standard_form",
                 "split_description"
-            ]
+            ];
         }
 
         connect() {
@@ -33,26 +33,26 @@ $(document).ready(function ($) {
         }
 
         reloadForm(e) {
-            console.log(e.currentTarget.value)
+            console.log(e.currentTarget.value);
 
             fetch('/issue_templates/custom_form?path=' + e.currentTarget.value)
                 .then(response => response.text())
                 .then(html => {
                     $('#custom_form_container')[0].innerHTML = html
-                })
+                });
         }
 
         toogleForm() {
             if (this.custom_form_radio_buttonTarget.checked) {
                 this.custom_form_path_text_fieldTarget.parentNode.style.display = 'block';
-                this.custom_formTarget.style.display = 'block'
-                this.standard_formTarget.style.display = 'none'
-                this.split_descriptionTarget.style.display = 'none'
+                this.custom_formTarget.style.display = 'block';
+                this.standard_formTarget.style.display = 'none';
+                this.split_descriptionTarget.style.display = 'none';
             } else {
                 this.custom_form_path_text_fieldTarget.parentNode.style.display = 'none';
-                this.custom_formTarget.style.display = 'none'
-                this.standard_formTarget.style.display = 'block'
-                this.split_descriptionTarget.style.display = 'block'
+                this.custom_formTarget.style.display = 'none';
+                this.standard_formTarget.style.display = 'block';
+                this.split_descriptionTarget.style.display = 'block';
             }
         }
 
@@ -61,7 +61,13 @@ $(document).ready(function ($) {
     stimulus_application.register("split-description", class extends Stimulus.Controller {
 
         static get targets() {
-            return ["split_description_checkbox", "split_description_number", "description_field"];
+            return [
+                "split_description_checkbox",
+                "split_description_number",
+                "description_field",
+                "description_sections_fields",
+                "description_section_form_template"
+            ];
         }
 
         connect() {
@@ -72,10 +78,32 @@ $(document).ready(function ($) {
             if (this.split_description_checkboxTarget.checked) {
                 this.split_description_numberTarget.style.display = "inline-block";
                 this.description_fieldTarget.style.display = "none";
+                this.description_sections_fieldsTarget.style.display = "block";
+
+                this.populateDescriptionSections();
             } else {
                 this.split_description_numberTarget.style.display = "none";
                 this.description_fieldTarget.style.display = "block";
+                this.description_sections_fieldsTarget.style.display = "none";
             }
         }
-    })
+
+        populateDescriptionSections() {
+            let repetition = this.split_description_numberTarget.value;
+            let template = this.description_section_form_templateTarget.innerHTML;
+            let sections = this.description_sections_fieldsTarget.querySelectorAll(".split_description_section");
+            var sectionsCount = sections.length ;
+
+            while(sectionsCount >= repetition) {
+                this.description_sections_fieldsTarget.lastElementChild.remove();
+                sectionsCount--;
+            }
+            
+            if (sectionsCount < repetition) {
+                for (let i = sectionsCount; i < repetition; i++) {
+                    this.description_sections_fieldsTarget.insertAdjacentHTML("beforeend", template);
+                }
+            }
+        }
+    });
 })();

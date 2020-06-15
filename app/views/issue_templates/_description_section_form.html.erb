@@ -1,0 +1,21 @@
+<%= f.fields_for :sections do |section_form| %>
+	<span class="split_description_section">
+		<p>
+			<%= label_tag :description_section %>
+			<%= section_form.text_field :title, :placeholder => "Titre", :no_label => true %>
+		</p>
+		<p>
+			<%= section_form.text_field :description, :placeholder => "Description", :no_label => true %>
+		</p>
+		<p>
+			<%= section_form.text_area :text,
+														:cols => 60,
+														:rows => (@issue_template.description.blank? ? 10 : [[10, @issue_template.description.length / 50].max, 100].min),
+														:accesskey => accesskey(:edit),
+														:class => "wiki-edit",
+														:no_label => true
+			%>
+			<!-- wikitoolbar_for "split_description_text" -->
+		</p>
+	</span>
+<% end %>
