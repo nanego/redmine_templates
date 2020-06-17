@@ -63,10 +63,9 @@ $(document).ready(function ($) {
         static get targets() {
             return [
                 "split_description_checkbox",
-                "split_description_number",
                 "description_field",
                 "description_sections_fields",
-                "description_section_form_template"
+                "add_section_button"
             ];
         }
 
@@ -76,33 +75,46 @@ $(document).ready(function ($) {
 
         toggleDescriptionSectionsField() {
             if (this.split_description_checkboxTarget.checked) {
-                this.split_description_numberTarget.style.display = "inline-block";
                 this.description_fieldTarget.style.display = "none";
                 this.description_sections_fieldsTarget.style.display = "block";
-
-                this.populateDescriptionSections();
+                this.add_section_buttonTarget.style.display = "block";
             } else {
-                this.split_description_numberTarget.style.display = "none";
                 this.description_fieldTarget.style.display = "block";
                 this.description_sections_fieldsTarget.style.display = "none";
+                this.add_section_buttonTarget.style.display = "none";
             }
         }
 
-        populateDescriptionSections() {
-            let repetition = this.split_description_numberTarget.value;
-            let template = this.description_section_form_templateTarget.innerHTML;
+        addSection(e) {
             let sections = this.description_sections_fieldsTarget.querySelectorAll(".split_description_section");
-            var sectionsCount = sections.length ;
+            let template = sections[0].outerHTML;
+            let index = sections.length
 
-            while(sectionsCount >= repetition) {
-                this.description_sections_fieldsTarget.lastElementChild.remove();
-                sectionsCount--;
-            }
-            
-            if (sectionsCount < repetition) {
-                for (let i = sectionsCount; i < repetition; i++) {
-                    this.description_sections_fieldsTarget.insertAdjacentHTML("beforeend", template);
-                }
+            template = template.replace(/\_0\_/g, "_" + index + "_").replace(/\[0\]/g, "[" + index + "]");
+            this.description_sections_fieldsTarget.insertAdjacentHTML("beforeend", template);
+            this.emptyNewSectionValues(this.description_sections_fieldsTarget.lastChild);
+        }
+
+        emptyNewSectionValues(section) {
+            section.querySelector("textarea").value = "";
+            section.querySelectorAll("input[type=text]").forEach(input => input.value = "");
+        }
+    });
+
+    stimulus_application.register("section-form", class extends Stimulus.Controller {
+
+        static get targets() {
+            return [
+                "destroy_hidden"
+            ];
+        }
+
+        connect() {}
+
+        deleteSection(e) {
+            if (window.confirm("Êtes-vous sûr ?")) {
+                this.element.style.display = "none";
+                this.destroy_hiddenTarget.value = "1";
             }
         }
     });

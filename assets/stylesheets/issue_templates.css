@@ -231,3 +231,8 @@ a.list_templates_projects_names.current {
     text-decoration: none !important;
     background-color: #FCF5C1;
 }
+
+.split_description_section .delete-section, .add-section {
+    cursor: pointer;
+}
+

@@ -22,19 +22,12 @@
             </p>
             <p data-target="template-form.split_description">
               <%= label_tag :split_description, l(:field_split_description) %>
-              <%= check_box_tag :split_description, 1, false, 
+              <%= check_box_tag :split_description, 1, @issue_template.split_description_field?, 
                                 :data => { 
                                   "action" => "split-description#toggleDescriptionSectionsField", 
                                   "target" => "split-description.split_description_checkbox" 
                                 }
               %>
-
-              <%= number_field_tag :split_description_number, "2", :min => 2, 
-                                    :data => { 
-                                      "target" => "split-description.split_description_number",
-                                      "action" => "split-description#populateDescriptionSections"
-                                    }
-               %>
             </p>
             <%= f.hidden_field :project_id, :value => (@project.try(:id) || @issue_template.project_id) %>
             <%= f.hidden_field :id, :value => @issue_template.id %>
@@ -147,10 +140,12 @@
         </p>
         <%= wikitoolbar_for 'issue_template_description' %>
 
-        <span data-target="split-description.description_sections_fields" style="display: none;"></span>
-        <span data-target="split-description.description_section_form_template" style="display: none;">
-          <%= render :partial => "issue_templates/description_section_form", :locals => { f: f } %>  
+        <span data-target="split-description.description_sections_fields" style="display: none;">
+          <%= render :partial => "issue_templates/description_section_form", :locals => { f: f } %>
         </span>
+        <p data-target="split-description.add_section_button" style="display: none;">
+          <a class="icon icon-add add-section" data-action="split-description#addSection">Ajouter une section</a>
+        </p>
 
         <div id="attributes" class="attributes">
           <div class="splitcontent">
