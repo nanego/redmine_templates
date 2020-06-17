@@ -13,7 +13,7 @@ class IssueTemplate < ActiveRecord::Base
   belongs_to :category, :class_name => 'IssueCategory', :foreign_key => 'category_id'
 
   has_many :sections, :class_name => "IssueTemplateDescriptionSection"
-  accepts_nested_attributes_for :sections
+  accepts_nested_attributes_for :sections, :allow_destroy => true
 
   has_and_belongs_to_many :template_projects, class_name: 'Project', join_table: 'issue_templates_projects'
 
@@ -66,7 +66,8 @@ class IssueTemplate < ActiveRecord::Base
                   :authorized_viewers,
                   :custom_form,
                   :custom_form_path,
-                  :tracker_read_only
+                  :tracker_read_only,
+                  :sections_attributes
 
   def to_s
     template_title
@@ -161,4 +162,7 @@ class IssueTemplate < ActiveRecord::Base
     nil #TODO Make templates compatible with this functionality
   end
 
+  def split_description_field?
+    sections.reject(&:new_record?).any?
+  end
 end
