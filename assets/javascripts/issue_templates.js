@@ -90,14 +90,43 @@ $(document).ready(function ($) {
             let template = sections[0].outerHTML;
             let index = sections.length
 
-            template = template.replace(/\_0\_/g, "_" + index + "_").replace(/\[0\]/g, "[" + index + "]");
+            template = this.updateSectionId(template, index);
             this.description_sections_fieldsTarget.insertAdjacentHTML("beforeend", template);
             this.emptyNewSectionValues(this.description_sections_fieldsTarget.lastChild);
+            this.createWikiToolBar(this.description_sections_fieldsTarget.lastChild);
+        }
+
+        updateSectionId(template, index) {
+            template = template.replace(/\_0\_/g, "_" + index + "_").replace(/\[0\]/g, "[" + index + "]");
+            template = template.replace("Description section 1", "Description section " +  (index + 1));
+
+            return template;
         }
 
         emptyNewSectionValues(section) {
             section.querySelector("textarea").value = "";
             section.querySelectorAll("input[type=text]").forEach(input => input.value = "");
+        }
+
+        createWikiToolBar(section) {
+            let description_field = section.querySelector("textarea");
+            section.querySelector("p:nth-child(3)").appendChild(description_field);
+
+            this.cleanSectionFromOldWikitoolbar(section);
+            this.addWikiToolBar(description_field.id);
+        }
+
+        cleanSectionFromOldWikitoolbar(section) {
+            section.querySelector(".jstBlock").remove();
+            section.querySelector("script").remove();
+            section.querySelector("p:nth-child(4)").remove();
+        }
+
+        addWikiToolBar(field_id) {
+            var wikiToolbar = new jsToolBar(document.getElementById(field_id));
+            wikiToolbar.setHelpLink("/help/fr/wiki_syntax_textile.html");
+            wikiToolbar.setPreviewUrl("/preview/text");
+            wikiToolbar.draw();
         }
     });
 
