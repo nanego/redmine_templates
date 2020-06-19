@@ -12,8 +12,8 @@ class IssueTemplate < ActiveRecord::Base
   belongs_to :priority, :class_name => 'IssuePriority', :foreign_key => 'priority_id'
   belongs_to :category, :class_name => 'IssueCategory', :foreign_key => 'category_id'
 
-  has_many :sections, :class_name => "IssueTemplateDescriptionSection"
-  accepts_nested_attributes_for :sections, :allow_destroy => true
+  has_many :sections, :class_name => "IssueTemplateDescriptionSection", :dependent => :destroy
+  accepts_nested_attributes_for :sections, :reject_if => :session_is_empty?, :allow_destroy => true
 
   has_and_belongs_to_many :template_projects, class_name: 'Project', join_table: 'issue_templates_projects'
 
@@ -164,5 +164,12 @@ class IssueTemplate < ActiveRecord::Base
 
   def split_description_field?
     sections.reject(&:new_record?).any?
+  end
+
+  def session_is_empty?(attributes)
+    exists = attributes["id"].present?
+    empty = attributes.slice(:title, :description).values.all?(&:blank?)
+    attributes.merge!({:_destroy => 1}) if exists and empty
+    return (!exists and empty)
   end
 end
