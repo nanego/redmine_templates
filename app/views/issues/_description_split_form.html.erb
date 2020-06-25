@@ -1,0 +1,39 @@
+<% if @issue.safe_attribute? 'description' %>
+  <% if @issue_template&.split_description_field? %>
+    <%= f.fields_for :issue_template, @issue_template do |template_form| %>
+      <%= template_form.fields_for :sections, @issue_template.sections do |section_form| %>
+        <span class="split_description_section">
+          <p>
+            <%= label_tag @issue_template.sections[section_form.index].title %>
+            <em class="info" style="padding-top: 3px;"><%= @issue_template.sections[section_form.index].description %></em>
+          </p>
+          <p>
+              <%= section_form.text_area :text,
+                                          :cols => 60,
+                                          :rows => (@issue_template.description.blank? ? 10 : [[10, @issue_template.description.length / 50].max, 100].min),
+                                          :accesskey => accesskey(:edit),
+                                          :class => "wiki-edit",
+                                          :no_label => true
+              %>
+              <%= wikitoolbar_for "issue_issue_template_sections_attributes_#{section_form.index}_text" %>
+          </p>
+        </span>
+      <% end %>
+    <% end %>
+  <% else %>
+    <p>
+     <%= f.label_for_field :description, :required => @issue.required_attribute?('description') %>
+     <%= link_to_function content_tag(:span, l(:button_edit), :class => 'icon icon-edit'), '$(this).hide(); $("#issue_description_and_toolbar").show()' unless @issue.new_record? %>
+     <%= content_tag 'span', :id => "issue_description_and_toolbar", :style => (@issue.new_record? ? nil : 'display:none') do %>
+       <%= f.text_area :description, :cols => 60, :accesskey => accesskey(:edit), :class => 'wiki-edit',
+                      :rows => [[10, @issue.description.to_s.length / 50].max, 20].min,
+                      :data => {
+                          :auto_complete => true,
+                          :issues_url => auto_complete_issues_path(:project_id => @issue.project, :q => '')
+                      },
+                      :no_label => true %>
+     <% end %>
+    </p>
+    <%= wikitoolbar_for 'issue_description', preview_issue_path(:project_id => @issue.project, :issue_id => @issue.id) %>
+  <% end %>
+<% end %>
