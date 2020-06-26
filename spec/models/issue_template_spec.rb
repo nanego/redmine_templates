@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "Issue" do
+describe "IssueTemplate" do
   fixtures :projects, :users, :members, :member_roles, :roles,
            :trackers, :issue_statuses
 
@@ -67,4 +67,63 @@ describe "Issue" do
     end
   end
 
+  it "should have many sections" do
+    t = IssueTemplate.reflect_on_association(:sections)
+    expect(t.macro).to eq(:has_many)
+  end
+
+  it "should save section if it has a title and a description" do
+    template = IssueTemplate.new(:project_id => 1,
+                                 :tracker_id => 1,
+                                 :status_id => 1,
+                                 :author_id => 2,
+                                 :subject => 'test_create',
+                                 :template_title => 'New title template',
+                                 :template_enabled => true,
+                                 :template_project_ids => [1],
+                                 :sections_attributes => [{
+                                    :title => "Section title",
+                                    :description => "Section description"
+                                 }]
+                                )
+    template.save
+    template.reload
+    expect(template.sections.size).to eq 1
+  end
+
+  it "shouldn't save section it hasn't a title" do
+    template = IssueTemplate.new(:project_id => 1,
+                                 :tracker_id => 1,
+                                 :status_id => 1,
+                                 :author_id => 2,
+                                 :subject => 'test_create',
+                                 :template_title => 'New title template',
+                                 :template_enabled => true,
+                                 :template_project_ids => [1],
+                                 :sections_attributes => [{
+                                    :description => "Section description"
+                                 }]
+                                )
+    template.save
+    template.reload
+    expect(template.sections.size).to eq 0
+  end
+
+  it "shouldn't save section it hasn't a description" do
+    template = IssueTemplate.new(:project_id => 1,
+                                 :tracker_id => 1,
+                                 :status_id => 1,
+                                 :author_id => 2,
+                                 :subject => 'test_create',
+                                 :template_title => 'New title template',
+                                 :template_enabled => true,
+                                 :template_project_ids => [1],
+                                 :sections_attributes => [{
+                                    :title => "Section title"
+                                 }]
+                                )
+    template.save
+    template.reload
+    expect(template.sections.size).to eq 0
+  end
 end
