@@ -13,7 +13,7 @@ class IssueTemplate < ActiveRecord::Base
   belongs_to :category, :class_name => 'IssueCategory', :foreign_key => 'category_id'
 
   has_many :sections, :class_name => "IssueTemplateDescriptionSection", :dependent => :destroy
-  accepts_nested_attributes_for :sections, :reject_if => :session_is_empty?, :allow_destroy => true
+  accepts_nested_attributes_for :sections, :reject_if => :section_is_empty?, :allow_destroy => true
 
   has_and_belongs_to_many :template_projects, class_name: 'Project', join_table: 'issue_templates_projects'
 
@@ -166,9 +166,9 @@ class IssueTemplate < ActiveRecord::Base
     sections.reject(&:new_record?).any?
   end
 
-  def session_is_empty?(attributes)
+  def section_is_empty?(attributes)
     exists = attributes["id"].present?
-    empty = attributes.slice(:title, :description).values.all?(&:blank?)
+    empty = attributes["title"].blank? || attributes["description"].blank?
     attributes.merge!({:_destroy => 1}) if exists and empty
     return (!exists and empty)
   end

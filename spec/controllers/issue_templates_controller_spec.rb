@@ -25,6 +25,15 @@ describe IssueTemplatesController, type: :controller do
     end
   end
 
+  context "GET new" do
+    it "should build section for the template" do
+      get :new
+      expect(response).to be_successful
+      assert_template "new"
+      expect(assigns(:issue_template).sections).to_not be_nil
+    end
+  end
+
   context "POST create" do
     it "should succeed and assign a new template" do
       post :create, params: {:issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] }}
@@ -39,6 +48,7 @@ describe IssueTemplatesController, type: :controller do
       get :edit, params: {id: IssueTemplate.first.id}
       expect(response).to be_successful
       assert_template 'edit'
+      expect(assigns(:issue_template).sections).to_not be_nil
     end
   end
 
@@ -87,7 +97,4 @@ describe IssueTemplatesController, type: :controller do
     # check redirection
     expect(response).to redirect_to(:controller => 'issue_templates', :action => 'index', :project => template.project.identifier)
   end
-
-
-
 end
