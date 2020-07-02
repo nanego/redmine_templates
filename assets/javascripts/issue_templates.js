@@ -127,6 +127,23 @@ $(document).ready(function ($) {
             wikiToolbar.setHelpLink("/help/fr/wiki_syntax_textile.html");
             wikiToolbar.setPreviewUrl("/preview/text");
             wikiToolbar.draw();
+
+            if (typeof initRedmineWysiwygEditor === "function") {
+                this.launchWysiwygEditor();
+            }
+        }
+
+        launchWysiwygEditor() {
+            $('.jstEditor').each(initRedmineWysiwygEditor);
+
+            $(document).ajaxSuccess(function() {
+              $('.jstEditor').each(initRedmineWysiwygEditor);
+            });
+
+            // Redmine 4.1+
+            $(document).on('ajax:success', function() {
+              $('.jstEditor').each(initRedmineWysiwygEditor);
+            });
         }
     });
 
