@@ -2,7 +2,7 @@
     <span class="split_description_section" data-controller="section-form">
         <p>
             <%= label_tag "Description section #{section_form.index + 1}" %>
-            <%= section_form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true %>
+            <%= section_form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 80 %>
         </p>
         <p>
             <%= section_form.text_field :description, :placeholder => "Description", :no_label => true, :size => 80 %>
