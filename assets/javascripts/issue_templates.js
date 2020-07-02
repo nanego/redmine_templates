@@ -134,15 +134,15 @@ $(document).ready(function ($) {
         }
 
         launchWysiwygEditor() {
-            $('.jstEditor').each(initRedmineWysiwygEditor);
+            $(".jstEditor:last").each(initRedmineWysiwygEditor);
 
             $(document).ajaxSuccess(function() {
-              $('.jstEditor').each(initRedmineWysiwygEditor);
+                $(".jstEditor:last").each(initRedmineWysiwygEditor);
             });
 
             // Redmine 4.1+
-            $(document).on('ajax:success', function() {
-              $('.jstEditor').each(initRedmineWysiwygEditor);
+            $(document).on("ajax:success", function() {
+                $(".jstEditor:last").each(initRedmineWysiwygEditor);
             });
         }
     });
