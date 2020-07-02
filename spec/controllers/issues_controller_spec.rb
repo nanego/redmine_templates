@@ -55,7 +55,11 @@ describe IssuesController, type: :controller do
       :sections_attributes => [{
         :title => "Section title",
         :description => "Section description"
-      }]
+      },
+       {:title => "Second section title",
+        :description => "Second section description"
+       }
+      ]
     )
   end
 
@@ -86,6 +90,37 @@ describe IssuesController, type: :controller do
       issue = Issue.find_by_subject('This is the test_new issue')
       expect(issue).not_to be_nil
       expect(issue.description).to eq("h1. Section title \r\n\r\nTest text\r\n\r\n")
+    end
+
+    it "joins multiple sections into one description" do
+      @request.session[:user_id] = 2
+      assert_difference('Issue.count', 1) do
+        post :create, :params => {
+            :project_id => 1,
+            :issue => {
+                :tracker_id => 3,
+                :status_id => 2,
+                :subject => 'This is the test_new issue',
+                :description => 'This is the description',
+                :priority_id => 5,
+                :issue_template_id => template.id,
+                :issue_template => {
+                    :sections_attributes => {
+                        "0" => {
+                            :text => "Test text"
+                        },
+                        "1" => {
+                            :text => "Second test text"
+                        }
+                    },
+                },
+            },
+        }
+      end
+
+      issue = Issue.find_by_subject('This is the test_new issue')
+      expect(issue).not_to be_nil
+      expect(issue.description).to eq("h1. Section title \r\n\r\nTest text\r\n\r\nh1. Second section title \r\n\r\nSecond test text\r\n\r\n")
     end
   end
 end
