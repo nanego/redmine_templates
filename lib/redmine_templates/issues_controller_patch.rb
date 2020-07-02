@@ -26,9 +26,9 @@ class IssuesController < ApplicationController
     if @issue.issue_template&.split_description_field?
       description_text = ""
 
-      params[:issue][:issue_template][:sections_attributes].to_unsafe_h.each_with_index do |section, i|
+      params[:issue][:issue_template][:sections_attributes].values.each_with_index do |section, i|
         description_text += "h1. #{@issue.issue_template.sections[i].title} \r\n\r\n"
-        description_text += "#{section[1][:text]}\r\n\r\n"
+        description_text += "#{section[:text]}\r\n\r\n"
       end
 
       @issue.update(description: description_text)
