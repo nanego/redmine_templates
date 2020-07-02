@@ -4,11 +4,13 @@
       <%= template_form.fields_for :sections, @issue_template.sections do |section_form| %>
         <span>
           <p>
-            <%= label_tag @issue_template.sections[section_form.index].title %>
-            <em class="info" style="padding-top: 3px;"><%= @issue_template.sections[section_form.index].description %></em>
-          </p>
-          <p>
-              <%= section_form.text_area :text, 
+            <%= label_tag do %>
+              <%= @issue_template.sections[section_form.index].title %>
+              <% if @issue_template.sections[section_form.index].description.present? %>
+                <em class="info" style="padding-top: 3px;"><%= @issue_template.sections[section_form.index].description %></em>
+              <% end %>
+            <% end %>
+            <%= section_form.text_area :text,
                                          :cols => 60,
                                          :accesskey => accesskey(:edit),
                                          :class => 'wiki-edit',
@@ -17,7 +19,7 @@
                                           :auto_complete => true,
                                             :issues_url => auto_complete_issues_path(:project_id => @issue.project, :q => '')
                                          },
-                                         :no_label => true 
+                                         :no_label => true
               %>
               <%= wikitoolbar_for "issue_issue_template_sections_attributes_#{section_form.index}_text" %>
           </p>
