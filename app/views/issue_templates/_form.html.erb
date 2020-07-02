@@ -20,15 +20,6 @@
             <p>
               <%= f.check_box :show_on_overview, :no_label => false %>
             </p>
-            <p data-target="template-form.split_description">
-              <%= label_tag :split_description, l(:field_split_description) %>
-              <%= check_box_tag :split_description, 1, @issue_template.split_description_field?, 
-                                :data => { 
-                                  "action" => "split-description#toggleDescriptionSectionsField", 
-                                  "target" => "split-description.split_description_checkbox" 
-                                }
-              %>
-            </p>
             <%= f.hidden_field :project_id, :value => (@project.try(:id) || @issue_template.project_id) %>
             <%= f.hidden_field :id, :value => @issue_template.id %>
             <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
@@ -44,6 +35,15 @@
               <br>
               <%= f.radio_button :custom_form, true, :checked => f.object.custom_form?, 'data-action': "template-form#toogleForm", 'data-target': "template-form.custom_form_radio_button" %>
               <%= f.label :custom_form, 'Sur mesure', :value => true, class: "inline" %>
+            </p>
+            <p data-target="template-form.split_description">
+              <%= label_tag :split_description, l(:field_split_description) %>
+              <%= check_box_tag :split_description, 1, @issue_template.split_description_field?,
+                                :data => {
+                                  "action" => "split-description#toggleDescriptionSectionsField",
+                                  "target" => "split-description.split_description_checkbox"
+                                }
+              %>
             </p>
             <p>
               <%= f.text_field :custom_form_path, label: l('custom_form_path'), :size => 80, :maxlength => 255, :required => false,
