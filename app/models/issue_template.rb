@@ -168,7 +168,7 @@ class IssueTemplate < ActiveRecord::Base
 
   def section_is_empty?(attributes)
     exists = attributes["id"].present?
-    empty = attributes["title"].blank? || attributes["description"].blank?
+    empty = attributes["title"].blank?
     attributes.merge!({:_destroy => 1}) if exists and empty
     return (!exists and empty)
   end

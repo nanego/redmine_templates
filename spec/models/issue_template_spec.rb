@@ -105,22 +105,6 @@ describe "IssueTemplate" do
     expect(template.sections.size).to eq 0
   end
 
-  it "shouldn't save section it hasn't a description" do
-    template = IssueTemplate.new(:project_id => 1,
-                                 :tracker_id => 1,
-                                 :status_id => 1,
-                                 :author_id => 2,
-                                 :subject => 'test_create',
-                                 :template_title => 'New title template',
-                                 :template_enabled => true,
-                                 :template_project_ids => [1],
-                                 :sections_attributes => [{
-                                    :title => "Section title"
-                                 }]
-                                )
-    expect(template.sections.size).to eq 0
-  end
-
   context "split_description_field?" do
     it "should send true if template has sections" do
       template = IssueTemplate.new(:project_id => 1,
