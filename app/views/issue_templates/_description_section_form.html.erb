@@ -1,0 +1,25 @@
+<%= f.fields_for :sections do |section_form| %>
+    <span class="split_description_section" data-controller="section-form">
+        <p>
+            <%= label_tag "Description section #{section_form.index + 1}" %>
+            <%= section_form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true %>
+        </p>
+        <p>
+            <%= section_form.text_field :description, :placeholder => "Description", :no_label => true, :size => 80 %>
+        </p>
+        <p>
+            <%= section_form.text_area :text,
+                                        :cols => 60,
+                                        :rows => (@issue_template.description.blank? ? 10 : [[10, @issue_template.description.length / 50].max, 100].min),
+                                        :accesskey => accesskey(:edit),
+                                        :class => "wiki-edit",
+                                        :no_label => true
+            %>
+            <%= wikitoolbar_for "issue_template_sections_attributes_#{section_form.index}_text" %>
+        </p>
+        <p>
+            <a class="icon icon-del delete-section" rel="nofollow" data-action="section-form#deleteSection">Supprimer</a>
+            <%= section_form.hidden_field :_destroy, :value => 0, "data-target" => "section-form.destroy_hidden" %>
+        </p>
+    </span>
+<% end %>

@@ -24,6 +24,7 @@ class IssueTemplatesController < ApplicationController
     @issue_template = IssueTemplate.new(custom_form: false)
     @priorities = IssuePriority.active
     @issue_template.project = @project if @project.present?
+    @issue_template.sections.build
   end
 
   def custom_form
@@ -36,6 +37,7 @@ class IssueTemplatesController < ApplicationController
   def edit
     @issue_template = IssueTemplate.find(params[:id])
     @priorities = IssuePriority.active
+    @issue_template.sections.build if @issue_template.sections.empty?
   end
 
   def create
@@ -152,18 +154,17 @@ class IssueTemplatesController < ApplicationController
 
   private
 
-    def find_project
-      begin
-        @project ||= Project.find(params[:project_id])
-      rescue ActiveRecord::RecordNotFound
-        render_404
-      end
-    end
-
-    def find_optional_project
-      @project = Project.find(params[:project_id]) unless params[:project_id].blank?
+  def find_project
+    begin
+      @project ||= Project.find(params[:project_id])
     rescue ActiveRecord::RecordNotFound
       render_404
     end
+  end
 
+  def find_optional_project
+    @project = Project.find(params[:project_id]) unless params[:project_id].blank?
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
 end

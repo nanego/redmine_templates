@@ -1,8 +1,8 @@
 require "spec_helper"
 
-describe "Issue" do
+describe "IssueTemplate" do
   fixtures :projects, :users, :members, :member_roles, :roles,
-           :trackers, :issue_statuses
+           :trackers, :issue_statuses, :projects_trackers
 
   include Redmine::I18n
 
@@ -67,4 +67,77 @@ describe "Issue" do
     end
   end
 
+  it "should have many sections" do
+    t = IssueTemplate.reflect_on_association(:sections)
+    expect(t.macro).to eq(:has_many)
+  end
+
+  it "should save section if it has a title and a description" do
+    template = IssueTemplate.new(:project_id => 1,
+                                 :tracker_id => 1,
+                                 :status_id => 1,
+                                 :author_id => 2,
+                                 :subject => 'test_create',
+                                 :template_title => 'New title template',
+                                 :template_enabled => true,
+                                 :template_project_ids => [1],
+                                 :sections_attributes => [{
+                                    :title => "Section title",
+                                    :description => "Section description"
+                                 }]
+                                )
+    expect(template.sections.size).to eq 1
+  end
+
+  it "shouldn't save section it hasn't a title" do
+    template = IssueTemplate.new(:project_id => 1,
+                                 :tracker_id => 1,
+                                 :status_id => 1,
+                                 :author_id => 2,
+                                 :subject => 'test_create',
+                                 :template_title => 'New title template',
+                                 :template_enabled => true,
+                                 :template_project_ids => [1],
+                                 :sections_attributes => [{
+                                    :description => "Section description"
+                                 }]
+                                )
+    expect(template.sections.size).to eq 0
+  end
+
+  context "split_description_field?" do
+    it "should send true if template has sections" do
+      template = IssueTemplate.new(:project_id => 1,
+                                   :tracker_id => 1,
+                                   :status_id => 1,
+                                   :author_id => 2,
+                                   :subject => 'test_create',
+                                   :template_title => 'New title template',
+                                   :template_enabled => true,
+                                   :template_project_ids => [1],
+                                   :sections_attributes => [{
+                                      :title => "Section title",
+                                      :description => "Section description"
+                                   }]
+                                  )
+      template.save
+      template.reload
+      assert template.split_description_field?
+    end
+
+    it "should send false if template hasn't got sections" do
+      template = IssueTemplate.new(:project_id => 1,
+                                   :tracker_id => 1,
+                                   :status_id => 1,
+                                   :author_id => 2,
+                                   :subject => 'test_create',
+                                   :template_title => 'New title template',
+                                   :template_enabled => true,
+                                   :template_project_ids => [1]
+                                   )
+      template.save
+      template.reload
+      assert !template.split_description_field?
+    end
+  end
 end
