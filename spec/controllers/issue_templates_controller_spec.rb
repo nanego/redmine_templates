@@ -30,7 +30,7 @@ describe IssueTemplatesController, type: :controller do
       get :new
       expect(response).to be_successful
       assert_template "new"
-      expect(assigns(:issue_template).sections).to_not be_nil
+      expect(assigns(:issue_template).descriptions).to_not be_nil
     end
   end
 
@@ -48,7 +48,7 @@ describe IssueTemplatesController, type: :controller do
       get :edit, params: {id: IssueTemplate.first.id}
       expect(response).to be_successful
       assert_template 'edit'
-      expect(assigns(:issue_template).sections).to_not be_nil
+      expect(assigns(:issue_template).descriptions).to_not be_nil
     end
   end
 

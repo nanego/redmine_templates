@@ -24,7 +24,7 @@ class IssueTemplatesController < ApplicationController
     @issue_template = IssueTemplate.new(custom_form: false)
     @priorities = IssuePriority.active
     @issue_template.project = @project if @project.present?
-    @issue_template.sections.build
+    @issue_template.descriptions.build
   end
 
   def custom_form
@@ -37,7 +37,7 @@ class IssueTemplatesController < ApplicationController
   def edit
     @issue_template = IssueTemplate.find(params[:id])
     @priorities = IssuePriority.active
-    @issue_template.sections.build if @issue_template.sections.empty?
+    @issue_template.descriptions.build if @issue_template.descriptions.empty?
   end
 
   def create

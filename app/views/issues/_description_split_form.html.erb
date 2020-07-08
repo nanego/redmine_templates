@@ -1,16 +1,16 @@
 <% if @issue.safe_attribute? 'description' %>
   <% if @issue_template&.split_description_field? %>
     <%= f.fields_for :issue_template, @issue_template do |template_form| %>
-      <%= template_form.fields_for :sections, @issue_template.sections do |section_form| %>
+      <%= template_form.fields_for :descriptions, @issue_template.descriptions do |description_form| %>
         <span>
           <p>
             <%= label_tag do %>
-              <%= @issue_template.sections[section_form.index].title %>
-              <% if @issue_template.sections[section_form.index].description.present? %>
-                <em class="info" style="padding-top: 3px;"><%= @issue_template.sections[section_form.index].description %></em>
+              <%= @issue_template.descriptions[description_form.index].title %>
+              <% if @issue_template.descriptions[description_form.index].description.present? %>
+                <em class="info" style="padding-top: 3px; line-height: 1.5em;"><%= @issue_template.descriptions[description_form.index].description %></em>
               <% end %>
             <% end %>
-            <%= section_form.text_area :text,
+            <%= description_form.text_area :text,
                                          :cols => 60,
                                          :accesskey => accesskey(:edit),
                                          :class => 'wiki-edit',
@@ -21,7 +21,7 @@
                                          },
                                          :no_label => true
               %>
-              <%= wikitoolbar_for "issue_issue_template_sections_attributes_#{section_form.index}_text" %>
+              <%= wikitoolbar_for "issue_issue_template_descriptions_attributes_#{description_form.index}_text" %>
           </p>
         </span>
       <% end %>

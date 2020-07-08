@@ -143,8 +143,9 @@
         <span data-target="split-description.description_sections_fields" style="display: none;">
           <%= render :partial => "issue_templates/description_section_form", :locals => { f: f } %>
         </span>
-        <p data-target="split-description.add_section_button" style="display: none;">
-          <a class="icon icon-add add-section" data-action="split-description#addSection">Ajouter une section</a>
+        <p data-target="split-description.add_buttons" style="display: none;">
+          <a class="icon icon-add link-cursor" data-action="split-description#addSection">Ajouter une section</a>
+          <a class="icon icon-add link-cursor" data-action="split-description#addAnnoucement">Ajouter une annonce</a>
         </p>
 
         <div id="attributes" class="attributes">
