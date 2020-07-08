@@ -65,7 +65,7 @@ $(document).ready(function ($) {
                 "split_description_checkbox",
                 "description_field",
                 "description_sections_fields",
-                "add_section_button"
+                "add_buttons"
             ];
         }
 
@@ -77,11 +77,11 @@ $(document).ready(function ($) {
             if (this.split_description_checkboxTarget.checked) {
                 this.description_fieldTarget.style.display = "none";
                 this.description_sections_fieldsTarget.style.display = "block";
-                this.add_section_buttonTarget.style.display = "block";
+                this.add_buttonsTarget.style.display = "block";
             } else {
                 this.description_fieldTarget.style.display = "block";
                 this.description_sections_fieldsTarget.style.display = "none";
-                this.add_section_buttonTarget.style.display = "none";
+                this.add_buttonsTarget.style.display = "none";
             }
         }
 
@@ -94,6 +94,10 @@ $(document).ready(function ($) {
             this.description_sections_fieldsTarget.insertAdjacentHTML("beforeend", template);
             this.emptyNewSectionValues(this.description_sections_fieldsTarget.lastChild);
             this.createWikiToolBar(this.description_sections_fieldsTarget.lastChild);
+        }
+
+        addAnnoucement(e) {
+            console.log("create announcement");
         }
 
         updateSectionId(template, index) {

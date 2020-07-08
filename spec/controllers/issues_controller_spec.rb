@@ -52,12 +52,14 @@ describe IssuesController, type: :controller do
       :template_title => 'New title template',
       :template_enabled => true,
       :template_project_ids => [1],
-      :sections_attributes => [{
+      :descriptions_attributes => [{
         :title => "Section title",
-        :description => "Section description"
+        :description => "Section description",
+        :type => "IssueTemplateDescriptionSection"
       },
        {:title => "Second section title",
-        :description => "Second section description"
+        :description => "Second section description",
+        :type => "IssueTemplateDescriptionSection"
        }
       ]
     )
@@ -77,9 +79,10 @@ describe IssuesController, type: :controller do
             :priority_id => 5,
             :issue_template_id => template.id,
             :issue_template => {
-              :sections_attributes => {
+              :descriptions_attributes => {
                 "0" => {
-                  :text => "Test text"
+                  :text => "Test text",
+                  :type => "IssueTemplateDescriptionSection"
                 }
               },
             },
@@ -105,12 +108,14 @@ describe IssuesController, type: :controller do
                 :priority_id => 5,
                 :issue_template_id => template.id,
                 :issue_template => {
-                    :sections_attributes => {
+                    :descriptions_attributes => {
                         "0" => {
-                            :text => "Test text"
+                            :text => "Test text",
+                            :type => "IssueTemplateDescriptionSection"
                         },
                         "1" => {
-                            :text => "Second test text"
+                            :text => "Second test text",
+                            :type => "IssueTemplateDescriptionSection"
                         }
                     },
                 },

@@ -67,8 +67,8 @@ describe "IssueTemplate" do
     end
   end
 
-  it "should have many sections" do
-    t = IssueTemplate.reflect_on_association(:sections)
+  it "should have many descriptions" do
+    t = IssueTemplate.reflect_on_association(:descriptions)
     expect(t.macro).to eq(:has_many)
   end
 
@@ -81,12 +81,13 @@ describe "IssueTemplate" do
                                  :template_title => 'New title template',
                                  :template_enabled => true,
                                  :template_project_ids => [1],
-                                 :sections_attributes => [{
+                                 :descriptions_attributes => [{
                                     :title => "Section title",
-                                    :description => "Section description"
+                                    :description => "Section description",
+                                    :type => "IssueTemplateDescriptionSection"
                                  }]
                                 )
-    expect(template.sections.size).to eq 1
+    expect(template.descriptions.size).to eq 1
   end
 
   it "shouldn't save section it hasn't a title" do
@@ -98,15 +99,16 @@ describe "IssueTemplate" do
                                  :template_title => 'New title template',
                                  :template_enabled => true,
                                  :template_project_ids => [1],
-                                 :sections_attributes => [{
-                                    :description => "Section description"
+                                 :descriptions_attributes => [{
+                                    :description => "Section description",
+                                    :type => "IssueTemplateDescriptionSection"
                                  }]
                                 )
-    expect(template.sections.size).to eq 0
+    expect(template.descriptions.size).to eq 0
   end
 
   context "split_description_field?" do
-    it "should send true if template has sections" do
+    it "should send true if template has descriptions" do
       template = IssueTemplate.new(:project_id => 1,
                                    :tracker_id => 1,
                                    :status_id => 1,
@@ -115,9 +117,10 @@ describe "IssueTemplate" do
                                    :template_title => 'New title template',
                                    :template_enabled => true,
                                    :template_project_ids => [1],
-                                   :sections_attributes => [{
+                                   :descriptions_attributes => [{
                                       :title => "Section title",
-                                      :description => "Section description"
+                                      :description => "Section description",
+                                      :type => "IssueTemplateDescriptionSection"
                                    }]
                                   )
       template.save
@@ -125,7 +128,7 @@ describe "IssueTemplate" do
       assert template.split_description_field?
     end
 
-    it "should send false if template hasn't got sections" do
+    it "should send false if template hasn't got descriptions" do
       template = IssueTemplate.new(:project_id => 1,
                                    :tracker_id => 1,
                                    :status_id => 1,

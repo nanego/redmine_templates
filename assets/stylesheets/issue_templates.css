@@ -232,6 +232,6 @@ a.list_templates_projects_names.current {
     background-color: #FCF5C1;
 }
 
-.split_description_section .delete-section, .add-section {
+.link-cursor {
     cursor: pointer;
 }
