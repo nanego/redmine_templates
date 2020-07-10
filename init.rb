@@ -1,10 +1,12 @@
 require 'redmine'
-require 'redmine_templates/hooks'
+require_dependency 'redmine_templates/hooks'
 
 ActiveSupport::Reloader.to_prepare do
-  require 'redmine_templates/redmine_core_patch'
-  require 'redmine_templates/menu_manager_patch'
-  require 'redmine_templates/issues_controller_patch'
+  require_dependency 'redmine_templates/redmine_core_patch'
+  require_dependency 'redmine_templates/menu_manager_patch'
+  require_dependency 'redmine_templates/issues_controller_patch'
+
+  require_dependency 'redmine_templates/helpers/projects_helper_patch'
 end
 
 Redmine::Plugin.register :redmine_templates do

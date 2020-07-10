@@ -4,7 +4,7 @@ class IssueTemplatesController < ApplicationController
   include CustomFieldsHelper
 
   before_action :authorize_global
-  before_action :find_project, only: [:init, :exclude_templates_per_project]
+  before_action :find_project, only: [:init, :project_settings]
   before_action :find_optional_project, only: [:index, :new, :edit]
 
   def init
@@ -153,6 +153,16 @@ class IssueTemplatesController < ApplicationController
         render json: @similar_templates.to_json
       }
     end
+  end
+
+  def project_settings
+    @project.safe_attributes = params[:project]
+
+    if @project.save
+      flash[:notice] = l(:notice_project_settings_issue_template_successfully_updated)
+    end
+
+    redirect_to settings_project_path(@project, tab: :issue_templates)
   end
 
   private

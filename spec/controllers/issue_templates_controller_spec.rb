@@ -102,4 +102,19 @@ describe IssueTemplatesController, type: :controller do
     # check redirection
     expect(response).to redirect_to(:controller => 'issue_templates', :action => 'index', :project => template.project.identifier)
   end
+
+  context "PUT project_settings" do
+    it "should succeed and update the templates associations to project" do
+
+      project = Project.first
+      template = IssueTemplate.last
+
+      assert_difference -> { project.issue_templates.count }, 1 do
+        put :project_settings, params: { :project_id => project.id, :project => { :issue_template_ids => [ template.id ] } }
+      end
+
+      expect(response).to redirect_to(settings_project_path(:id => project.identifier, :tab => :issue_templates))
+      assert_match /updated/, flash[:notice]
+    end
+  end
 end
