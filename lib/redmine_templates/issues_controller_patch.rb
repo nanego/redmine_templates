@@ -27,7 +27,10 @@ class IssuesController < ApplicationController
       description_text = ""
 
       params[:issue][:issue_template][:descriptions_attributes].values.each_with_index do |description, i|
-        description_text += "h1. #{@issue.issue_template.descriptions[i].title} \r\n\r\n"
+        split_item = @issue.issue_template.descriptions[i]
+        next unless split_item.is_a? IssueTemplateDescriptionSection
+
+        description_text += "h1. #{split_item.title} \r\n\r\n"
         description_text += "#{description[:text]}\r\n\r\n"
       end
 
