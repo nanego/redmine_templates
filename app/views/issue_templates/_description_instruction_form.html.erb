@@ -1,24 +1,19 @@
-<span class="split_description section <%= "template" if template %>" 
+<span class="split_description instruction <%= "template" if template %>" 
       data-controller="description-item-form"
-      <%= "data-target=split-description.section_template" if template %>
+      <%= "data-target=split-description.instruction_template" if template %>
       <%= "style=display:none;" if template %>>
-    <p>
-        <%= label_tag "Description section" %>
-        <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 80 %>
-        <%= form.hidden_field :type, :value => "IssueTemplateDescriptionSection" %>
-    </p>
-    <p>
-        <%= form.text_field :description, :placeholder => "Description", :no_label => true, :size => 80 %>
-    </p>
     <p class="with-textarea">
+        <%= label_tag "Consigne" %>
         <%= form.text_area :text,
                             :cols => 60,
                             :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
                             :accesskey => accesskey(:edit),
                             :class => "wiki-edit",
-                            :no_label => true
+                            :no_label => true,
+                            :placeholder => "Obligatoire"
         %>
         <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" %>
+        <%= form.hidden_field :type, :value => "IssueTemplateDescriptionInstruction" %>
     </p>
     <p>
         <a class="icon icon-del link-cursor" rel="nofollow" data-action="description-item-form#delete">Supprimer</a>

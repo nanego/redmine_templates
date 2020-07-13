@@ -40,7 +40,7 @@
               <%= label_tag :split_description, l(:field_split_description) %>
               <%= check_box_tag :split_description, 1, @issue_template.split_description_field?,
                                 :data => {
-                                  "action" => "split-description#toggleDescriptionSectionsField",
+                                  "action" => "split-description#toggleDescriptionField",
                                   "target" => "split-description.split_description_checkbox"
                                 }
               %>
@@ -140,12 +140,12 @@
         </p>
         <%= wikitoolbar_for 'issue_template_description' %>
 
-        <span data-target="split-description.description_sections_fields" style="display: none;">
-          <%= render :partial => "issue_templates/description_section_form", :locals => { f: f } %>
+        <span data-target="split-description.description_fields" style="display: none;">
+          <%= render :partial => "issue_templates/description_form", :locals => { f: f } %>
         </span>
         <p data-target="split-description.add_buttons" style="display: none;">
           <a class="icon icon-add link-cursor" data-action="split-description#addSection">Ajouter une section</a>
-          <a class="icon icon-add link-cursor" data-action="split-description#addAnnoucement">Ajouter une annonce</a>
+          <a class="icon icon-add link-cursor" data-action="split-description#addInstruction">Ajouter une annonce</a>
         </p>
 
         <div id="attributes" class="attributes">
