@@ -90,7 +90,7 @@ describe "IssueTemplate" do
     expect(template.descriptions.size).to eq 1
   end
 
-  it "shouldn't save section it hasn't a title" do
+  it "shouldn't save section with no title" do
     template = IssueTemplate.new(:project_id => 1,
                                  :tracker_id => 1,
                                  :status_id => 1,
@@ -102,6 +102,39 @@ describe "IssueTemplate" do
                                  :descriptions_attributes => [{
                                     :description => "Section description",
                                     :type => "IssueTemplateDescriptionSection"
+                                 }]
+                                )
+    expect(template.descriptions.size).to eq 0
+  end
+
+  it "should save instruction if it has a text" do
+    template = IssueTemplate.new(:project_id => 1,
+                                 :tracker_id => 1,
+                                 :status_id => 1,
+                                 :author_id => 2,
+                                 :subject => 'test_create',
+                                 :template_title => 'New title template',
+                                 :template_enabled => true,
+                                 :template_project_ids => [1],
+                                 :descriptions_attributes => [{
+                                    :text => "Consigne pour remplir le formulaire de création d'une demande",
+                                    :type => "IssueTemplateDescriptionInstruction"
+                                 }]
+                                )
+    expect(template.descriptions.size).to eq 1
+  end
+
+  it "shouldn't save instruction with no text" do
+    template = IssueTemplate.new(:project_id => 1,
+                                 :tracker_id => 1,
+                                 :status_id => 1,
+                                 :author_id => 2,
+                                 :subject => 'test_create',
+                                 :template_title => 'New title template',
+                                 :template_enabled => true,
+                                 :template_project_ids => [1],
+                                 :descriptions_attributes => [{
+                                    :type => "IssueTemplateDescriptionInstruction"
                                  }]
                                 )
     expect(template.descriptions.size).to eq 0
