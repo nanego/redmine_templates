@@ -10,7 +10,11 @@
                             :accesskey => accesskey(:edit),
                             :class => "wiki-edit",
                             :no_label => true,
-                            :placeholder => "Obligatoire"
+                            :placeholder => "Obligatoire",
+                            :data => {
+                                  "help-link" => "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax_textile.html",
+                                  "preview-link" => preview_text_path
+                                }
         %>
         <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" %>
         <%= form.hidden_field :type, :value => "IssueTemplateDescriptionInstruction" %>

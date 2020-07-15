@@ -117,7 +117,7 @@ $(document).ready(function ($) {
             item.querySelector("p.with-textarea").appendChild(text_area);
 
             this.cleanOldWikitoolbar(item);
-            this.addWikiToolBar(text_area.id);
+            this.addWikiToolBar(text_area);
         }
 
         cleanOldWikitoolbar(item) {
@@ -126,10 +126,10 @@ $(document).ready(function ($) {
             item.querySelector("p:empty").remove();
         }
 
-        addWikiToolBar(field_id) {
-            var wikiToolbar = new jsToolBar(document.getElementById(field_id));
-            wikiToolbar.setHelpLink("/help/fr/wiki_syntax_textile.html");
-            wikiToolbar.setPreviewUrl("/preview/text");
+        addWikiToolBar(field) {
+            var wikiToolbar = new jsToolBar(document.getElementById(field.id));
+            wikiToolbar.setHelpLink(field.dataset.helpLink);
+            wikiToolbar.setPreviewUrl(field.dataset.previewLink);
             wikiToolbar.draw();
 
             if (typeof initRedmineWysiwygEditor === "function") {
