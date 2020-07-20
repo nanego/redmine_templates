@@ -38,7 +38,7 @@ class IssueTemplatesController < ApplicationController
   def edit
     @issue_template = IssueTemplate.find(params[:id])
     @priorities = IssuePriority.active
-    @issue_template.descriptions << IssueTemplateDescriptionSection.new if @issue_template.descriptions.empty?
+    @issue_template.descriptions.build(type: "IssueTemplateDescriptionSection") if @issue_template.descriptions.empty?
   end
 
   def create

@@ -98,7 +98,7 @@ describe IssuesController, type: :controller do
             :issue_template => {
               :descriptions_attributes => {
                 "0" => {
-                  :text => "Text of an instruction field",
+                  :text => "Test text",
                   :type => "IssueTemplateDescriptionSection"
                 }
               },
