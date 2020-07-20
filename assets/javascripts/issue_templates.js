@@ -64,68 +64,72 @@ $(document).ready(function ($) {
             return [
                 "split_description_checkbox",
                 "description_field",
-                "description_sections_fields",
-                "add_section_button"
+                "description_fields",
+                "add_buttons",
+                "section_template",
+                "instruction_template"
             ];
         }
 
         connect() {
-            this.toggleDescriptionSectionsField();
+            this.toggleDescriptionField();
         }
 
-        toggleDescriptionSectionsField() {
+        toggleDescriptionField() {
             if (this.split_description_checkboxTarget.checked) {
                 this.description_fieldTarget.style.display = "none";
-                this.description_sections_fieldsTarget.style.display = "block";
-                this.add_section_buttonTarget.style.display = "block";
+                this.description_fieldsTarget.style.display = "block";
+                this.add_buttonsTarget.style.display = "block";
             } else {
                 this.description_fieldTarget.style.display = "block";
-                this.description_sections_fieldsTarget.style.display = "none";
-                this.add_section_buttonTarget.style.display = "none";
+                this.description_fieldsTarget.style.display = "none";
+                this.add_buttonsTarget.style.display = "none";
             }
         }
 
         addSection(e) {
-            let sections = this.description_sections_fieldsTarget.querySelectorAll(".split_description_section");
-            let template = sections[0].outerHTML;
-            let index = sections.length
+            let index = this.description_fieldsTarget.querySelectorAll(".split_description:not(.template)").length;
+            let template = this.section_templateTarget.outerHTML;
 
-            template = this.updateSectionId(template, index);
-            this.description_sections_fieldsTarget.insertAdjacentHTML("beforeend", template);
-            this.emptyNewSectionValues(this.description_sections_fieldsTarget.lastChild);
-            this.createWikiToolBar(this.description_sections_fieldsTarget.lastChild);
+            this.appendItem(template.replace(/\$id_section\$/g, index));
         }
 
-        updateSectionId(template, index) {
-            template = template.replace(/\_0\_/g, "_" + index + "_").replace(/\[0\]/g, "[" + index + "]");
-            template = template.replace("Description section 1", "Description section " +  (index + 1));
+        addInstruction(e) {
+            let index = this.description_fieldsTarget.querySelectorAll(".split_description:not(.template)").length;
+            let template = this.instruction_templateTarget.outerHTML;
 
-            return template;
+            this.appendItem(template.replace(/\$id_instruction\$/g, index));
         }
 
-        emptyNewSectionValues(section) {
-            section.querySelector("textarea").value = "";
-            section.querySelectorAll("input[type=text]").forEach(input => input.value = "");
+        appendItem(item) {
+            this.description_fieldsTarget.insertAdjacentHTML("beforeend", item);
+            this.cleanTemplate(this.description_fieldsTarget.lastChild);
+            this.createWikiToolBar(this.description_fieldsTarget.lastChild);
         }
 
-        createWikiToolBar(section) {
-            let description_field = section.querySelector("textarea");
-            section.querySelector("p:nth-child(3)").appendChild(description_field);
-
-            this.cleanSectionFromOldWikitoolbar(section);
-            this.addWikiToolBar(description_field.id);
+        cleanTemplate(item) {
+            item.classList.remove("template");
+            item.style.display = "block";
         }
 
-        cleanSectionFromOldWikitoolbar(section) {
-            section.querySelector(".jstBlock").remove();
-            section.querySelector("script").remove();
-            section.querySelector("p:nth-child(4)").remove();
+        createWikiToolBar(item) {
+            let text_area = item.querySelector("textarea");
+            item.querySelector("p.with-textarea").appendChild(text_area);
+
+            this.cleanOldWikitoolbar(item);
+            this.addWikiToolBar(text_area);
         }
 
-        addWikiToolBar(field_id) {
-            var wikiToolbar = new jsToolBar(document.getElementById(field_id));
-            wikiToolbar.setHelpLink("/help/fr/wiki_syntax_textile.html");
-            wikiToolbar.setPreviewUrl("/preview/text");
+        cleanOldWikitoolbar(item) {
+            item.querySelector(".jstBlock").remove();
+            item.querySelector("script").remove();
+            item.querySelector("p:empty").remove();
+        }
+
+        addWikiToolBar(field) {
+            var wikiToolbar = new jsToolBar(document.getElementById(field.id));
+            wikiToolbar.setHelpLink(field.dataset.helpLink);
+            wikiToolbar.setPreviewUrl(field.dataset.previewLink);
             wikiToolbar.draw();
 
             if (typeof initRedmineWysiwygEditor === "function") {
@@ -147,7 +151,7 @@ $(document).ready(function ($) {
         }
     });
 
-    stimulus_application.register("section-form", class extends Stimulus.Controller {
+    stimulus_application.register("description-item-form", class extends Stimulus.Controller {
 
         static get targets() {
             return [
@@ -157,7 +161,7 @@ $(document).ready(function ($) {
 
         connect() {}
 
-        deleteSection(e) {
+        delete(e) {
             if (window.confirm("Êtes-vous sûr ?")) {
                 this.element.style.display = "none";
                 this.destroy_hiddenTarget.value = "1";

@@ -26,9 +26,12 @@ class IssuesController < ApplicationController
     if @issue.issue_template&.split_description_field?
       description_text = ""
 
-      params[:issue][:issue_template][:sections_attributes].values.each_with_index do |section, i|
-        description_text += "h1. #{@issue.issue_template.sections[i].title} \r\n\r\n"
-        description_text += "#{section[:text]}\r\n\r\n"
+      params[:issue][:issue_template][:descriptions_attributes].values.each_with_index do |description, i|
+        split_item = @issue.issue_template.descriptions[i]
+        next unless split_item.is_a? IssueTemplateDescriptionSection
+
+        description_text += "h1. #{split_item.title} \r\n\r\n"
+        description_text += "#{description[:text]}\r\n\r\n"
       end
 
       @issue.update(description: description_text)
