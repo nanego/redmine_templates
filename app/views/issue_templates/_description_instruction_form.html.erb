@@ -1,9 +1,10 @@
-<span class="split_description instruction <%= "template" if template %>" 
+<span class="split_description instruction <%= "template" if template %>"
       data-controller="description-item-form"
       <%= "data-target=split-description.instruction_template" if template %>
       <%= "style=display:none;" if template %>>
     <p class="with-textarea">
         <%= label_tag "Consigne" %>
+        <%= form.select :instruction_type, IssueTemplateDescriptionInstruction.instruction_types_options , :no_label => true %>
         <%= form.text_area :text,
                             :cols => 60,
                             :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
