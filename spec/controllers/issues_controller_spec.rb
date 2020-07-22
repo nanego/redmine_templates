@@ -52,6 +52,7 @@ describe IssuesController, type: :controller do
       :template_title => 'New title template',
       :template_enabled => true,
       :template_project_ids => [1],
+      :split_description => "1",
       :descriptions_attributes => [{
         :title => "Section title",
         :description => "Section description",
@@ -75,6 +76,7 @@ describe IssuesController, type: :controller do
       :template_title => 'New title template',
       :template_enabled => true,
       :template_project_ids => [1],
+      :split_description => "1",
       :descriptions_attributes => [{
         :text => "Text of an instruction field",
         :type => "IssueTemplateDescriptionInstruction"
