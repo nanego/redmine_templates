@@ -20,6 +20,7 @@ Redmine::Plugin.register :redmine_templates do
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
   requires_redmine_plugin :redmine_base_stimulusjs, :version_or_higher => '1.1.1'
   permission :create_issue_templates, {:issue_templates => [:init, :new, :create, :edit, :update, :index, :destroy]}
+  permission :manage_project_issue_templates, {}
   settings :default => {'custom_fields' => [], 'disable_templates' => false},
            :partial => 'settings/redmine_plugin_templates_settings'
   menu :admin_menu, :issue_templates, {:controller => 'issue_templates', :action => 'index'},
@@ -39,5 +40,4 @@ Redmine::MenuManager.map :project_menu do |menu|
                 (Issue.allowed_target_trackers(p) & p.issue_templates.map(&:tracker)).any?},
             :permission => :add_issues,
             :parent => :new_issue
-
 end
