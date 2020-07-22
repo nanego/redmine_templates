@@ -150,6 +150,7 @@ describe "IssueTemplate" do
                                    :template_title => 'New title template',
                                    :template_enabled => true,
                                    :template_project_ids => [1],
+                                   :split_description => "1",
                                    :descriptions_attributes => [{
                                       :title => "Section title",
                                       :description => "Section description",
@@ -174,6 +175,29 @@ describe "IssueTemplate" do
       template.save
       template.reload
       assert !template.split_description_field?
+    end
+
+    it "should empty split descriptions if split_description unchecked" do
+      template = IssueTemplate.new(:project_id => 1,
+                                   :tracker_id => 1,
+                                   :status_id => 1,
+                                   :author_id => 2,
+                                   :subject => 'test_create',
+                                   :template_title => 'New title template',
+                                   :template_enabled => true,
+                                   :template_project_ids => [1],
+                                   :split_description => "0",
+                                   :descriptions_attributes => [{
+                                      :title => "Section title",
+                                      :description => "Section description",
+                                      :type => "IssueTemplateDescriptionSection"
+                                   }]
+                                  )
+
+      template.save
+      template.reload
+
+      expect(template.descriptions.size).to eq 0
     end
   end
 end

@@ -37,8 +37,8 @@
               <%= f.label :custom_form, 'Sur mesure', :value => true, class: "inline" %>
             </p>
             <p data-target="template-form.split_description">
-              <%= label_tag :split_description, l(:field_split_description) %>
-              <%= check_box_tag :split_description, 1, @issue_template.split_description_field?,
+              <%= f.label :split_description, l(:field_split_description) %>
+              <%= f.check_box :split_description, :no_label => true,
                                 :data => {
                                   "action" => "split-description#toggleDescriptionField",
                                   "target" => "split-description.split_description_checkbox"
@@ -145,7 +145,7 @@
         </span>
         <p data-target="split-description.add_buttons" style="display: none;">
           <a class="icon icon-add link-cursor" data-action="split-description#addSection">Ajouter une section</a>
-          <a class="icon icon-add link-cursor" data-action="split-description#addInstruction">Ajouter une annonce</a>
+          <a class="icon icon-add link-cursor" data-action="split-description#addInstruction">Ajouter une consigne</a>
         </p>
 
         <div id="attributes" class="attributes">
