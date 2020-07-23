@@ -21,6 +21,7 @@ en:
   notice_issue_template_successfully_deleted: "The template has been deleted"
   field_template_project_ids: "Projects"
   permission_create_issue_templates: "Manage templates"
+  permission_manage_project_issue_templates: "Select templates"
   show_subprojects_templates: "Subprojects"
   warning: "Warning"
   warning_all_changes_will_be_overwritten: "If you apply this template, all current modification will be overwritten. <BR/>Are you sure ?"
@@ -38,3 +39,5 @@ en:
   modify_projects: "Edit projects list"
   usage: "Usage"
   label_other_issue: "Other issue"
+  notice_project_settings_issue_template_successfully_updated: "Issues templates available have been successfully updated"
+  template_activated: "Available issue template"

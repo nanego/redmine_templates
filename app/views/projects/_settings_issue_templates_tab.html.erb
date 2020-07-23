@@ -1,12 +1,14 @@
 <fieldset class="box">
   <legend>Modèles disponibles pour ce projet</legend>
 
-  <%= form_for(:templates,
+  <%= form_for(@project,
                :method => :put,
                :url => { :controller => 'issue_templates',
-                         :action => 'exclude_templates_per_project',
-                         :project_id => @project.id },
-               :html => { :id => "templates-form" }) do %>
+                         :action => 'project_settings',
+                         :project_id => @project.identifier },
+               :html => { :id => "templates-form" }) do |f| %>
+
+    <%= hidden_field_tag "project[issue_template_ids][]", nil  %>
 
     <p>
 
@@ -28,7 +30,7 @@
           </tr>
           </thead>
           <tbody>
-          <% @project.issue_templates.each do |issue_template| %>
+          <% IssueTemplate.order("custom_form desc, tracker_id desc, usage desc").each do |issue_template| %>
             <tr class="issue_template issue">
               <% link_to_edition = Proc.new do |label, title|
                 size_max = 40
@@ -39,7 +41,7 @@
                                           # ,:project_id => project.id
                 }, {:title => title }
               end %>
-              <td><%= check_box_tag "activated_templates_ids[]", issue_template.id, (@project.issue_template_exclusions.blank? || @project.issue_template_exclusions.map(&:issue_template_id).exclude?(issue_template.id)) %></td>
+              <td><%= check_box_tag "project[issue_template_ids][]", issue_template.id, @project.issue_templates.include?(issue_template) %></td>
               <td><%= link_to_edition.call h(issue_template.template_title), issue_template.template_title %></td>
               <td><%= link_to_edition.call h(issue_template.tracker.name), issue_template.tracker.name %></td>
               <td><%= link_to_edition.call h(issue_template.subject), issue_template.subject %></td>

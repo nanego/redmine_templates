@@ -27,7 +27,7 @@ describe ProjectsController, type: :controller do
       end
       new_project = Project.find('copy-with-templates')
       assert_equal source_project.issue_templates, new_project.issue_templates, "All issue_templates were not copied"
-      assert_equal IssueTemplate.where(id: [1, 2]).to_a, new_project.issue_templates.to_a
+      assert_equal IssueTemplate.where(id: [1, 2]).order("custom_form desc, tracker_id desc, usage desc").to_a, new_project.issue_templates.to_a
     end
   end
 
