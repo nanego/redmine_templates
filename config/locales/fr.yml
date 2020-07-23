@@ -45,3 +45,4 @@ fr:
   custom_form_path: "Chemin vers le formulaire"
   form_type: "Type de formulaire"
   notice_project_settings_issue_template_successfully_updated: "Les modèles disponibles ont bien été mis à jour"
+  disabled_tracker_for_this_project: Tracker désactivé sur ce projet
