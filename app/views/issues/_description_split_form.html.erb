@@ -28,9 +28,11 @@
             </p>
           </span>
         <% elsif description_form.object.is_a? IssueTemplateDescriptionInstruction %>
-          <p class="<%= @issue_template.descriptions[description_form.index].instruction_type %>">
-             <%= @issue_template.descriptions[description_form.index].text %>
-          </p>
+          <span class="wiki" style="margin: 10px;">
+            <p class="<%= @issue_template.descriptions[description_form.index].instruction_type %>">
+               <%= @issue_template.descriptions[description_form.index].text %>
+            </p>
+          </span>
         <% end %>
       <% end %>
     <% end %>
