@@ -7,6 +7,7 @@
             <p>
               <%= label_tag do %>
                 <%= @issue_template.descriptions[description_form.index].title %>
+                <span class="required"> *</span>
                 <% if @issue_template.descriptions[description_form.index].description.present? %>
                   <em class="info" style="padding-top: 3px; line-height: 1.5em;"><%= @issue_template.descriptions[description_form.index].description %></em>
                 <% end %>
@@ -20,19 +21,17 @@
                                             :auto_complete => true,
                                               :issues_url => auto_complete_issues_path(:project_id => @issue.project, :q => '')
                                            },
-                                           :no_label => true
+                                           :no_label => true,
+                                           :required => true
                 %>
                 <%= wikitoolbar_for "issue_issue_template_descriptions_attributes_#{description_form.index}_text" %>
             </p>
           </span>
         <% elsif description_form.object.is_a? IssueTemplateDescriptionInstruction %>
-          <span>
-            <span class="wiki" style="margin: 10px;">
-              <p class="<%= @issue_template.descriptions[description_form.index].instruction_type %>"
-                 style="margin: 0 auto;">
-                 <%= @issue_template.descriptions[description_form.index].text %>
-              </p>
-            </span>
+          <span class="wiki" style="margin: 10px;">
+            <p class="<%= @issue_template.descriptions[description_form.index].instruction_type %>">
+               <%= @issue_template.descriptions[description_form.index].text %>
+            </p>
           </span>
         <% end %>
       <% end %>
