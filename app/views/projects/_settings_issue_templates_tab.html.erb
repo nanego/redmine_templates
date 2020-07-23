@@ -19,7 +19,6 @@
           <th class="template_id"><%= l(:field_tracker) %></th>
           <th class="template_subject"><%= l(:field_subject) %></th>
           <th class="template_projects"><%= l(:field_project).pluralize %></th>
-          <th class="template_usage"><%= l(:usage) %></th>
           <th></th>
         </tr>
         </thead>
@@ -32,7 +31,12 @@
                 <%= issue_template.template_title %>
               <% end %>
             </td>
-            <td><%= issue_template.tracker.name %></td>
+            <td>
+              <% if @project.trackers.exclude? issue_template.tracker %>
+                <span class="icon icon-warning" style="margin-left: 8px;" title="<%= t('disabled_tracker_for_this_project') %>"></span>
+              <% end %>
+              <%= issue_template.tracker.name %>
+            </td>
             <td><%= issue_template.subject %></td>
             <td class="template_projects">
               <div>
@@ -67,7 +71,6 @@
                 <% end %>
               </div>
             </td>
-            <td class="template_usage"><%= issue_template.usage %></td>
             <td class="buttons">
               <% if User.current.allowed_to?(:create_issue_templates, @project) %>
                 <%= link_to l(:button_edit),
