@@ -147,7 +147,7 @@ describe IssuesController, type: :controller do
       expect(issue.description).to eq("h1. Section title \r\n\r\nTest text\r\n\r\nh1. Second section title \r\n\r\nSecond test text\r\n\r\n")
     end
 
-    it "doesn't joins instruction into description" do
+    it "does not join instructions into description" do
       @request.session[:user_id] = 2
       assert_difference('Issue.count', 1) do
         post :create, :params => {
