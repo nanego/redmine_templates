@@ -13,11 +13,19 @@ Deface::Override.new :virtual_path      => "issues/_form",
                      :remove            => "erb[silent]:contains(\"if @issue.safe_attribute? 'description' \")",
                      :original          => "0dbbe91b2f6ecf9a66aa7e994df6381f90f19219",
                      :closing_selector  => "erb[silent]:contains('end')"
+Deface::Override.new :virtual_path      => "issues/_form_with_positions",
+                     :name              => "remove_description_field",
+                     :remove            => "erb[silent]:contains(\"if @issue.safe_attribute? 'description' \")",
+                     :original          => "0dbbe91b2f6ecf9a66aa7e994df6381f90f19219",
+                     :closing_selector  => "erb[silent]:contains('end')"
 
 Deface::Override.new :virtual_path      => "issues/_form",
                      :name              => "add_description_field_with_sections",
                      :insert_before     => "div#attributes",
                      :original          => "e82da8a57ee682e41ee7df667681b7defb32a993",
                      :partial           => "issues/description_split_form"
-
-
+Deface::Override.new :virtual_path      => "issues/_form_with_positions",
+                     :name              => "add_description_field_with_sections",
+                     :insert_before     => "div#attributes",
+                     :original          => "e82da8a57ee682e41ee7df667681b7defb32a993",
+                     :partial           => "issues/description_split_form"
