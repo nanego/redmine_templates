@@ -94,6 +94,10 @@ table .template_icon {
     white-space: normal;
 }
 
+table#templates_list td.template_usage, table#templates_list th.template_usage {
+    text-align: center;
+}
+
 .box.header {
     background-color: #edf3fe;
 }

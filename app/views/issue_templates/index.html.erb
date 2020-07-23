@@ -91,7 +91,7 @@
           <td><%= issue_template.usage %></td>
           <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
             <td class="center image_enabled_<%= issue_template.id %>">
-              <%= render "enable_form", issue_template: issue_template %>
+              <%= render "issue_templates/enable_form", issue_template: issue_template %>
             </td>
           <% end %>
           <td class="buttons">

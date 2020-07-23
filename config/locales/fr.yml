@@ -45,4 +45,3 @@ fr:
   custom_form_path: "Chemin vers le formulaire"
   form_type: "Type de formulaire"
   notice_project_settings_issue_template_successfully_updated: "Les modèles disponibles ont bien été mis à jour"
-  template_activated: "Modèle disponible"
