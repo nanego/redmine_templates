@@ -12,6 +12,8 @@ $(document).ready(function ($) {
         var className = $(this).attr('class').split(' ')[0]; // get first class
         $('.' + className).toggleClass("hover");
     });
+
+    $(".split-description-container").positionedItems();
 });
 
 // Template Form controller

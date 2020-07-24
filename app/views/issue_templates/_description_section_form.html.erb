@@ -4,6 +4,7 @@
       <%= "style=display:none;" if template %>>
     <p>
         <%= label_tag "Description section" %>
+        <%= reorder_handle(form.object, :url => issue_template_path(@issue_template)) %>
         <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 80 %>
         <%= form.hidden_field :type, :value => "IssueTemplateDescriptionSection" %>
     </p>

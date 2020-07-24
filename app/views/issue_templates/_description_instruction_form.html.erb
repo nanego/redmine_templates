@@ -4,6 +4,7 @@
       <%= "style=display:none;" if template %>>
     <p class="with-textarea">
         <%= label_tag "Consigne" %>
+        <%= reorder_handle(form.object, :url => issue_template_path(@issue_template)) %>
         <%= form.select :instruction_type, IssueTemplateDescriptionInstruction.instruction_types_options , :no_label => true %>
         <%= form.text_area :text,
                             :cols => 60,

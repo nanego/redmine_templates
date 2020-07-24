@@ -140,7 +140,7 @@
         </p>
         <%= wikitoolbar_for 'issue_template_description' %>
 
-        <span data-target="split-description.description_fields" style="display: none;">
+        <span class="split-description-container" data-target="split-description.description_fields" style="display: none;">
           <%= render :partial => "issue_templates/description_form", :locals => { f: f } %>
         </span>
         <p data-target="split-description.add_buttons" style="display: none;">
