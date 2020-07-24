@@ -12,7 +12,7 @@ class IssueTemplate < ActiveRecord::Base
   belongs_to :priority, :class_name => 'IssuePriority', :foreign_key => 'priority_id'
   belongs_to :category, :class_name => 'IssueCategory', :foreign_key => 'category_id'
 
-  has_many :descriptions, :class_name => "IssueTemplateDescription", :dependent => :destroy
+  has_many :descriptions, -> { order(:position) }, :class_name => "IssueTemplateDescription", :dependent => :destroy
   accepts_nested_attributes_for :descriptions, :reject_if => :description_is_empty?, :allow_destroy => true
 
   has_and_belongs_to_many :template_projects, class_name: 'Project', join_table: 'issue_templates_projects'

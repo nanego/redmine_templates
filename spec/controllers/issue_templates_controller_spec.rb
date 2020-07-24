@@ -68,6 +68,55 @@ describe IssueTemplatesController, type: :controller do
       #assert_equal 6, template.priority_id
       #assert_equal 1, template.category_id
     end
+
+    it "should successfuly update descriptions positions" do
+      template = IssueTemplate.create(
+        :project_id => 1,
+        :tracker_id => 3,
+        :status_id => 2,
+        :author_id => 2,
+        :subject => 'test_create',
+        :template_title => 'New title template',
+        :template_enabled => true,
+        :template_project_ids => [1],
+        :split_description => "1",
+        :descriptions_attributes => [{
+          :text => "Text of an instruction field",
+          :type => "IssueTemplateDescriptionInstruction",
+          :position => 1,
+        }],
+      )
+
+      expect(template.descriptions.first.text).to eq "Text of an instruction field"
+      expect(template.descriptions.first.position).to eq 1
+
+      assert_difference('IssueTemplateDescription.count', 1) do
+        put :update, params: {
+            :id => template.id,
+            issue_template: {
+              descriptions_attributes: {
+                "0" => {
+                  :id => template.descriptions.first.id,
+                  :position => 2,
+                },
+                "1" => {
+                  :text => "Text of an instruction field 2",
+                  :type => "IssueTemplateDescriptionInstruction",
+                  :position => 1,
+                }
+              }
+            }
+          }
+      end
+
+      expect(response).to redirect_to(issue_templates_path(project: template.project.identifier))
+      template.reload
+      assert_match /updated/, flash[:notice]
+      expect(template.descriptions.first.text).to eq "Text of an instruction field 2"
+      expect(template.descriptions.first.position).to eq 1
+      expect(template.descriptions.second.text).to eq "Text of an instruction field"
+      expect(template.descriptions.second.position).to eq 2
+    end
   end
 
   # create a template
