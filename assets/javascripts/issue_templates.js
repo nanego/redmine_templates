@@ -7,11 +7,34 @@ function updateIssueTemplateFrom(url) {
     });
 }
 
+(function($){
+    $.fn.positionedFormItems = function(sortableOptions, options){
+      var sortable = this.sortable($.extend({
+        axis: 'y',
+        handle: ".sort-handle",
+      }, sortableOptions));
+
+      this.on("sortupdate", function(event, ui) {
+        var sortable = $(this);
+        var position = 1;
+
+        sortable.children(".split_description:not(.template)").each(function() {
+            $(this).find("input[name*=position]:first").attr("value", position);
+            position += 1;
+        });
+      });
+
+      return sortable;
+    }
+  }( jQuery ));
+
 $(document).ready(function ($) {
     $(".list_templates_projects_names").hover(function () {
         var className = $(this).attr('class').split(' ')[0]; // get first class
         $('.' + className).toggleClass("hover");
     });
+
+    $("#split-description-container").positionedFormItems();
 });
 
 // Template Form controller
@@ -105,6 +128,8 @@ $(document).ready(function ($) {
             this.description_fieldsTarget.insertAdjacentHTML("beforeend", item);
             this.cleanTemplate(this.description_fieldsTarget.lastChild);
             this.createWikiToolBar(this.description_fieldsTarget.lastChild);
+
+            $("#split-description-container").trigger("sortupdate");
         }
 
         cleanTemplate(item) {
