@@ -6,6 +6,7 @@ one:
   subject: "Template sample title"
   tracker_id: 1
   template_title: "Template title one"
+  split_description: '0'
 two:
   id: 2
   author_id: 1
@@ -14,3 +15,14 @@ two:
   subject: "Second sample"
   tracker_id: 3
   template_title: "Template title two"
+  split_description: '0'
+three:
+  id: 3
+  author_id: 2
+  project_id: 1
+  status_id: 2
+  subject: "Issue created with template 3"
+  tracker_id: 3
+  template_title: "Template with sections"
+  template_enabled: true
+  split_description: '1'

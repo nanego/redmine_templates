@@ -140,7 +140,7 @@ describe "IssueTemplate" do
     expect(template.descriptions.size).to eq 0
   end
 
-  context "split_description_field?" do
+  context "has_descriptions_fields?" do
     it "should send true if template has descriptions" do
       template = IssueTemplate.new(:project_id => 1,
                                    :tracker_id => 1,
@@ -159,7 +159,8 @@ describe "IssueTemplate" do
                                   )
       template.save
       template.reload
-      assert template.split_description_field?
+      expect(template.split_description).to be_truthy
+      expect(template.descriptions).to_not be_empty
     end
 
     it "should send false if template hasn't got descriptions" do
@@ -174,10 +175,11 @@ describe "IssueTemplate" do
                                    )
       template.save
       template.reload
-      assert !template.split_description_field?
+      expect(template.split_description).to be_falsey
+      expect(template.descriptions).to be_empty
     end
 
-    it "should empty split descriptions if split_description unchecked" do
+    it "does NOT empty sections and instructions if split_description is unchecked" do
       template = IssueTemplate.new(:project_id => 1,
                                    :tracker_id => 1,
                                    :status_id => 1,
@@ -197,7 +199,7 @@ describe "IssueTemplate" do
       template.save
       template.reload
 
-      expect(template.descriptions.size).to eq 0
+      expect(template.descriptions.size).to eq 1
     end
   end
 end

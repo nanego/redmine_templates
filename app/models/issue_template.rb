@@ -33,10 +33,6 @@ class IssueTemplate < ActiveRecord::Base
 
   scope :displayed_on_overview, -> {where(show_on_overview: true)}
 
-  attr_accessor :split_description
-
-  before_save :clean_descriptions_if_needed
-
   safe_attributes :template_project_ids,
                   :secondary_project_ids,
                   :project_id,
@@ -167,16 +163,6 @@ class IssueTemplate < ActiveRecord::Base
     nil #TODO Make templates compatible with this functionality
   end
 
-  def split_description
-    return ActiveModel::Type::Boolean.new.cast(@split_description) if @split_description
-
-    split_description_field?
-  end
-
-  def split_description_field?
-    descriptions.reject(&:new_record?).any?
-  end
-
   def description_is_empty?(attributes)
     exists = attributes["id"].present?
     empty = attributes["title"].blank? if attributes["type"] == "IssueTemplateDescriptionSection"
@@ -185,9 +171,4 @@ class IssueTemplate < ActiveRecord::Base
     return (!exists and empty)
   end
 
-  private
-
-  def clean_descriptions_if_needed
-    self.descriptions = [] unless split_description
-  end
 end

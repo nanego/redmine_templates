@@ -23,7 +23,7 @@ class IssuesController < ApplicationController
   end
 
   def set_description_sections
-    if @issue.issue_template&.split_description_field?
+    if @issue.issue_template&.split_description
       description_text = ""
 
       params[:issue][:issue_template][:descriptions_attributes].values.each_with_index do |description, i|

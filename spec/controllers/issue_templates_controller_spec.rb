@@ -41,7 +41,7 @@ describe IssueTemplatesController, type: :controller do
 
   context "POST create" do
     it "should succeed and assign a new template" do
-      post :create, params: {:issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] }}
+      post :create, params: {:issue_template => {subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1]}}
       expect(response).to redirect_to(issue_templates_path(project: 'ecookbook'))
       expect(flash[:notice]).to eq "New issue template successfully created!"
       expect(IssueTemplate.last.try(:subject)).to eq "New issue"
@@ -59,37 +59,33 @@ describe IssueTemplatesController, type: :controller do
 
   context "PUT update" do
     it "should succeed and update the first template" do
-      post :create, params: {:issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] }}
+      post :create, params: {:issue_template => {subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1]}}
       template = IssueTemplate.last
       assert_no_difference('IssueTemplate.count') do
-        put :update, params: {:id => template.id, issue_template: { subject: "Modified subject" }}
+        put :update, params: {:id => template.id, issue_template: {subject: "Modified subject"}}
       end
-      expect(response).to redirect_to(issue_templates_path(project: template.project.identifier))
+      expect(response).to redirect_to edit_issue_template_path(template)
       template.reload
       assert_match /updated/, flash[:notice]
       expect(template.subject).to eq "Modified subject"
-      #assert_equal 1, template.project_id
-      #assert_equal 2, template.tracker_id
-      #assert_equal 6, template.priority_id
-      #assert_equal 1, template.category_id
     end
 
     it "should successfuly update descriptions positions" do
       template = IssueTemplate.create(
-        :project_id => 1,
-        :tracker_id => 3,
-        :status_id => 2,
-        :author_id => 2,
-        :subject => 'test_create',
-        :template_title => 'New title template',
-        :template_enabled => true,
-        :template_project_ids => [1],
-        :split_description => "1",
-        :descriptions_attributes => [{
-          :text => "Text of an instruction field",
-          :type => "IssueTemplateDescriptionInstruction",
-          :position => 1,
-        }],
+          :project_id => 1,
+          :tracker_id => 3,
+          :status_id => 2,
+          :author_id => 2,
+          :subject => 'test_create',
+          :template_title => 'New title template',
+          :template_enabled => true,
+          :template_project_ids => [1],
+          :split_description => "1",
+          :descriptions_attributes => [{
+                                           :text => "Text of an instruction field",
+                                           :type => "IssueTemplateDescriptionInstruction",
+                                           :position => 1,
+                                       }],
       )
 
       expect(template.descriptions.first.text).to eq "Text of an instruction field"
@@ -99,22 +95,22 @@ describe IssueTemplatesController, type: :controller do
         put :update, params: {
             :id => template.id,
             issue_template: {
-              descriptions_attributes: {
-                "0" => {
-                  :id => template.descriptions.first.id,
-                  :position => 2,
-                },
-                "1" => {
-                  :text => "Text of an instruction field 2",
-                  :type => "IssueTemplateDescriptionInstruction",
-                  :position => 1,
+                descriptions_attributes: {
+                    "0" => {
+                        :id => template.descriptions.first.id,
+                        :position => 2,
+                    },
+                    "1" => {
+                        :text => "Text of an instruction field 2",
+                        :type => "IssueTemplateDescriptionInstruction",
+                        :position => 1,
+                    }
                 }
-              }
             }
-          }
+        }
       end
 
-      expect(response).to redirect_to(issue_templates_path(project: template.project.identifier))
+      expect(response).to redirect_to edit_issue_template_path(template)
       template.reload
       assert_match /updated/, flash[:notice]
       expect(template.descriptions.first.text).to eq "Text of an instruction field 2"
@@ -130,19 +126,19 @@ describe IssueTemplatesController, type: :controller do
     expect(response).to be_successful
     assert_template 'new'
 
-    post :create, params: {:issue_template => { :tracker_id => '1',
-                                                  :start_date => "2006-12-26",
-                                                  :priority_id => "4",
-                                                  :subject => "new test template subject",
-                                                  :description => "new template description",
-                                                  :done_ratio => "0",
-                                                  :due_date => "",
-                                                  :assigned_to_id => "",
-                                                  :template_title => "Init new template",
-                                                  :template_enabled => true,
-                                                  :project_id => '1',
-                                                  :template_project_ids => ['1'],
-                                                  :status_id => '1'}}
+    post :create, params: {:issue_template => {:tracker_id => '1',
+                                               :start_date => "2006-12-26",
+                                               :priority_id => "4",
+                                               :subject => "new test template subject",
+                                               :description => "new template description",
+                                               :done_ratio => "0",
+                                               :due_date => "",
+                                               :assigned_to_id => "",
+                                               :template_title => "Init new template",
+                                               :template_enabled => true,
+                                               :project_id => '1',
+                                               :template_project_ids => ['1'],
+                                               :status_id => '1'}}
 
     # find created template
     template = IssueTemplate.find_by_template_title("Init new template")
@@ -159,7 +155,7 @@ describe IssueTemplatesController, type: :controller do
       template = IssueTemplate.last
 
       assert_difference -> { project.issue_templates.count }, 1 do
-        put :project_settings, params: { :project_id => project.id, :project => { :issue_template_ids => [ template.id ] } }
+        put :project_settings, params: {:project_id => project.id, :project => {:issue_template_ids => [template.id]}}
       end
 
       expect(response).to redirect_to(settings_project_path(:id => project.identifier, :tab => :issue_templates))

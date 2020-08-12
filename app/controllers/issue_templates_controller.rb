@@ -76,7 +76,7 @@ class IssueTemplatesController < ApplicationController
         format.html {
           flash[:notice] = l(:notice_issue_template_successfully_updated)
           if @issue_template.project.present?
-            redirect_to issue_templates_path(project: @issue_template.project)
+            redirect_to edit_issue_template_path(@issue_template)
           else
             redirect_to issue_templates_path
           end
