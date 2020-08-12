@@ -27,7 +27,7 @@
     float: right
 }
 
-.pull-right-with-marging {
+.pull-right-with-margin {
     float: right;
     margin-right: 1em;
 }
@@ -193,7 +193,6 @@ a.list_templates_projects_names.current {
     border: 1px solid #D8DDE6;
     border-radius: 2px;
     position: relative;
-    transition: all 100ms ease-in-out;
     background: #fff;
     transition: all 150ms ease-in-out;
     color: #3F3F44;
@@ -247,3 +246,5 @@ a.list_templates_projects_names.current {
 .instruction-warning { background: #f9d9d8 url(../images/tab_red.gif) no-repeat left top; }
 .instruction-note { background: #fff9d8 url(../images/tab_note.gif) no-repeat left top; }
 .instruction-info { background: #d5e9f6 url(../images/tab_info.gif) no-repeat left top; }
+
+.issue .description h1 {margin: 0 -6px;}

@@ -23,7 +23,7 @@ class IssuesController < ApplicationController
   end
 
   def update_description_with_sections
-    if @issue.issue_template&.split_description
+    if @issue.issue_template&.split_description && params[:issue][:issue_template].present?
       description_text = ""
       descriptions_attributes = params[:issue][:issue_template][:descriptions_attributes].values
       descriptions_attributes.each_with_index do |description, i|
