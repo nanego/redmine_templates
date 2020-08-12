@@ -155,16 +155,6 @@ class IssueTemplatesController < ApplicationController
     end
   end
 
-  def project_settings
-    @project.safe_attributes = params[:project]
-
-    if @project.save
-      flash[:notice] = l(:notice_project_settings_issue_template_successfully_updated)
-    end
-
-    redirect_to settings_project_path(@project, tab: :issue_templates)
-  end
-
   private
 
   def find_project

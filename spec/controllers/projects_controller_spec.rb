@@ -31,4 +31,22 @@ describe ProjectsController, type: :controller do
     end
   end
 
+  context "PUT project settings" do
+    it "should succeed and update the templates associations to project" do
+
+      project = Project.first
+      template = IssueTemplate.last
+
+      assert_difference -> { project.issue_templates.count }, 1 do
+        put :update, params: {:id => project.id,
+                              :project => {:issue_template_ids => [template.id]},
+                              :tab => :issue_templates
+        }
+      end
+
+      expect(response).to redirect_to(settings_project_path(:id => project.identifier, :tab => :issue_templates))
+      expect(flash[:notice]).to match /Successful update/
+    end
+  end
+
 end

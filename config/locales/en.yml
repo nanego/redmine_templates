@@ -39,5 +39,4 @@ en:
   modify_projects: "Edit projects list"
   usage: "Usage"
   label_other_issue: "Other issue"
-  notice_project_settings_issue_template_successfully_updated: "Issues templates available have been successfully updated"
   disabled_tracker_for_this_project: Disabled tracker for this project
