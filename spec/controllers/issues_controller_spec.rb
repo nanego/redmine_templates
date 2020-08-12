@@ -44,43 +44,43 @@ describe IssuesController, type: :controller do
 
   let(:template) do
     IssueTemplate.create(
-      :project_id => 1,
-      :tracker_id => 3,
-      :status_id => 2,
-      :author_id => 2,
-      :subject => 'test_create',
-      :template_title => 'New title template',
-      :template_enabled => true,
-      :template_project_ids => [1],
-      :split_description => "1",
-      :descriptions_attributes => [{
-        :title => "Section title",
-        :description => "Section description",
-        :type => "IssueTemplateDescriptionSection"
-      },
-       {:title => "Second section title",
-        :description => "Second section description",
-        :type => "IssueTemplateDescriptionSection"
-       }
-      ]
+        :project_id => 1,
+        :tracker_id => 3,
+        :status_id => 2,
+        :author_id => 2,
+        :subject => 'test_create',
+        :template_title => 'New title template',
+        :template_enabled => true,
+        :template_project_ids => [1],
+        :split_description => "1",
+        :descriptions_attributes => [{
+                                         :title => "Section title",
+                                         :description => "Section description",
+                                         :type => "IssueTemplateDescriptionSection"
+                                     },
+                                     {:title => "Second section title",
+                                      :description => "Second section description",
+                                      :type => "IssueTemplateDescriptionSection"
+                                     }
+        ]
     )
   end
 
   let(:template_instruction) do
     IssueTemplate.create(
-      :project_id => 1,
-      :tracker_id => 3,
-      :status_id => 2,
-      :author_id => 2,
-      :subject => 'test_create',
-      :template_title => 'New title template',
-      :template_enabled => true,
-      :template_project_ids => [1],
-      :split_description => "1",
-      :descriptions_attributes => [{
-        :text => "Text of an instruction field",
-        :type => "IssueTemplateDescriptionInstruction"
-      }]
+        :project_id => 1,
+        :tracker_id => 3,
+        :status_id => 2,
+        :author_id => 2,
+        :subject => 'test_create',
+        :template_title => 'New title template',
+        :template_enabled => true,
+        :template_project_ids => [1],
+        :split_description => "1",
+        :descriptions_attributes => [{
+                                         :text => "Text of an instruction field",
+                                         :type => "IssueTemplateDescriptionInstruction"
+                                     }]
     )
   end
 
@@ -89,23 +89,23 @@ describe IssuesController, type: :controller do
       @request.session[:user_id] = 2
       assert_difference('Issue.count', 1) do
         post :create, :params => {
-          :project_id => 1,
-          :issue => {
-            :tracker_id => 3,
-            :status_id => 2,
-            :subject => 'This is the test_new issue',
-            :description => 'This is the description',
-            :priority_id => 5,
-            :issue_template_id => template.id,
-            :issue_template => {
-              :descriptions_attributes => {
-                "0" => {
-                  :text => "Test text",
-                  :type => "IssueTemplateDescriptionSection"
-                }
-              },
+            :project_id => 1,
+            :issue => {
+                :tracker_id => 3,
+                :status_id => 2,
+                :subject => 'This is the test_new issue',
+                :description => 'This is the description',
+                :priority_id => 5,
+                :issue_template_id => template.id,
+                :issue_template => {
+                    :descriptions_attributes => {
+                        "0" => {
+                            :text => "Test text",
+                            :type => "IssueTemplateDescriptionSection"
+                        }
+                    },
+                },
             },
-          },
         }
       end
 
@@ -175,5 +175,45 @@ describe IssuesController, type: :controller do
       expect(issue).not_to be_nil
       expect(issue.description).to eq("")
     end
+
+    it "sends a notification by mail with multiple sections concatenated into one description" do
+      @request.session[:user_id] = 2
+      post :create, :params => {
+          :project_id => 1,
+          :issue => {
+              :tracker_id => 3,
+              :status_id => 2,
+              :subject => 'This is the test_new issue',
+              :description => 'This is the description',
+              :priority_id => 5,
+              :issue_template_id => template.id,
+              :issue_template => {
+                  :descriptions_attributes => {
+                      "0" => {
+                          :text => "Test text",
+                          :type => "IssueTemplateDescriptionSection"
+                      },
+                      "1" => {
+                          :text => "Second test text",
+                          :type => "IssueTemplateDescriptionSection"
+                      }
+                  },
+              },
+          },
+      }
+      expect(ActionMailer::Base.deliveries).to_not be_empty
+
+      issue = Issue.find_by_subject('This is the test_new issue')
+      expect(issue).not_to be_nil
+      expect(issue.description).to_not eq 'This is the description'
+      expect(issue.description).to eq("h1. Section title \r\n\r\nTest text\r\n\r\nh1. Second section title \r\n\r\nSecond test text\r\n\r\n")
+
+      mail = ActionMailer::Base.deliveries.last
+      mail.parts.each do |part|
+        expect(part.body.raw_source).to include("Test text")
+        expect(part.body.raw_source).to include("Second test text")
+      end
+    end
+
   end
 end
