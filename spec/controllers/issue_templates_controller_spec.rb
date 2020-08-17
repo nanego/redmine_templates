@@ -8,8 +8,12 @@ describe IssueTemplatesController, type: :controller do
 
   fixtures :issue_templates, :projects, :users, :issue_statuses, :trackers, :enumerations
 
+  let(:template) { IssueTemplate.find(1) }
+  let(:role) { Role.find(1) }
+
   before do
-    @request.session[:user_id] = 1 #=> admin ; permissions are hard...
+    @request.session[:user_id] = 2 #=> admin ; permissions are hard...
+    role.add_permission!(:create_issue_templates)
   end
 
   context "POST init" do

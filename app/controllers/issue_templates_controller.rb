@@ -3,6 +3,7 @@ class IssueTemplatesController < ApplicationController
   helper :custom_fields
   include CustomFieldsHelper
 
+  before_action :authorize_global
   before_action :find_project, only: [:init, :exclude_templates_per_project]
   before_action :find_optional_project, only: [:index, :new, :edit]
 
