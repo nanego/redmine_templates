@@ -24,7 +24,6 @@ class IssueTemplatesController < ApplicationController
     @issue_template = IssueTemplate.new(custom_form: false)
     @priorities = IssuePriority.active
     @issue_template.project = @project if @project.present?
-    @issue_template.descriptions << IssueTemplateDescriptionSection.new
   end
 
   def custom_form
@@ -37,7 +36,6 @@ class IssueTemplatesController < ApplicationController
   def edit
     @issue_template = IssueTemplate.find(params[:id])
     @priorities = IssuePriority.active
-    @issue_template.descriptions.build(type: "IssueTemplateDescriptionSection") if @issue_template.descriptions.empty?
   end
 
   def create
@@ -59,7 +57,6 @@ class IssueTemplatesController < ApplicationController
       end
     else
       @priorities = IssuePriority.active
-      @issue_template.descriptions << IssueTemplateDescriptionSection.new
 
       respond_to do |format|
         format.html { render :action => :new }
