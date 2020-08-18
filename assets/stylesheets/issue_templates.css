@@ -247,4 +247,4 @@ a.list_templates_projects_names.current {
 .instruction-note { background: #fff9d8 url(../images/tab_note.gif) no-repeat left top; }
 .instruction-info { background: #d5e9f6 url(../images/tab_info.gif) no-repeat left top; }
 
-.issue .description h1 {margin: 0 -6px;}
+.issue .description h2 {padding: 0;margin: 0; font-size: 12px;}

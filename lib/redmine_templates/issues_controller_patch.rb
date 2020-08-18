@@ -30,7 +30,7 @@ class IssuesController < ApplicationController
         split_item = @issue.issue_template.descriptions[i]
         next unless split_item.is_a? IssueTemplateDescriptionSection
 
-        description_text += "h1. #{split_item.title} \r\n\r\n"
+        description_text += "h2. #{split_item.title} \r\n\r\n"
         description_text += "#{description[:text]}\r\n\r\n"
       end
       @issue.description = description_text
