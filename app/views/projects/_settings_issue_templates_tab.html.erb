@@ -1,0 +1,89 @@
+<fieldset class="box">
+  <legend>Modèles disponibles pour ce projet</legend>
+
+  <%= form_for @project,
+               :method => :put,
+               :url => project_path(@project, tab: :issue_templates),
+               :html => {:id => "templates-form"} do |f| %>
+
+    <%= hidden_field_tag "project[issue_template_ids][]", nil %>
+
+    <p>
+    <div>
+      <table class="list issues" id="templates_list">
+        <thead>
+        <tr>
+          <th class="template_title"><%= l(:project_module_issue_templates) %></th>
+          <th class="template_id"><%= l(:field_tracker) %></th>
+          <th class="template_subject"><%= l(:field_subject) %></th>
+          <th class="template_projects"><%= l(:field_project).pluralize %></th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% IssueTemplate.order("custom_form desc, tracker_id desc, usage desc").each do |issue_template| %>
+          <tr class="issue_template issue">
+            <td>
+              <%= label_tag do %>
+                <%= check_box_tag "project[issue_template_ids][]", issue_template.id, @project.issue_templates.include?(issue_template) %>
+                <%= issue_template.template_title %>
+              <% end %>
+            </td>
+            <td>
+              <% if @project.trackers.exclude? issue_template.tracker %>
+                <span class="icon icon-warning" style="margin-left: 8px;" title="<%= t('disabled_tracker_for_this_project') %>"></span>
+              <% end %>
+              <%= issue_template.tracker.name %>
+            </td>
+            <td><%= issue_template.subject %></td>
+            <td class="template_projects">
+              <div>
+                <%
+                  nb_other_projects = 0
+                  nb_visible_projects = 0
+                  template_projects = issue_template.template_projects.all
+                  allowed_projects = issue_template.allowed_target_projects
+                %>
+                <% template_projects.each do |project| %>
+                  <% if allowed_projects.include?(project) %>
+                    <%= link_to project.name.gsub(/ /, "&nbsp;").html_safe,
+                                "#",
+                                class: "project_id_#{project.id} list_templates_projects_names #{@project && @project == project ? "current" : ""}",
+                                :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project.id}\").toggleClass('current')"
+                    %>
+                    <% nb_visible_projects += 1 %>
+                  <% else %>
+                    <% nb_other_projects += 1 %>
+                  <% end %>
+                <% end %>
+                <% if nb_other_projects > 0 %>
+                  <span class="list_templates_other_projects">
+                    <% if nb_visible_projects > 0 %>
+                      <%= l("support.array.sentence_connector") %>
+                      <%= pluralize(nb_other_projects, l("other")) %>
+                      <%= nb_other_projects > 1 ? l("project").pluralize : l("project") %>
+                    <% else %>
+                      <%= pluralize(nb_other_projects, l("project")) %>
+                    <% end %>
+                  </span>
+                <% end %>
+              </div>
+            </td>
+            <td class="buttons">
+              <% if User.current.allowed_to?(:create_issue_templates, @project) %>
+                <%= link_to l(:button_edit),
+                            edit_issue_template_path(id: issue_template.id, project_id: @project.id),
+                            :class => 'icon icon-edit' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        <% reset_cycle %>
+        </tbody>
+      </table>
+    </div>
+
+    </p>
+    <p><%= submit_tag l(:button_save) %></p>
+  <% end %>
+</fieldset>

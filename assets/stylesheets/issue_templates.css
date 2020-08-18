@@ -27,7 +27,7 @@
     float: right
 }
 
-.pull-right-with-marging {
+.pull-right-with-margin {
     float: right;
     margin-right: 1em;
 }
@@ -92,6 +92,10 @@ table .template_icon {
 .template_projects {
     max-width: 300px;
     white-space: normal;
+}
+
+table#templates_list td.template_usage, table#templates_list th.template_usage {
+    text-align: center;
 }
 
 .box.header {
@@ -189,7 +193,6 @@ a.list_templates_projects_names.current {
     border: 1px solid #D8DDE6;
     border-radius: 2px;
     position: relative;
-    transition: all 100ms ease-in-out;
     background: #fff;
     transition: all 150ms ease-in-out;
     color: #3F3F44;
@@ -231,3 +234,17 @@ a.list_templates_projects_names.current {
     text-decoration: none !important;
     background-color: #FCF5C1;
 }
+
+.link-cursor {
+    cursor: pointer;
+}
+
+.instruction-warning, .instruction-note, .instruction-info {
+  border: none; padding:1.5em 1.5em 1.5em 48px; margin-top: 0.25em; line-height: 1.4em;
+  color:#333; text-align:left; display:block; font-size:12px; max-width: 800px;
+}
+.instruction-warning { background: #f9d9d8 url(../images/tab_red.gif) no-repeat left top; }
+.instruction-note { background: #fff9d8 url(../images/tab_note.gif) no-repeat left top; }
+.instruction-info { background: #d5e9f6 url(../images/tab_info.gif) no-repeat left top; }
+
+.issue .description h2 {padding: 0;margin: 0; font-size: 12px;}

@@ -12,6 +12,9 @@ class IssueTemplate < ActiveRecord::Base
   belongs_to :priority, :class_name => 'IssuePriority', :foreign_key => 'priority_id'
   belongs_to :category, :class_name => 'IssueCategory', :foreign_key => 'category_id'
 
+  has_many :descriptions, -> { order(:position) }, :class_name => "IssueTemplateDescription", :dependent => :destroy
+  accepts_nested_attributes_for :descriptions, :reject_if => :description_is_empty?, :allow_destroy => true
+
   has_and_belongs_to_many :template_projects, class_name: 'Project', join_table: 'issue_templates_projects'
 
   if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
@@ -63,7 +66,9 @@ class IssueTemplate < ActiveRecord::Base
                   :authorized_viewers,
                   :custom_form,
                   :custom_form_path,
-                  :tracker_read_only
+                  :tracker_read_only,
+                  :descriptions_attributes,
+                  :split_description
 
   def to_s
     template_title
@@ -156,6 +161,14 @@ class IssueTemplate < ActiveRecord::Base
 
   def assigned_to_function_id
     nil #TODO Make templates compatible with this functionality
+  end
+
+  def description_is_empty?(attributes)
+    exists = attributes["id"].present?
+    empty = attributes["title"].blank? if attributes["type"] == "IssueTemplateDescriptionSection"
+    empty = attributes["text"].blank? if attributes["type"] == "IssueTemplateDescriptionInstruction"
+    attributes.merge!({:_destroy => 1}) if exists and empty
+    return (!exists and empty)
   end
 
 end

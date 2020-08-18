@@ -4,6 +4,8 @@ class IssuesController < ApplicationController
 
   before_action :set_template, :only => [:new]
 
+  append_before_action :update_description_with_sections, :only => [:create]
+
   def set_template
     if params[:template_id] && params[:template_id].to_i.to_s == params[:template_id]
       permitted_params_override = params[:issue].present? ? params.require(:issue).to_unsafe_h : {}
@@ -20,4 +22,18 @@ class IssuesController < ApplicationController
     end
   end
 
+  def update_description_with_sections
+    if @issue.issue_template&.split_description && params[:issue][:issue_template].present?
+      description_text = ""
+      descriptions_attributes = params[:issue][:issue_template][:descriptions_attributes].values
+      descriptions_attributes.each_with_index do |description, i|
+        split_item = @issue.issue_template.descriptions[i]
+        next unless split_item.is_a? IssueTemplateDescriptionSection
+
+        description_text += "h2. #{split_item.title} \r\n\r\n"
+        description_text += "#{description[:text]}\r\n\r\n"
+      end
+      @issue.description = description_text
+    end
+  end
 end

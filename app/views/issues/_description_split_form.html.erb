@@ -1,0 +1,58 @@
+<% if @issue.safe_attribute? 'description' %>
+  <% if @issue_template&.split_description %>
+    <%= f.fields_for :issue_template, @issue_template do |template_form| %>
+      <%= template_form.fields_for :descriptions, @issue_template.descriptions do |description_form| %>
+        <% description = description_form.object %>
+        <% if description.is_a? IssueTemplateDescriptionSection %>
+          <span>
+            <p>
+              <%= label_tag do %>
+                <%= description.title %>
+                <span class="required"> *</span>
+                <% if description.description.present? %>
+                  <em class="info" style="padding-top: 3px; line-height: 1.5em;">
+                    <%= description.description %>
+                  </em>
+                <% end %>
+              <% end %>
+              <%= description_form.text_area :text,
+                                             :cols => 60,
+                                             :accesskey => accesskey(:edit),
+                                             :class => 'wiki-edit',
+                                             :rows => [[10, description_form.object.text.to_s.length / 50].max, 20].min,
+                                             :data => {
+                                                 :auto_complete => true,
+                                                 :issues_url => auto_complete_issues_path(:project_id => @issue.project, :q => '')
+                                             },
+                                             :no_label => true,
+                                             :required => true
+              %>
+              <%= wikitoolbar_for "issue_issue_template_descriptions_attributes_#{description_form.index}_text" %>
+            </p>
+          </span>
+        <% elsif description_form.object.is_a? IssueTemplateDescriptionInstruction %>
+          <p>
+            <span class="instruction-<%= description.instruction_type %>">
+              <%= description.text %>
+            </span>
+          </p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <p>
+      <%= f.label_for_field :description, :required => @issue.required_attribute?('description') %>
+      <%= link_to_function content_tag(:span, l(:button_edit), :class => 'icon icon-edit'), '$(this).hide(); $("#issue_description_and_toolbar").show()' unless @issue.new_record? %>
+      <%= content_tag 'span', :id => "issue_description_and_toolbar", :style => (@issue.new_record? ? nil : 'display:none') do %>
+        <%= f.text_area :description, :cols => 60, :accesskey => accesskey(:edit), :class => 'wiki-edit',
+                        :rows => [[10, @issue.description.to_s.length / 50].max, 20].min,
+                        :data => {
+                            :auto_complete => true,
+                            :issues_url => auto_complete_issues_path(:project_id => @issue.project, :q => '')
+                        },
+                        :no_label => true %>
+      <% end %>
+    </p>
+    <%= wikitoolbar_for 'issue_description', preview_issue_path(:project_id => @issue.project, :issue_id => @issue.id) %>
+  <% end %>
+<% end %>

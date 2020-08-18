@@ -1,0 +1,16 @@
+one:
+  id: 1
+  title: "Section title"
+  description: "Section description"
+  type: "IssueTemplateDescriptionSection"
+  issue_template_id: 3
+  position: 1
+  text: "Type here first section content"
+two:
+  id: 2
+  title: "Second section title"
+  description: "Second section description"
+  type: "IssueTemplateDescriptionSection"
+  issue_template_id: 3
+  position: 2
+  text: "Type here second section content"

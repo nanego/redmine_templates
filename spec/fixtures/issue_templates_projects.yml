@@ -4,3 +4,6 @@ one:
 two:
   issue_template_id: 2
   project_id: 2
+three:
+  issue_template_id: 3
+  project_id: 2

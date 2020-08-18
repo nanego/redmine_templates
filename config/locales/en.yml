@@ -6,6 +6,7 @@ en:
   button_save_issue_template: "Save this template"
   field_template_title: "Template name"
   field_tracker_read_only: "Tracker read only"
+  field_split_description: Split description field in multiple fields
   template_is_enabled: "Template enabled"
   label_issue_templates: "Issue templates"
   no_issue_templates_for_this_project: "There is no issue template for this project"
@@ -20,6 +21,7 @@ en:
   notice_issue_template_successfully_deleted: "The template has been deleted"
   field_template_project_ids: "Projects"
   permission_create_issue_templates: "Manage templates"
+  permission_manage_project_issue_templates: "Select templates"
   show_subprojects_templates: "Subprojects"
   warning: "Warning"
   warning_all_changes_will_be_overwritten: "If you apply this template, all current modification will be overwritten. <BR/>Are you sure ?"
@@ -37,3 +39,4 @@ en:
   modify_projects: "Edit projects list"
   usage: "Usage"
   label_other_issue: "Other issue"
+  disabled_tracker_for_this_project: Disabled tracker for this project

@@ -9,6 +9,7 @@ fr:
   field_template_image: "Illustration"
   field_show_on_overview: "Afficher sur l'aperçu du projet"
   field_tracker_read_only: "Tracker en lecture seule"
+  field_split_description: Diviser le champ description
   template_is_enabled: "Actif (décocher pour suspendre l'utilisation du modèle)"
   label_issue_templates: "Modèles de demande"
   no_issue_templates_for_this_project: "Il n'y a aucun modèle associé à ce projet"
@@ -22,7 +23,8 @@ fr:
   issue_is_private: "Demande privée"
   notice_issue_template_successfully_deleted: "Le modèle a été supprimé"
   field_template_project_ids: "Projets"
-  permission_create_issue_templates: "Créer et modifier les modèles de demande"
+  permission_create_issue_templates: "Créer et modifier les modèles de demandes"
+  permission_manage_project_issue_templates: "Choisir les modèles de demandes"
   show_subprojects_templates: "Sous-projets"
   warning: "Avertissement"
   warning_all_changes_will_be_overwritten: "Si vous appliquez le modèle, toutes les modifications en cours seront perdues. <BR/>Etes-vous sûr ?"
@@ -42,3 +44,4 @@ fr:
   label_other_issue: "Demande libre"
   custom_form_path: "Chemin vers le formulaire"
   form_type: "Type de formulaire"
+  disabled_tracker_for_this_project: Tracker désactivé sur ce projet

@@ -4,7 +4,7 @@ class IssueTemplatesController < ApplicationController
   include CustomFieldsHelper
 
   before_action :authorize_global
-  before_action :find_project, only: [:init, :exclude_templates_per_project]
+  before_action :find_project, only: [:init]
   before_action :find_optional_project, only: [:index, :new, :edit]
 
   def init
@@ -25,6 +25,7 @@ class IssueTemplatesController < ApplicationController
     @issue_template = IssueTemplate.new(custom_form: false)
     @priorities = IssuePriority.active
     @issue_template.project = @project if @project.present?
+    @issue_template.descriptions << IssueTemplateDescriptionSection.new
   end
 
   def custom_form
@@ -37,6 +38,7 @@ class IssueTemplatesController < ApplicationController
   def edit
     @issue_template = IssueTemplate.find(params[:id])
     @priorities = IssuePriority.active
+    @issue_template.descriptions.build(type: "IssueTemplateDescriptionSection") if @issue_template.descriptions.empty?
   end
 
   def create
@@ -58,6 +60,8 @@ class IssueTemplatesController < ApplicationController
       end
     else
       @priorities = IssuePriority.active
+      @issue_template.descriptions << IssueTemplateDescriptionSection.new
+
       respond_to do |format|
         format.html { render :action => :new }
       end
@@ -72,7 +76,7 @@ class IssueTemplatesController < ApplicationController
         format.html {
           flash[:notice] = l(:notice_issue_template_successfully_updated)
           if @issue_template.project.present?
-            redirect_to issue_templates_path(project: @issue_template.project)
+            redirect_to edit_issue_template_path(@issue_template)
           else
             redirect_to issue_templates_path
           end
@@ -153,18 +157,17 @@ class IssueTemplatesController < ApplicationController
 
   private
 
-    def find_project
-      begin
-        @project ||= Project.find(params[:project_id])
-      rescue ActiveRecord::RecordNotFound
-        render_404
-      end
-    end
-
-    def find_optional_project
-      @project = Project.find(params[:project_id]) unless params[:project_id].blank?
+  def find_project
+    begin
+      @project ||= Project.find(params[:project_id])
     rescue ActiveRecord::RecordNotFound
       render_404
     end
+  end
 
+  def find_optional_project
+    @project = Project.find(params[:project_id]) unless params[:project_id].blank?
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
 end

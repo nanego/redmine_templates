@@ -1,4 +1,4 @@
-<div data-controller="template-form">
+<div data-controller="template-form split-description">
 
   <%= labelled_form_for @issue_template, :html => {id: 'issue-template-form',
                                                    name: 'issue-template-form_name'} do |f| %>
@@ -35,6 +35,15 @@
               <br>
               <%= f.radio_button :custom_form, true, :checked => f.object.custom_form?, 'data-action': "template-form#toogleForm", 'data-target': "template-form.custom_form_radio_button" %>
               <%= f.label :custom_form, 'Sur mesure', :value => true, class: "inline" %>
+            </p>
+            <p data-target="template-form.split_description">
+              <%= f.label :split_description, l(:field_split_description) %>
+              <%= f.check_box :split_description, :no_label => true,
+                                :data => {
+                                  "action" => "split-description#toggleDescriptionField",
+                                  "target" => "split-description.split_description_checkbox"
+                                }
+              %>
             </p>
             <p>
               <%= f.text_field :custom_form_path, label: l('custom_form_path'), :size => 80, :maxlength => 255, :required => false,
@@ -106,7 +115,7 @@
     <div class="box tabular" data-target="template-form.standard_form">
       <div id="issue_attributes">
 
-        <p class="pull-right-with-marging">
+        <p class="pull-right-with-margin">
           <%= f.check_box :is_private, :no_label => true %>
           <label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:issue_is_private) %></label>
         </p>
@@ -118,7 +127,7 @@
 
         <p><%= f.text_field :subject, :size => 80, :maxlength => 255, :required => true %></p>
 
-        <p>
+        <p data-target="split-description.description_field">
           <%= f.label_for_field :description, :required => false %>
           <%= content_tag 'span', :id => "issue_description_and_toolbar" do %>
             <%= f.text_area :description,
@@ -131,18 +140,21 @@
         </p>
         <%= wikitoolbar_for 'issue_template_description' %>
 
-        <div id="attributes" class="attributes">
+        <span id="split-description-container" data-target="split-description.description_fields" style="display: none;">
+          <%= render :partial => "issue_templates/description_form", :locals => { f: f } %>
+        </span>
+        <p data-target="split-description.add_buttons" style="display: none;">
+          <a class="icon icon-add link-cursor" data-action="split-description#addSection">Ajouter une section</a>
+          <a class="icon icon-add link-cursor" data-action="split-description#addInstruction">Ajouter une consigne</a>
+        </p>
 
+        <div id="attributes" class="attributes">
           <div class="splitcontent">
             <div class="splitcontentleft">
-
               <p><%= f.select :status_id, (IssueStatus.all.collect {|p| [p.name, p.id]}), {:required => true},
                               :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
-
               <p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), {:required => true}, :disabled => false %></p>
-
               <p><%= f.select :assigned_to_id, principals_options_for_select(@issue_template.assignable_users, @issue_template.assigned_to), :include_blank => true, :required => false %></p>
-
               <p><%= f.select :category_id, (IssueCategory.all.collect {|c| [c.name, c.id]}), :include_blank => true, :required => false %>
                 <%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
                             new_project_issue_category_path(@issue_template.project),
@@ -152,20 +164,13 @@
                             :tabindex => 200) if User.current.allowed_to?(:manage_categories, @issue_template.project) %></p>
 
             </div>
-
             <div class="splitcontentright">
-
               <p><%= f.text_field :start_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_start_date') %></p>
-
               <p><%= f.text_field :due_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_due_date') %></p>
-
               <p><%= f.text_field :estimated_hours, :size => 3, :disabled => false, :required => false %> <%= l(:field_hours) %></p>
-
               <p><%= f.select :done_ratio, ((0..10).to_a.collect {|r| ["#{r * 10} %", r * 10]}), :required => false %></p>
-
             </div>
           </div>
-
           <div class="splitcontent">
             <div class="splitcontentleft">
               <% i = 0 %>
@@ -180,11 +185,8 @@
               <% end -%>
               </div>
               </div>
-
           <% include_calendar_headers_tags %>
-
         </div>
-
       </div>
 
       <% if Redmine::Plugin.installed?(:redmine_multiprojects_issue) %>
