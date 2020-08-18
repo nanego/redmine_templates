@@ -11,7 +11,10 @@
               <%= template.template_image.present? ? octicon(template.template_image, :height => 48, :class => "right left", :"aria-label" => "hi") : octicon('repo-template', :height => 48, :class => "right left", :"aria-label" => "hi") %>
             <% rescue => e %>
               </div>
-              <div class="error"><%= "Vérifiez le nom de l'octicon<BR>('#{template.template_image}' n'existe pas)".html_safe %>
+              <div class="error">
+                Vérifiez le nom de l'octicon
+                <br>
+                <%= "('#{template.template_image}' n'existe pas)" %>
             <% end %>
           </div>
           <div class="template-title"><%= template.template_title %></div>
