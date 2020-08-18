@@ -9,6 +9,4 @@ Rails.application.routes.draw do
       get :custom_form
     end
   end
-
-  match "/projects/:project_id/settings/issue_templates" => "issue_templates#project_settings", :via => [:put, :patch]
 end
