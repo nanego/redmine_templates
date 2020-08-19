@@ -240,7 +240,7 @@ a.list_templates_projects_names.current {
 }
 
 .tabular .instruction {
-    margin: 0.25em 0 0 180px;
+    margin: 2em 0 2em 180px;
     min-height: 2em;
     clear: left;
     border: none;
@@ -255,6 +255,12 @@ a.list_templates_projects_names.current {
 
 .tabular .instruction p {
     padding-left: 0;
+}
+
+@media screen and (max-width: 899px) {
+    .tabular .instruction {
+        margin-left: 0;
+    }
 }
 
 .instruction-warning {
