@@ -97,10 +97,10 @@ class IssueTemplatesController < ApplicationController
   def update_form
     unless params[:issue_template][:id].blank?
       @issue_template = IssueTemplate.find(params[:issue_template][:id])
-      @issue_template.assign_attributes(params[:issue_template])
+      @issue_template.safe_attributes = params[:issue_template]
     else
       @issue_template = IssueTemplate.new
-      @issue_template.safe_attributes(params[:issue_template])
+      @issue_template.safe_attributes = params[:issue_template]
     end
     @priorities = IssuePriority.active
   end
