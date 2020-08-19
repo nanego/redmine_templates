@@ -31,11 +31,9 @@
             </p>
           </span>
         <% elsif description_form.object.is_a? IssueTemplateDescriptionInstruction %>
-          <p>
-            <span class="instruction-<%= description.instruction_type %>">
-              <%= description.text %>
-            </span>
-          </p>
+          <div class="instruction instruction-<%= description.instruction_type %>">
+            <%= textilizable description.text %>
+          </div>
         <% end %>
       <% end %>
     <% end %>
