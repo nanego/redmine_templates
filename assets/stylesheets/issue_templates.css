@@ -239,7 +239,7 @@ a.list_templates_projects_names.current {
     cursor: pointer;
 }
 
-.tabular .instruction {
+#issue-form .instruction {
     margin: 2em 0 2em 180px;
     min-height: 2em;
     clear: left;
@@ -253,12 +253,12 @@ a.list_templates_projects_names.current {
     max-width: 800px;
 }
 
-.tabular .instruction p {
+#issue-form .instruction p {
     padding-left: 0;
 }
 
 @media screen and (max-width: 899px) {
-    .tabular .instruction {
+    #issue-form .instruction {
         margin-left: 0;
     }
 }
@@ -279,4 +279,21 @@ a.list_templates_projects_names.current {
     padding: 0;
     margin: 0;
     font-size: 12px;
+}
+
+#issue-form textarea {
+    padding: 0.5em;
+}
+
+#issue-form em.info {
+    font-weight: normal;
+    font-size: 95%;
+}
+
+#split-description-container .split_description {
+    border-top: dotted 1px lightgray;
+    border-bottom: dotted 1px lightgray;
+    margin: 1em;
+    padding: 1em;
+    background-color: #edf3fe;
 }

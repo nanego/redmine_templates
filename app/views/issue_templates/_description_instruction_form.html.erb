@@ -1,29 +1,35 @@
-<span class="split_description instruction <%= "template" if template %>"
-      data-controller="description-item-form"
-      <%= "data-target=split-description.instruction_template" if template %>
-      <%= "style=display:none;" if template %>>
-    <p class="with-textarea">
-        <%= label_tag "Consigne" %>
-        <%= form.hidden_field :position %>
-        <%= reorder_handle(form.object, :url => "#") %>
-        <%= form.select :instruction_type, IssueTemplateDescriptionInstruction.instruction_types_options , :no_label => true %>
-        <%= form.text_area :text,
-                            :cols => 60,
-                            :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
-                            :accesskey => accesskey(:edit),
-                            :class => "wiki-edit",
-                            :no_label => true,
-                            :placeholder => "Obligatoire",
-                            :data => {
-                                  "help-link" => "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax_textile.html",
-                                  "preview-link" => preview_text_path
-                                }
-        %>
-        <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" %>
-        <%= form.hidden_field :type, :value => "IssueTemplateDescriptionInstruction" %>
-    </p>
-    <p>
-        <a class="icon icon-del link-cursor" rel="nofollow" data-action="description-item-form#delete">Supprimer</a>
-        <%= form.hidden_field :_destroy, :value => 0, "data-target" => "description-item-form.destroy_hidden" %>
-    </p>
-</span>
+<div class="split_description instruction <%= "template" if template %>"
+     data-controller="description-item-form"
+     <%= "data-target=split-description.instruction_template" if template %>
+     <%= "style=display:none;" if template %>>
+
+  <span style="float: right;">
+    <a class="icon icon-del link-cursor" rel="nofollow" data-action="description-item-form#delete">Supprimer</a>
+    <%= form.hidden_field :_destroy, :value => 0, "data-target" => "description-item-form.destroy_hidden" %>
+  </span>
+
+  <p class="with-textarea">
+    <%= label_tag do %>
+      <%= reorder_handle(form.object, :url => "#") %>
+      Consigne
+    <% end %>
+    <%= form.hidden_field :position %>
+
+    <%= form.select :instruction_type, IssueTemplateDescriptionInstruction.instruction_types_options, :no_label => true %>
+    <%= form.text_area :text,
+                       :cols => 60,
+                       :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
+                       :accesskey => accesskey(:edit),
+                       :class => "wiki-edit",
+                       :no_label => true,
+                       :placeholder => "Obligatoire",
+                       :data => {
+                           "help-link" => "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax_textile.html",
+                           "preview-link" => preview_text_path
+                       }
+    %>
+    <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" %>
+    <%= form.hidden_field :type, :value => "IssueTemplateDescriptionInstruction" %>
+  </p>
+
+</div>

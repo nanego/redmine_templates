@@ -1,33 +1,41 @@
-<span class="split_description section <%= "template" if template %>" 
-      data-controller="description-item-form"
-      <%= "data-target=split-description.section_template" if template %>
-      <%= "style=display:none;" if template %>>
-    <p>
-        <%= label_tag "Description section" %>
-        <%= form.hidden_field :position %>
-        <%= reorder_handle(form.object, :url => "#") %>
-        <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 80 %>
-        <%= form.hidden_field :type, :value => "IssueTemplateDescriptionSection" %>
-    </p>
-    <p>
-        <%= form.text_field :description, :placeholder => "Description", :no_label => true, :size => 80 %>
-    </p>
-    <p class="with-textarea">
-        <%= form.text_area :text,
-                            :cols => 60,
-                            :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
-                            :accesskey => accesskey(:edit),
-                            :class => "wiki-edit",
-                            :no_label => true,
-                            :data => {
-                                  "help-link" => "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax_textile.html",
-                                  "preview-link" => preview_text_path
-                                }
-        %>
-        <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" %>
-    </p>
-    <p>
-        <a class="icon icon-del link-cursor" rel="nofollow" data-action="description-item-form#delete">Supprimer</a>
-        <%= form.hidden_field :_destroy, :value => 0, "data-target" => "description-item-form.destroy_hidden" %>
-    </p>
-</span>
+<div class="split_description section <%= "template" if template %>"
+     data-controller="description-item-form"
+     <%= "data-target=split-description.section_template" if template %>
+     <%= "style=display:none;" if template %>>
+
+  <span style="float: right;">
+    <a class="icon icon-del link-cursor" rel="nofollow" data-action="description-item-form#delete">Supprimer</a>
+    <%= form.hidden_field :_destroy, :value => 0, "data-target" => "description-item-form.destroy_hidden" %>
+  </span>
+
+  <p>
+    <%= label_tag do %>
+      <%= reorder_handle(form.object, :url => "#") %>
+      Section
+    <% end %>
+    <%= form.hidden_field :position %>
+
+    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 80, required: true %>
+    <%= form.hidden_field :type, :value => "IssueTemplateDescriptionSection" %>
+  </p>
+  <p>
+    <%= form.text_field :description, :placeholder => "Description", :no_label => true, :size => 80 %>
+  </p>
+  <p class="with-textarea">
+    <%= form.text_area :text,
+                       :cols => 60,
+                       :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
+                       :accesskey => accesskey(:edit),
+                       :class => "wiki-edit",
+                       :no_label => true,
+                       :data => {
+                           "help-link" => "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax_textile.html",
+                           "preview-link" => preview_text_path
+                       }
+    %>
+    <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" %>
+  </p>
+  <p>
+    <%= form.text_field :placeholder, :size => 80, label: "Valeur si non saisi" if form.object %>
+  </p>
+</div>

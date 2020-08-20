@@ -4,32 +4,30 @@
       <%= template_form.fields_for :descriptions, @issue_template.descriptions do |description_form| %>
         <% description = description_form.object %>
         <% if description.is_a? IssueTemplateDescriptionSection %>
-          <span>
-            <p>
-              <%= label_tag do %>
-                <%= description.title %>
-                <span class="required"> *</span>
-                <% if description.description.present? %>
-                  <em class="info" style="padding-top: 3px; line-height: 1.5em;">
-                    <%= description.description %>
-                  </em>
-                <% end %>
+          <p>
+            <%= label_tag do %>
+              <%= description.title %>
+              <% if description.description.present? %>
+                <em class="info" style="padding-top: 3px; line-height: 1.5em;">
+                  <%= description.description %>
+                </em>
               <% end %>
-              <%= description_form.text_area :text,
-                                             :cols => 60,
-                                             :accesskey => accesskey(:edit),
-                                             :class => 'wiki-edit',
-                                             :rows => [[10, description_form.object.text.to_s.length / 50].max, 20].min,
-                                             :data => {
-                                                 :auto_complete => true,
-                                                 :issues_url => auto_complete_issues_path(:project_id => @issue.project, :q => '')
-                                             },
-                                             :no_label => true,
-                                             :required => true
-              %>
-              <%= wikitoolbar_for "issue_issue_template_descriptions_attributes_#{description_form.index}_text" %>
-            </p>
-          </span>
+            <% end %>
+            <%= description_form.text_area :text,
+                                           :cols => 60,
+                                           :accesskey => accesskey(:edit),
+                                           :class => 'wiki-edit',
+                                           :rows => [[10, description_form.object.text.to_s.length / 50].max, 20].min,
+                                           :data => {
+                                               :auto_complete => true,
+                                               :issues_url => auto_complete_issues_path(:project_id => @issue.project, :q => '')
+                                           },
+                                           :no_label => true,
+                                           :required => false,
+                                           :placeholder => description.placeholder
+            %>
+            <%= wikitoolbar_for "issue_issue_template_descriptions_attributes_#{description_form.index}_text" %>
+          </p>
         <% elsif description_form.object.is_a? IssueTemplateDescriptionInstruction %>
           <div class="instruction instruction-<%= description.instruction_type %>">
             <%= textilizable description.text %>

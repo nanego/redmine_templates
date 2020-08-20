@@ -39,10 +39,10 @@
             <p data-target="template-form.split_description">
               <%= f.label :split_description, l(:field_split_description) %>
               <%= f.check_box :split_description, :no_label => true,
-                                :data => {
+                              :data => {
                                   "action" => "split-description#toggleDescriptionField",
                                   "target" => "split-description.split_description_checkbox"
-                                }
+                              }
               %>
             </p>
             <p>
@@ -99,16 +99,17 @@
 
           </div>
 
-          <p>
-            <%= f.text_area :template_description, :maxlength => 1024, :class => 'wiki-edit' %>
-            <%= wikitoolbar_for 'issue_template_template_description' %>
-          </p>
-          <p>
-            <%= f.text_field :template_image, :size => 80, :maxlength => 255, placeholder: 'Ex: alert' %>
-            <br><%= link_to 'Liste des icones compatibles', 'https://octicons.github.com', target: '_blank' %>
-          </p>
-
         </div>
+
+        <p>
+          <%= f.text_area :template_description, :maxlength => 1024, :class => 'wiki-edit' %>
+          <%= wikitoolbar_for 'issue_template_template_description' %>
+        </p>
+        <p>
+          <%= f.text_field :template_image, :size => 80, :maxlength => 255, placeholder: 'Ex: alert' %>
+          <br><%= link_to 'Liste des icones compatibles', 'https://octicons.github.com', target: '_blank' %>
+        </p>
+
       </div>
     </div>
 
@@ -120,7 +121,7 @@
           <label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:issue_is_private) %></label>
         </p>
 
-        <p><%= f.select :tracker_id, Tracker.visible.collect {|t| [t.name, t.id]}, {:required => true},
+        <p><%= f.select :tracker_id, Tracker.visible.collect { |t| [t.name, t.id] }, {:required => true},
                         :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
 
         <%= render "limited_visibility_fields" if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
@@ -141,7 +142,7 @@
         <%= wikitoolbar_for 'issue_template_description' %>
 
         <span id="split-description-container" data-target="split-description.description_fields" style="display: none;">
-          <%= render :partial => "issue_templates/description_form", :locals => { f: f } %>
+          <%= render :partial => "issue_templates/description_form", :locals => {f: f} %>
         </span>
         <p data-target="split-description.add_buttons" style="display: none;">
           <a class="icon icon-add link-cursor" data-action="split-description#addSection">Ajouter une section</a>
@@ -151,11 +152,11 @@
         <div id="attributes" class="attributes">
           <div class="splitcontent">
             <div class="splitcontentleft">
-              <p><%= f.select :status_id, (IssueStatus.all.collect {|p| [p.name, p.id]}), {:required => true},
+              <p><%= f.select :status_id, (IssueStatus.all.collect { |p| [p.name, p.id] }), {:required => true},
                               :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
-              <p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), {:required => true}, :disabled => false %></p>
+              <p><%= f.select :priority_id, (@priorities.collect { |p| [p.name, p.id] }), {:required => true}, :disabled => false %></p>
               <p><%= f.select :assigned_to_id, principals_options_for_select(@issue_template.assignable_users, @issue_template.assigned_to), :include_blank => true, :required => false %></p>
-              <p><%= f.select :category_id, (IssueCategory.all.collect {|c| [c.name, c.id]}), :include_blank => true, :required => false %>
+              <p><%= f.select :category_id, (IssueCategory.all.collect { |c| [c.name, c.id] }), :include_blank => true, :required => false %>
                 <%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
                             new_project_issue_category_path(@issue_template.project),
                             :remote => true,
@@ -168,7 +169,7 @@
               <p><%= f.text_field :start_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_start_date') %></p>
               <p><%= f.text_field :due_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_due_date') %></p>
               <p><%= f.text_field :estimated_hours, :size => 3, :disabled => false, :required => false %> <%= l(:field_hours) %></p>
-              <p><%= f.select :done_ratio, ((0..10).to_a.collect {|r| ["#{r * 10} %", r * 10]}), :required => false %></p>
+              <p><%= f.select :done_ratio, ((0..10).to_a.collect { |r| ["#{r * 10} %", r * 10] }), :required => false %></p>
             </div>
           </div>
           <div class="splitcontent">
