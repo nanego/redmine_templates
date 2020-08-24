@@ -152,7 +152,7 @@ $(document).ready(function ($) {
         }
 
         addWikiToolBar(field) {
-            var wikiToolbar = new jsToolBar(document.getElementById(field.id));
+            var wikiToolbar = new jsToolBar(field);
             wikiToolbar.setHelpLink(field.dataset.helpLink);
             wikiToolbar.setPreviewUrl(field.dataset.previewLink);
             wikiToolbar.draw();
