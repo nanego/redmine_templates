@@ -37,7 +37,7 @@ describe IssuesController, type: :controller do
   include Redmine::I18n
 
   before do
-    @request.session[:user_id] = 1 # Admin
+    @request.session[:user_id] = 2
     User.current = User.find(1)
     Setting.default_language = "en"
   end
@@ -56,11 +56,13 @@ describe IssuesController, type: :controller do
         :descriptions_attributes => [{
                                          :title => "Section title",
                                          :description => "Section description",
-                                         :type => "IssueTemplateDescriptionSection"
+                                         :type => "IssueTemplateDescriptionSection",
+                                         :placeholder => "No data"
                                      },
                                      {:title => "Second section title",
                                       :description => "Second section description",
-                                      :type => "IssueTemplateDescriptionSection"
+                                      :type => "IssueTemplateDescriptionSection",
+                                      :placeholder => "Nothing to say"
                                      }
         ]
     )
@@ -80,13 +82,18 @@ describe IssuesController, type: :controller do
         :descriptions_attributes => [{
                                          :text => "Text of an instruction field",
                                          :type => "IssueTemplateDescriptionInstruction"
+                                     },
+                                     {
+                                         :title => "Section title",
+                                         :description => "Section description",
+                                         :type => "IssueTemplateDescriptionSection",
+                                         :placeholder => "No data"
                                      }]
     )
   end
 
   context "POST create" do
-    it "should show multiple description sections" do
-      @request.session[:user_id] = 2
+    it "shows multiple description sections" do
       assert_difference('Issue.count', 1) do
         post :create, :params => {
             :project_id => 1,
@@ -115,7 +122,6 @@ describe IssuesController, type: :controller do
     end
 
     it "joins multiple sections into one description" do
-      @request.session[:user_id] = 2
       assert_difference('Issue.count', 1) do
         post :create, :params => {
             :project_id => 1,
@@ -147,8 +153,41 @@ describe IssuesController, type: :controller do
       expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title \r\n\r\nSecond test text\r\n\r\n")
     end
 
+    it "uses placeholder if text field is empty" do
+      assert_difference('Issue.count', 1) do
+        post :create, :params => {
+            :project_id => 1,
+            :issue => {
+                :tracker_id => 3,
+                :status_id => 2,
+                :subject => 'This is the test_new issue',
+                :description => 'This is the description',
+                :priority_id => 5,
+                :issue_template_id => template.id,
+                :issue_template => {
+                    :descriptions_attributes => {
+                        "0" => {
+                            :text => "Test text",
+                            :type => "IssueTemplateDescriptionSection",
+                            :placeholder => "No data"
+                        },
+                        "1" => {
+                            :text => "",
+                            :type => "IssueTemplateDescriptionSection",
+                            :placeholder => "Nothing to say"
+                        }
+                    },
+                },
+            },
+        }
+      end
+
+      issue = Issue.find_by_subject('This is the test_new issue')
+      expect(issue).not_to be_nil
+      expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title \r\n\r\nNothing to say\r\n\r\n")
+    end
+
     it "does not join instructions into description" do
-      @request.session[:user_id] = 2
       assert_difference('Issue.count', 1) do
         post :create, :params => {
             :project_id => 1,
@@ -177,7 +216,6 @@ describe IssuesController, type: :controller do
     end
 
     it "sends a notification by mail with multiple sections concatenated into one description" do
-      @request.session[:user_id] = 2
       post :create, :params => {
           :project_id => 1,
           :issue => {

@@ -27,6 +27,7 @@
                                            :placeholder => description.placeholder
             %>
             <%= wikitoolbar_for "issue_issue_template_descriptions_attributes_#{description_form.index}_text" %>
+            <%= description_form.hidden_field :section_id, value: description.id %>
           </p>
         <% elsif description_form.object.is_a? IssueTemplateDescriptionInstruction %>
           <div class="instruction instruction-<%= description.instruction_type %>">
