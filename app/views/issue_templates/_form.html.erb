@@ -141,14 +141,6 @@
         </p>
         <%= wikitoolbar_for 'issue_template_description' %>
 
-        <span id="split-description-container" data-target="split-description.description_fields" style="display: none;">
-          <%= render :partial => "issue_templates/description_form", :locals => {f: f} %>
-        </span>
-        <p data-target="split-description.add_buttons" style="display: none;">
-          <a class="icon icon-add link-cursor" data-action="split-description#addSection">Ajouter une section</a>
-          <a class="icon icon-add link-cursor" data-action="split-description#addInstruction">Ajouter une consigne</a>
-        </p>
-
         <div id="attributes" class="attributes">
           <div class="splitcontent">
             <div class="splitcontentleft">
@@ -188,6 +180,15 @@
               </div>
           <% include_calendar_headers_tags %>
         </div>
+
+        <span id="split-description-container" data-target="split-description.description_fields" style="display: none;">
+          <%= render :partial => "issue_templates/description_form", :locals => {f: f} %>
+        </span>
+        <p data-target="split-description.add_buttons" style="display: none;">
+          <a class="icon icon-add link-cursor" data-action="split-description#addSection">Ajouter une section</a>
+          <a class="icon icon-add link-cursor" data-action="split-description#addInstruction">Ajouter une consigne</a>
+        </p>
+
       </div>
 
       <% if Redmine::Plugin.installed?(:redmine_multiprojects_issue) %>
