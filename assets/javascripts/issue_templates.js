@@ -88,9 +88,11 @@ $(document).ready(function ($) {
                 "split_description_checkbox",
                 "description_field",
                 "description_fields",
+                "template_sections",
                 "add_buttons",
                 "section_template",
-                "instruction_template"
+                "instruction_template",
+                "select_new_section_type"
             ];
         }
 
@@ -101,27 +103,28 @@ $(document).ready(function ($) {
         toggleDescriptionField() {
             if (this.split_description_checkboxTarget.checked) {
                 this.description_fieldTarget.style.display = "none";
-                this.description_fieldsTarget.style.display = "block";
-                this.add_buttonsTarget.style.display = "block";
+                this.template_sectionsTarget.style.display = "block";
             } else {
                 this.description_fieldTarget.style.display = "block";
-                this.description_fieldsTarget.style.display = "none";
-                this.add_buttonsTarget.style.display = "none";
+                this.template_sectionsTarget.style.display = "none";
             }
         }
 
         addSection(e) {
-            let index = this.description_fieldsTarget.querySelectorAll(".split_description:not(.template)").length;
-            let template = this.section_templateTarget.outerHTML;
+            e.preventDefault();
+            let index = this.description_fieldsTarget.querySelectorAll(".split_description:not(.template)").length
+            let template = ''
+            switch (this.select_new_section_typeTarget.value) {
+                case('1'):
+                    template = this.section_templateTarget.outerHTML
+                    this.appendItem(template.replace(/\$id_section\$/g, index))
+                    break
+                case('2'):
+                    template = this.instruction_templateTarget.outerHTML
+                    this.appendItem(template.replace(/\$id_instruction\$/g, index));
+                    break
+            }
 
-            this.appendItem(template.replace(/\$id_section\$/g, index));
-        }
-
-        addInstruction(e) {
-            let index = this.description_fieldsTarget.querySelectorAll(".split_description:not(.template)").length;
-            let template = this.instruction_templateTarget.outerHTML;
-
-            this.appendItem(template.replace(/\$id_instruction\$/g, index));
         }
 
         appendItem(item) {

@@ -297,3 +297,8 @@ a.list_templates_projects_names.current {
     padding: 1em;
     background-color: #f0f0f0;
 }
+
+#template_sections .icon-add {
+    background-position: 3px 50%;
+    padding-left: 22px;
+}
