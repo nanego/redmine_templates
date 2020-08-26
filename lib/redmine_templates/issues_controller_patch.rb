@@ -28,7 +28,7 @@ class IssuesController < ApplicationController
       descriptions_attributes = params[:issue][:issue_template][:descriptions_attributes].values
       descriptions_attributes.each_with_index do |description, i|
         split_item = @issue.issue_template.descriptions[i]
-        if split_item.is_a? IssueTemplateDescriptionSection
+        unless split_item.is_a? IssueTemplateDescriptionInstruction
           description_text += "h2. #{split_item.title} \r\n\r\n"
           if description[:text].present?
             value = description[:text]

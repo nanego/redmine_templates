@@ -15,7 +15,7 @@
     <% end %>
     <%= form.hidden_field :position %>
 
-    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 80, required: (template ? false : true) %>
+    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 80 %>
     <%= form.hidden_field :type, :value => "IssueTemplateDescriptionSection" %>
   </p>
   <p>

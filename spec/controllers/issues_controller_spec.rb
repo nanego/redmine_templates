@@ -32,7 +32,8 @@ describe IssuesController, type: :controller do
            :queries,
            :repositories,
            :changesets,
-           :watchers
+           :watchers,
+           :issue_templates, :issue_template_descriptions, :issue_templates_projects
 
   include Redmine::I18n
 
@@ -42,55 +43,8 @@ describe IssuesController, type: :controller do
     Setting.default_language = "en"
   end
 
-  let(:template) do
-    IssueTemplate.create(
-        :project_id => 1,
-        :tracker_id => 3,
-        :status_id => 2,
-        :author_id => 2,
-        :subject => 'test_create',
-        :template_title => 'New title template',
-        :template_enabled => true,
-        :template_project_ids => [1],
-        :split_description => "1",
-        :descriptions_attributes => [{
-                                         :title => "Section title",
-                                         :description => "Section description",
-                                         :type => "IssueTemplateDescriptionSection",
-                                         :placeholder => "No data"
-                                     },
-                                     {:title => "Second section title",
-                                      :description => "Second section description",
-                                      :type => "IssueTemplateDescriptionSection",
-                                      :placeholder => "Nothing to say"
-                                     }
-        ]
-    )
-  end
-
-  let(:template_instruction) do
-    IssueTemplate.create(
-        :project_id => 1,
-        :tracker_id => 3,
-        :status_id => 2,
-        :author_id => 2,
-        :subject => 'test_create',
-        :template_title => 'New title template',
-        :template_enabled => true,
-        :template_project_ids => [1],
-        :split_description => "1",
-        :descriptions_attributes => [{
-                                         :text => "Text of an instruction field",
-                                         :type => "IssueTemplateDescriptionInstruction"
-                                     },
-                                     {
-                                         :title => "Section title",
-                                         :description => "Section description",
-                                         :type => "IssueTemplateDescriptionSection",
-                                         :placeholder => "No data"
-                                     }]
-    )
-  end
+  let(:template) { IssueTemplate.find(4) }
+  let(:template_with_instruction) { IssueTemplate.find(5) }
 
   context "POST create" do
     it "shows multiple description sections" do
@@ -107,8 +61,7 @@ describe IssuesController, type: :controller do
                 :issue_template => {
                     :descriptions_attributes => {
                         "0" => {
-                            :text => "Test text",
-                            :type => "IssueTemplateDescriptionSection"
+                            :text => "Test text"
                         }
                     },
                 },
@@ -116,7 +69,7 @@ describe IssuesController, type: :controller do
         }
       end
 
-      issue = Issue.find_by_subject('This is the test_new issue')
+      issue = Issue.last
       expect(issue).not_to be_nil
       expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\n")
     end
@@ -135,12 +88,10 @@ describe IssuesController, type: :controller do
                 :issue_template => {
                     :descriptions_attributes => {
                         "0" => {
-                            :text => "Test text",
-                            :type => "IssueTemplateDescriptionSection"
+                            :text => "Test text"
                         },
                         "1" => {
-                            :text => "Second test text",
-                            :type => "IssueTemplateDescriptionSection"
+                            :text => "Second test text"
                         }
                     },
                 },
@@ -148,7 +99,7 @@ describe IssuesController, type: :controller do
         }
       end
 
-      issue = Issue.find_by_subject('This is the test_new issue')
+      issue = Issue.last
       expect(issue).not_to be_nil
       expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title \r\n\r\nSecond test text\r\n\r\n")
     end
@@ -168,12 +119,10 @@ describe IssuesController, type: :controller do
                     :descriptions_attributes => {
                         "0" => {
                             :text => "Test text",
-                            :type => "IssueTemplateDescriptionSection",
                             :placeholder => "No data"
                         },
                         "1" => {
                             :text => "",
-                            :type => "IssueTemplateDescriptionSection",
                             :placeholder => "Nothing to say"
                         }
                     },
@@ -182,7 +131,7 @@ describe IssuesController, type: :controller do
         }
       end
 
-      issue = Issue.find_by_subject('This is the test_new issue')
+      issue = Issue.last
       expect(issue).not_to be_nil
       expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title \r\n\r\nNothing to say\r\n\r\n")
     end
@@ -195,14 +144,13 @@ describe IssuesController, type: :controller do
                 :tracker_id => 3,
                 :status_id => 2,
                 :subject => 'This is the test_new issue',
-                :description => 'This is the description',
+                :description => 'Ignore default description',
                 :priority_id => 5,
-                :issue_template_id => template_instruction.id,
+                :issue_template_id => template_with_instruction.id,
                 :issue_template => {
                     :descriptions_attributes => {
                         "0" => {
-                            :text => "Text of an instruction field",
-                            :type => "IssueTemplateDescriptionInstruction"
+                            :text => "Text in a section field"
                         }
                     },
                 },
@@ -210,7 +158,7 @@ describe IssuesController, type: :controller do
         }
       end
 
-      issue = Issue.find_by_subject('This is the test_new issue')
+      issue = Issue.last
       expect(issue).not_to be_nil
       expect(issue.description).to eq("")
     end
@@ -228,12 +176,10 @@ describe IssuesController, type: :controller do
               :issue_template => {
                   :descriptions_attributes => {
                       "0" => {
-                          :text => "Test text",
-                          :type => "IssueTemplateDescriptionSection"
+                          :text => "Test text"
                       },
                       "1" => {
-                          :text => "Second test text",
-                          :type => "IssueTemplateDescriptionSection"
+                          :text => "Second test text"
                       }
                   },
               },
@@ -241,7 +187,7 @@ describe IssuesController, type: :controller do
       }
       expect(ActionMailer::Base.deliveries).to_not be_empty
 
-      issue = Issue.find_by_subject('This is the test_new issue')
+      issue = Issue.last
       expect(issue).not_to be_nil
       expect(issue.description).to_not eq 'This is the description'
       expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title \r\n\r\nSecond test text\r\n\r\n")

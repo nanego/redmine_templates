@@ -14,3 +14,46 @@ two:
   issue_template_id: 3
   position: 2
   text: "Type here second section content"
+three:
+  id: 3
+  title: "Section title"
+  description: "Section description"
+  type: "IssueTemplateDescriptionSection"
+  issue_template_id: 4
+  position: 1
+  text: ""
+  placeholder: "No data"
+four:
+  id: 4
+  title: "Second section title"
+  description: "Second section description"
+  type: "IssueTemplateDescriptionSection"
+  issue_template_id: 4
+  position: 2
+  text: ""
+  placeholder: "Nothing to say"
+five:
+  id: 5
+  title: "Section title"
+  description: "Section description"
+  type: "IssueTemplateDescriptionSection"
+  issue_template_id: 5
+  position: 2
+  text: ""
+  placeholder: "No data"
+six:
+  id: 6
+  text: "Text of an instruction field"
+  type: "IssueTemplateDescriptionInstruction"
+  instruction_type: "note"
+  issue_template_id: 5
+  position: 1
+field:
+  id: 7
+  title: "New one-line field"
+  description: "Short description of the field"
+  type: "IssueTemplateDescriptionField"
+  issue_template_id: 3
+  position: 3
+  text: "Default content for one-line field"
+  placeholder: "Field empty"

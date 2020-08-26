@@ -25,7 +25,6 @@ class IssueTemplatesController < ApplicationController
     @issue_template = IssueTemplate.new(custom_form: false)
     @priorities = IssuePriority.active
     @issue_template.project = @project if @project.present?
-    @issue_template.descriptions << IssueTemplateDescriptionSection.new
   end
 
   def custom_form
@@ -38,7 +37,6 @@ class IssueTemplatesController < ApplicationController
   def edit
     @issue_template = IssueTemplate.find(params[:id])
     @priorities = IssuePriority.active
-    @issue_template.descriptions.build(type: "IssueTemplateDescriptionSection") if @issue_template.descriptions.empty?
   end
 
   def create
@@ -51,16 +49,11 @@ class IssueTemplatesController < ApplicationController
       respond_to do |format|
         format.html {
           flash[:notice] = l(:notice_issue_template_successfully_created)
-          if @issue_template.project.present?
-            redirect_to issue_templates_path(project: @issue_template.project)
-          else
-            redirect_to issue_templates_path
-          end
+          redirect_to edit_issue_template_path(@issue_template)
         }
       end
     else
       @priorities = IssuePriority.active
-      @issue_template.descriptions << IssueTemplateDescriptionSection.new
 
       respond_to do |format|
         format.html { render :action => :new }
@@ -75,11 +68,7 @@ class IssueTemplatesController < ApplicationController
       respond_to do |format|
         format.html {
           flash[:notice] = l(:notice_issue_template_successfully_updated)
-          if @issue_template.project.present?
-            redirect_to edit_issue_template_path(@issue_template)
-          else
-            redirect_to issue_templates_path
-          end
+          redirect_to edit_issue_template_path(@issue_template)
         }
       end
     else

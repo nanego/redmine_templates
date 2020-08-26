@@ -1,0 +1,19 @@
+<% description = form.object %>
+<p>
+  <%= label_tag do %>
+    <%= description.title %>
+    <% if description.description.present? %>
+      <em class="info" style="padding-top: 3px; line-height: 1.5em;">
+        <%= description.description %>
+      </em>
+    <% end %>
+  <% end %>
+  <%= form.text_field :text,
+                      :cols => 80,
+                      :accesskey => accesskey(:edit),
+                      :no_label => true,
+                      :required => false,
+                      :placeholder => description.placeholder
+  %>
+  <%= form.hidden_field :placeholder, value: description.placeholder %>
+</p>

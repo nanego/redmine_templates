@@ -7,13 +7,11 @@ describe IssueTemplatesController, type: :controller do
   render_views
 
   fixtures :issue_templates, :projects, :users, :issue_statuses, :trackers, :enumerations,
-           :roles, :members, :member_roles
+           :roles, :members, :member_roles, :issue_template_descriptions, :issue_templates_projects
 
   let(:template) { IssueTemplate.find(1) }
   let(:role) { Role.find(1) }
-
-  let(:template) { IssueTemplate.find(1) }
-  let(:role) { Role.find(1) }
+  let(:template_with_instruction) { IssueTemplate.find(5) }
 
   before do
     @request.session[:user_id] = 2
@@ -73,9 +71,9 @@ describe IssueTemplatesController, type: :controller do
     it "forbids issue modification if user has no permission" do
       role.remove_permission!(:create_issue_templates)
 
-      expect{
+      expect {
         put :update, params: {:id => template.id, issue_template: {subject: "Modified subject"}}
-      }.to_not change{template.subject}
+      }.to_not change { template.subject }
 
       expect(response).to have_http_status(:forbidden)
     end
@@ -93,38 +91,32 @@ describe IssueTemplatesController, type: :controller do
     end
 
     it "should successfuly update descriptions positions" do
-      template = IssueTemplate.create(
-          :project_id => 1,
-          :tracker_id => 3,
-          :status_id => 2,
-          :author_id => 2,
-          :subject => 'test_create',
-          :template_title => 'New title template',
-          :template_enabled => true,
-          :template_project_ids => [1],
-          :split_description => "1",
-          :descriptions_attributes => [{
-                                           :text => "Text of an instruction field",
-                                           :type => "IssueTemplateDescriptionInstruction",
-                                           :position => 1,
-                                       }],
-      )
+      instruction = IssueTemplateDescriptionInstruction.new(:text => "Text of an instruction field",
+                                                            :type => "IssueTemplateDescriptionInstruction",
+                                                            :instruction_type => "note",
+                                                            :position => 1)
+      template_with_instruction.descriptions = [instruction]
+      template_with_instruction.save
 
-      expect(template.descriptions.first.text).to eq "Text of an instruction field"
-      expect(template.descriptions.first.position).to eq 1
+      expect(template_with_instruction.descriptions.size).to eq 1
+      expect(template_with_instruction.descriptions.first.text).to eq "Text of an instruction field"
+      expect(template_with_instruction.descriptions.first.position).to eq 1
 
       assert_difference('IssueTemplateDescription.count', 1) do
         put :update, params: {
-            :id => template.id,
+            :id => template_with_instruction.id,
             issue_template: {
                 descriptions_attributes: {
                     "0" => {
-                        :id => template.descriptions.first.id,
+                        :id => template_with_instruction.descriptions.first.id,
+                        :text => template_with_instruction.descriptions.first.text,
+                        :type => template_with_instruction.descriptions.first.type,
                         :position => 2,
                     },
                     "1" => {
-                        :text => "Text of an instruction field 2",
+                        :text => "Text of an other instruction field 2",
                         :type => "IssueTemplateDescriptionInstruction",
+                        :instruction_type => 'warning',
                         :position => 1,
                     }
                 }
@@ -132,13 +124,13 @@ describe IssueTemplatesController, type: :controller do
         }
       end
 
-      expect(response).to redirect_to edit_issue_template_path(template)
-      template.reload
+      expect(response).to redirect_to edit_issue_template_path(template_with_instruction)
+      template_with_instruction.reload
       assert_match /updated/, flash[:notice]
-      expect(template.descriptions.first.text).to eq "Text of an instruction field 2"
-      expect(template.descriptions.first.position).to eq 1
-      expect(template.descriptions.second.text).to eq "Text of an instruction field"
-      expect(template.descriptions.second.position).to eq 2
+      expect(template_with_instruction.descriptions.first.text).to eq "Text of an other instruction field 2"
+      expect(template_with_instruction.descriptions.first.position).to eq 1
+      expect(template_with_instruction.descriptions.second.text).to eq "Text of an instruction field"
+      expect(template_with_instruction.descriptions.second.position).to eq 2
     end
   end
 
@@ -163,9 +155,10 @@ describe IssueTemplatesController, type: :controller do
 
     it "should succeed and assign a new template" do
       post :create, params: {:issue_template => {subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1]}}
-      expect(response).to redirect_to(issue_templates_path(project: 'ecookbook'))
+      new_template = IssueTemplate.last
+      expect(response).to redirect_to(edit_issue_template_path(new_template))
       expect(flash[:notice]).to eq "New issue template successfully created!"
-      expect(IssueTemplate.last.try(:subject)).to eq "New issue"
+      expect(new_template.try(:subject)).to eq "New issue"
     end
 
     it "should add issue template through the init new template screen" do
@@ -192,7 +185,7 @@ describe IssueTemplatesController, type: :controller do
       assert_kind_of IssueTemplate, template
 
       # check redirection
-      expect(response).to redirect_to(:controller => 'issue_templates', :action => 'index', :project => template.project.identifier)
+      expect(response).to redirect_to(:controller => 'issue_templates', :action => 'edit', :id => template.id)
     end
   end
 

@@ -1,4 +1,6 @@
-<h2><%=l(:label_new_issue_template)%></h2>
+<h2>
+  <%= link_to l(:label_issue_templates), issue_templates_path %> &#187; <%= l(:label_new_issue_template) %>
+</h2>
 
 <div id="all_attributes">
   <%= render :partial => 'issue_templates/form' %>

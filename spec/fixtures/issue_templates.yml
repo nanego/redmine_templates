@@ -26,3 +26,23 @@ three:
   template_title: "Template with sections"
   template_enabled: true
   split_description: '1'
+four:
+  id: 4
+  author_id: 2
+  project_id: 1
+  status_id: 2
+  subject: "test_create"
+  tracker_id: 3
+  template_title: "Template 4"
+  template_enabled: true
+  split_description: '1'
+five:
+  id: 5
+  author_id: 2
+  project_id: 1
+  status_id: 2
+  subject: "Issue subject"
+  tracker_id: 3
+  template_title: 'New template with instructions'
+  template_enabled: true
+  split_description: '1'

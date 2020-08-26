@@ -165,10 +165,13 @@ class IssueTemplate < ActiveRecord::Base
 
   def description_is_empty?(attributes)
     exists = attributes["id"].present?
-    empty = attributes["title"].blank? if attributes["type"] == "IssueTemplateDescriptionSection"
-    empty = attributes["text"].blank? if attributes["type"] == "IssueTemplateDescriptionInstruction"
-    attributes.merge!({:_destroy => 1}) if exists and empty
-    return (!exists and empty)
+    if attributes["type"] == "IssueTemplateDescriptionInstruction"
+      empty = attributes["text"].blank?
+    else
+      empty = attributes["title"].blank?
+    end
+    attributes.merge!({:_destroy => 1}) if exists && empty
+    return (!exists && empty)
   end
 
 end

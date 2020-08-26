@@ -35,18 +35,20 @@ RSpec.describe "creating issues with templates", type: :system do
 
   describe "templates with sections and instructions" do
     it "shows an issue form with sections fields instead of description field" do
-      visit new_issue_path(project_id: project.identifier, template_id: template_with_sections.id )
+      visit new_issue_path(project_id: project.identifier, template_id: template_with_sections.id)
 
       expect(page).to have_field('Subject', with: 'Issue created with template 3')
       expect(page).to_not have_selector("description")
       expect(page).to have_selector('#issue_issue_template_descriptions_attributes_0_text', text: "Type here first section content")
+      expect(page).to have_selector('#issue_issue_template_descriptions_attributes_2_text') #, text: "Default content"
 
+      fill_in 'issue_issue_template_descriptions_attributes_2_text', with: 'One-line edited content'
       click_on 'Create'
 
       expect(page).to have_selector('.description', text: "Type here first section content")
       expect(page).to have_selector('.description', text: "Type here second section content")
+      expect(page).to have_selector('.description', text: 'One-line edited content')
     end
   end
 
 end
-

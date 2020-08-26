@@ -1,0 +1,3 @@
+class IssueTemplateDescriptionField < IssueTemplateDescription
+
+end

@@ -7,26 +7,26 @@ function updateIssueTemplateFrom(url) {
     });
 }
 
-(function($){
-    $.fn.positionedFormItems = function(sortableOptions, options){
-      var sortable = this.sortable($.extend({
-        axis: 'y',
-        handle: ".sort-handle",
-      }, sortableOptions));
+(function ($) {
+    $.fn.positionedFormItems = function (sortableOptions, options) {
+        var sortable = this.sortable($.extend({
+            axis: 'y',
+            handle: ".sort-handle",
+        }, sortableOptions));
 
-      this.on("sortupdate", function(event, ui) {
-        var sortable = $(this);
-        var position = 1;
+        this.on("sortupdate", function (event, ui) {
+            var sortable = $(this);
+            var position = 1;
 
-        sortable.children(".split_description:not(.template)").each(function() {
-            $(this).find("input[name*=position]:first").attr("value", position);
-            position += 1;
+            sortable.children(".split_description:not(.template)").each(function () {
+                $(this).find("input[name*=position]:first").attr("value", position);
+                position += 1;
+            });
         });
-      });
 
-      return sortable;
+        return sortable;
     }
-  }( jQuery ));
+}(jQuery));
 
 $(document).ready(function ($) {
     $(".list_templates_projects_names").hover(function () {
@@ -90,6 +90,7 @@ $(document).ready(function ($) {
                 "description_fields",
                 "template_sections",
                 "add_buttons",
+                "field_template",
                 "section_template",
                 "instruction_template",
                 "select_new_section_type"
@@ -117,22 +118,22 @@ $(document).ready(function ($) {
             switch (this.select_new_section_typeTarget.value) {
                 case('1'):
                     template = this.section_templateTarget.outerHTML
-                    this.appendItem(template.replace(/\$id_section\$/g, index))
                     break
                 case('2'):
                     template = this.instruction_templateTarget.outerHTML
-                    this.appendItem(template.replace(/\$id_instruction\$/g, index));
+                    break
+                case('3'):
+                    template = this.field_templateTarget.outerHTML
                     break
             }
-
+            this.appendItem(template.replace(/\$id_section\$/g, index))
         }
 
         appendItem(item) {
-            this.description_fieldsTarget.insertAdjacentHTML("beforeend", item);
-            this.cleanTemplate(this.description_fieldsTarget.lastChild);
-            this.createWikiToolBar(this.description_fieldsTarget.lastChild);
-
-            $("#split-description-container").trigger("sortupdate");
+            this.description_fieldsTarget.insertAdjacentHTML("beforeend", item)
+            this.cleanTemplate(this.description_fieldsTarget.lastChild)
+            this.createWikiToolBar(this.description_fieldsTarget.lastChild)
+            $("#split-description-container").trigger("sortupdate")
         }
 
         cleanTemplate(item) {
@@ -141,11 +142,12 @@ $(document).ready(function ($) {
         }
 
         createWikiToolBar(item) {
-            let text_area = item.querySelector("textarea");
-            item.querySelector("p.with-textarea").appendChild(text_area);
-
-            this.cleanOldWikitoolbar(item);
-            this.addWikiToolBar(text_area);
+            let text_area = item.querySelector("textarea")
+            if (text_area != undefined) {
+                item.querySelector("p.with-textarea").appendChild(text_area);
+                this.cleanOldWikitoolbar(item);
+                this.addWikiToolBar(text_area);
+            }
         }
 
         cleanOldWikitoolbar(item) {
@@ -168,12 +170,12 @@ $(document).ready(function ($) {
         launchWysiwygEditor() {
             $(".jstEditor:last").each(initRedmineWysiwygEditor);
 
-            $(document).ajaxSuccess(function() {
+            $(document).ajaxSuccess(function () {
                 $(".jstEditor:last").each(initRedmineWysiwygEditor);
             });
 
             // Redmine 4.1+
-            $(document).on("ajax:success", function() {
+            $(document).on("ajax:success", function () {
                 $(".jstEditor:last").each(initRedmineWysiwygEditor);
             });
         }
@@ -187,7 +189,8 @@ $(document).ready(function ($) {
             ];
         }
 
-        connect() {}
+        connect() {
+        }
 
         delete(e) {
             if (window.confirm("Êtes-vous sûr ?")) {
