@@ -151,9 +151,11 @@ $(document).ready(function ($) {
         }
 
         cleanOldWikitoolbar(item) {
-            item.querySelector(".jstBlock").remove();
-            item.querySelector("script").remove();
-            item.querySelector("p:empty").remove();
+            if (item.querySelector(".jstBlock")){
+                item.querySelector(".jstBlock").remove();
+                item.querySelector("script").remove();
+                item.querySelector("p:empty").remove();
+            }
         }
 
         addWikiToolBar(field) {
@@ -196,6 +198,16 @@ $(document).ready(function ($) {
             if (window.confirm("Êtes-vous sûr ?")) {
                 this.element.style.display = "none";
                 this.destroy_hiddenTarget.value = "1";
+            }
+        }
+
+        expand_collapse(e) {
+            e.preventDefault();
+            // console.log(e.currentTarget);
+            if ($(e.currentTarget).closest('.split_description')[0].classList.toggle("collapsed")){
+                e.currentTarget.text = 'Afficher les détails'
+            }else{
+                e.currentTarget.text = 'Masquer les détails'
             }
         }
     });

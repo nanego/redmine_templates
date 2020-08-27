@@ -1,41 +1,51 @@
-<div class="split_description section <%= "template" if template %>"
-     data-controller="description-item-form"
-     <%= "data-target=split-description.section_template" if template %>
-     <%= "style=display:none;" if template %>>
+<% if template
+     template_class = "template"
+     template_target_name = "data-target=split-description.section_template"
+     template_style = "style=display:none;"
+     details_link_label = 'Masquer les détails'
+   else
+     template_class = "collapsed"
+     details_link_label = 'Afficher les détails'
+   end %>
+<div class="split_description section <%= template_class %>"
+     data-controller="description-item-form" <%= template_target_name %> <%= template_style %>>
 
   <span style="float: right;">
     <a class="icon icon-del link-cursor" rel="nofollow" data-action="description-item-form#delete">Supprimer</a>
     <%= form.hidden_field :_destroy, :value => 0, "data-target" => "description-item-form.destroy_hidden" %>
   </span>
 
+  <%= reorder_handle(form.object, :url => "#") %>
   <p>
-    <%= label_tag do %>
-      <%= reorder_handle(form.object, :url => "#") %>
-      Section
-    <% end %>
+    <%= label_tag 'Section' %>
     <%= form.hidden_field :position %>
 
-    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 80 %>
+    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 45 %>
     <%= form.hidden_field :type, :value => "IssueTemplateDescriptionSection" %>
+    <%= link_to details_link_label, '#',
+                class: 'expand_collapse',
+                data: {action: "description-item-form#expand_collapse"} %>
   </p>
-  <p>
-    <%= form.text_field :description, :placeholder => "Description", :no_label => true, :size => 80 %>
-  </p>
-  <p class="with-textarea">
-    <%= form.text_area :text,
-                       :cols => 60,
-                       :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
-                       :accesskey => accesskey(:edit),
-                       :class => "wiki-edit",
-                       :no_label => true,
-                       :data => {
-                           "help-link" => "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax_textile.html",
-                           "preview-link" => preview_text_path
-                       }
-    %>
-    <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" %>
-  </p>
-  <p>
-    <%= form.text_field :placeholder, :size => 80, label: "Valeur si non saisi" if form.object %>
-  </p>
+  <div class="collapsible">
+    <p>
+      <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
+    </p>
+    <p class="with-textarea">
+      <%= form.text_area :text,
+                         :cols => 60,
+                         :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
+                         :accesskey => accesskey(:edit),
+                         :class => "wiki-edit",
+                         :label => "Contenu initial",
+                         :data => {
+                             "help-link" => "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax_textile.html",
+                             "preview-link" => preview_text_path
+                         }
+      %>
+      <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" %>
+    </p>
+    <p>
+      <%= form.text_field :placeholder, :size => 80, label: "Valeur si non saisi" %>
+    </p>
+  </div>
 </div>

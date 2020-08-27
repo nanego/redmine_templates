@@ -293,12 +293,33 @@ a.list_templates_projects_names.current {
 #split-description-container .split_description {
     border-top: dotted 1px lightgray;
     border-bottom: dotted 1px lightgray;
-    margin: 1em;
-    padding: 1em;
+    margin: 0.8em;
+    padding: 0.5em;
     background-color: #f0f0f0;
 }
 
 #template_sections .icon-add {
     background-position: 3px 50%;
     padding-left: 22px;
+}
+
+#split-description-container .sort-handle {
+    position: absolute;
+    padding: 8px;
+    margin-left: 3px;
+}
+#split-description-container a.icon-del {
+    margin-top: 6px;
+    display: inline-flex;
+    margin-right: 3px;
+}
+
+#split-description-container a.expand_collapse {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+#split-description-container .split_description.collapsed .collapsible {
+    display: none;
 }

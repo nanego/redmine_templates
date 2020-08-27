@@ -2,35 +2,43 @@
      template_class = "template"
      template_target_name = "data-target=split-description.field_template"
      template_style = "style=display:none;"
+     details_link_label = 'Masquer les détails'
+   else
+     template_class = "collapsed"
+     details_link_label = 'Afficher les détails'
    end %>
-<div class="split_description field <%= template_class %>" data-controller="description-item-form" <%= template_target_name %> <%= template_style %>>
+<div class="split_description field <%= template_class %>"
+     data-controller="description-item-form" <%= template_target_name %> <%= template_style %>>
 
   <span style="float: right;">
     <a class="icon icon-del link-cursor" rel="nofollow" data-action="description-item-form#delete">Supprimer</a>
     <%= form.hidden_field :_destroy, :value => 0, "data-target" => "description-item-form.destroy_hidden" %>
   </span>
 
+  <%= reorder_handle(form.object, :url => "#") %>
   <p>
-    <%= label_tag do %>
-      <%= reorder_handle(form.object, :url => "#") %>
-      Section courte
-    <% end %>
+    <%= label_tag 'Section courte' %>
     <%= form.hidden_field :position %>
 
-    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 80 %>
+    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 45 %>
     <%= form.hidden_field :type, :value => "IssueTemplateDescriptionField" %>
+    <%= link_to details_link_label, '#',
+                class: 'expand_collapse',
+                data: {action: "description-item-form#expand_collapse"} %>
   </p>
-  <p>
-    <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
-  </p>
-  <p>
-    <%= form.text_field :text,
-                        :accesskey => accesskey(:edit),
-                        :label => "Contenu initial",
-                        :size => 80
-    %>
-  </p>
-  <p>
-    <%= form.text_field :placeholder, label: "Valeur si non saisi", :size => 80 %>
-  </p>
+  <div class="collapsible">
+    <p>
+      <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
+    </p>
+    <p>
+      <%= form.text_field :text,
+                          :accesskey => accesskey(:edit),
+                          :label => "Contenu initial",
+                          :size => 80
+      %>
+    </p>
+    <p>
+      <%= form.text_field :placeholder, label: "Valeur si non saisi", :size => 80 %>
+    </p>
+  </div>
 </div>
