@@ -21,4 +21,14 @@ module IssueTemplatesHelper
     s.html_safe
   end
 
+  def reorder_templates_handle(object, options = {})
+    data = {
+        :reorder_url => options[:url] || url_for(object),
+        :reorder_param => options[:param] || object.class.name.underscore
+    }
+    content_tag('span', '',
+                :class => "icon-only icon-sort-handle sort-handle",
+                :data => data)
+  end
+
 end
