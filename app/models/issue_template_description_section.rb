@@ -1,3 +1,0 @@
-class IssueTemplateDescriptionSection < IssueTemplateDescription
-
-end

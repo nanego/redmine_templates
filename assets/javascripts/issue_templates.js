@@ -94,7 +94,8 @@ $(document).ready(function ($) {
                 "field_template",
                 "section_template",
                 "instruction_template",
-                "checkbox_template"
+                "checkbox_template",
+                "date_template"
             ];
         }
 
@@ -128,6 +129,9 @@ $(document).ready(function ($) {
                     break
                 case('4'):
                     template = this.checkbox_templateTarget.outerHTML
+                    break
+                case('5'):
+                    template = this.date_templateTarget.outerHTML
                     break
             }
             if(template != undefined){

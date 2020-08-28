@@ -1,0 +1,21 @@
+<% description = form.object %>
+<p>
+  <%= label_tag do %>
+    <%= description.title %>
+    <% if description.description.present? %>
+      <em class="info" style="padding-top: 3px; line-height: 1.5em;">
+        <%= description.description %>
+      </em>
+    <% end %>
+  <% end %>
+  <%= form.date_field :text,
+                      size: 10,
+                      no_label: true,
+                      required: false,
+                      value: reload_current_value(@sections_attributes, description.position) || description.text
+  %>
+  <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text") %>
+  <%= form.hidden_field :placeholder, value: description.placeholder %>
+</p>
+
+

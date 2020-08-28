@@ -1,3 +1,0 @@
-class IssueTemplateDescriptionCheckbox < IssueTemplateDescription
-
-end
