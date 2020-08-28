@@ -42,7 +42,7 @@
                              "preview-link" => preview_text_path
                          }
       %>
-      <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" %>
+      <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" if !template %>
     </p>
     <p>
       <%= form.text_field :placeholder, :size => 80, label: "Valeur si non saisi" %>

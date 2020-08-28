@@ -40,7 +40,7 @@
                              "preview-link" => preview_text_path
                          }
       %>
-      <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" %>
+      <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" if !template %>
       <%= form.hidden_field :type, :value => "IssueTemplateDescriptionInstruction" %>
     </p>
   </div>

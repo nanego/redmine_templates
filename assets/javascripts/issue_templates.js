@@ -149,7 +149,7 @@ $(document).ready(function ($) {
 
         createWikiToolBar(item) {
             let text_area = item.querySelector("textarea")
-            if (text_area != undefined) {
+            if (text_area) {
                 item.querySelector("p.with-textarea").appendChild(text_area);
                 this.cleanOldWikitoolbar(item);
                 this.addWikiToolBar(text_area);
@@ -157,9 +157,13 @@ $(document).ready(function ($) {
         }
 
         cleanOldWikitoolbar(item) {
-            if (item.querySelector(".jstBlock")){
+            if (item.querySelector(".jstBlock")) {
                 item.querySelector(".jstBlock").remove();
+            }
+            if (item.querySelector("script")) {
                 item.querySelector("script").remove();
+            }
+            if (item.querySelector("p:empty")) {
                 item.querySelector("p:empty").remove();
             }
         }
