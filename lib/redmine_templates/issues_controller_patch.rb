@@ -35,7 +35,13 @@ class IssuesController < ApplicationController
       descriptions_attributes = params[:issue][:issue_template][:descriptions_attributes].values
       descriptions_attributes.each_with_index do |description, i|
         split_item = @issue.issue_template.descriptions[i]
-        unless split_item.is_a? IssueTemplateDescriptionInstruction
+        case split_item.class.name
+        when  IssueTemplateDescriptionInstruction.name
+          # Nothing to add
+        when IssueTemplateDescriptionCheckbox.name
+          value = description[:text] == '1' ? l(:general_text_Yes) : l(:general_text_No)
+          description_text += "h2. #{split_item.title}: #{value} \r\n\r\n"
+        else
           description_text += "h2. #{split_item.title} \r\n\r\n"
           if description[:text].present?
             value = description[:text]

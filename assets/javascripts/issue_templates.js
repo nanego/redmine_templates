@@ -90,10 +90,11 @@ $(document).ready(function ($) {
                 "description_fields",
                 "template_sections",
                 "add_buttons",
+                "select_new_section_type",
                 "field_template",
                 "section_template",
                 "instruction_template",
-                "select_new_section_type"
+                "checkbox_template"
             ];
         }
 
@@ -114,7 +115,7 @@ $(document).ready(function ($) {
         addSection(e) {
             e.preventDefault();
             let index = this.description_fieldsTarget.querySelectorAll(".split_description:not(.template)").length
-            let template = ''
+            let template
             switch (this.select_new_section_typeTarget.value) {
                 case('1'):
                     template = this.section_templateTarget.outerHTML
@@ -125,8 +126,13 @@ $(document).ready(function ($) {
                 case('3'):
                     template = this.field_templateTarget.outerHTML
                     break
+                case('4'):
+                    template = this.checkbox_templateTarget.outerHTML
+                    break
             }
-            this.appendItem(template.replace(/\$id_section\$/g, index))
+            if(template != undefined){
+                this.appendItem(template.replace(/\$id_section\$/g, index))
+            }
         }
 
         appendItem(item) {

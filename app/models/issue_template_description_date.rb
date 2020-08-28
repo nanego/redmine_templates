@@ -1,0 +1,3 @@
+# class IssueTemplateDescriptionDate < IssueTemplateDescription
+#
+# end

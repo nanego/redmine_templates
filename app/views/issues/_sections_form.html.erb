@@ -1,0 +1,15 @@
+<%= f.fields_for :issue_template, @issue.issue_template do |template_form| %>
+  <%= template_form.fields_for :descriptions, @issue.issue_template.descriptions do |description_form| %>
+    <% case description_form.object.class.name
+       when IssueTemplateDescriptionInstruction.name
+         partial_path = "issues/sections/instruction_form"
+       when IssueTemplateDescriptionField.name
+         partial_path = "issues/sections/field_form"
+       when IssueTemplateDescriptionSection.name
+         partial_path = "issues/sections/section_form"
+       when IssueTemplateDescriptionCheckbox.name
+         partial_path = "issues/sections/checkbox_form"
+       end %>
+    <%= render :partial => partial_path, :locals => {form: description_form} if partial_path.present? %>
+  <% end %>
+<% end %>

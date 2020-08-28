@@ -1,18 +1,6 @@
 <% if @issue.safe_attribute? 'description' %>
-  <% if @issue.issue_template&.split_description %>
-    <%= f.fields_for :issue_template, @issue.issue_template do |template_form| %>
-      <%= template_form.fields_for :descriptions, @issue.issue_template.descriptions do |description_form| %>
-        <% case description_form.object.class.name
-           when 'IssueTemplateDescriptionInstruction'
-             partial_path = "instruction_form"
-           when 'IssueTemplateDescriptionField'
-             partial_path = "field_form"
-           else
-             partial_path = "section_form" #'IssueTemplateDescriptionSection'
-           end %>
-        <%= render :partial => partial_path, :locals => {form: description_form} %>
-      <% end %>
-    <% end %>
+  <% if !@issue.persisted? && @issue.issue_template&.split_description %>
+    <%= render 'sections_form', f: f %>
   <% else %>
     <p>
       <%= f.label_for_field :description, :required => @issue.required_attribute?('description') %>

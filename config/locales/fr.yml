@@ -9,7 +9,7 @@ fr:
   field_template_image: "Illustration"
   field_show_on_overview: "Afficher sur l'aperçu du projet"
   field_tracker_read_only: "Tracker en lecture seule"
-  field_split_description: Diviser le champ description
+  field_split_description: "Remplacer la description par des sections"
   template_is_enabled: "Actif (décocher pour suspendre l'utilisation du modèle)"
   label_issue_templates: "Modèles de demande"
   no_issue_templates_for_this_project: "Il n'y a aucun modèle associé à ce projet"
@@ -44,4 +44,4 @@ fr:
   label_other_issue: "Demande libre"
   custom_form_path: "Chemin vers le formulaire"
   form_type: "Type de formulaire"
-  disabled_tracker_for_this_project: Tracker désactivé sur ce projet
+  disabled_tracker_for_this_project: "Tracker désactivé sur ce projet"

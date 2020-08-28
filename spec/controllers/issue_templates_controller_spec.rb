@@ -90,7 +90,7 @@ describe IssueTemplatesController, type: :controller do
       expect(template.subject).to eq "Modified subject"
     end
 
-    it "should successfuly update descriptions positions" do
+    it "should successfully update descriptions positions" do
       instruction = IssueTemplateDescriptionInstruction.new(:text => "Text of an instruction field",
                                                             :type => "IssueTemplateDescriptionInstruction",
                                                             :instruction_type => "note",

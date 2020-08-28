@@ -1,23 +1,11 @@
-<% sections_partials = {instruction: "issue_templates/description_instruction_form",
-                        field: "issue_templates/description_field_form",
-                        section: "issue_templates/description_section_form"} %>
-
 <%= f.fields_for :descriptions do |description_form| %>
-  <% case description_form.object.class.name
-     when 'IssueTemplateDescriptionInstruction'
-       partial_path = sections_partials[:instruction]
-     when 'IssueTemplateDescriptionField'
-       partial_path = sections_partials[:field]
-     else
-       partial_path = sections_partials[:section] #'IssueTemplateDescriptionSection'
-     end %>
-  <%= render :partial => partial_path, :locals => {form: description_form, template: false} %>
-  <% %>
+  <%= render partial: issue_template_section_form_path(description_form.object.class),
+             locals: {form: description_form, template: false} %>
 <% end %>
 
 <%# Empty templates %>
-<% sections_partials.each do |type, path| %>
+<% IssueTemplateDescription.subclasses.each do |klass| %>
   <%= f.fields_for :descriptions_attributes, index: "$id_section$" do |description_form| %>
-    <%= render :partial => path, :locals => {form: description_form, template: true} %>
+    <%= render :partial => issue_template_section_form_path(klass), :locals => {form: description_form, template: true} %>
   <% end %>
 <% end %>

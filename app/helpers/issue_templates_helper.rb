@@ -41,4 +41,8 @@ module IssueTemplatesHelper
     return nil
   end
 
+  def issue_template_section_form_path(section_class)
+    "issue_templates/sections/#{section_class.name.underscore}_form"
+  end
+
 end

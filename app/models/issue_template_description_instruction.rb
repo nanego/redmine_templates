@@ -8,4 +8,8 @@ class IssueTemplateDescriptionInstruction < IssueTemplateDescription
   def self.instruction_types_options
     ["info", "warning", "note"].collect { |t| [ t.capitalize, t ] }
   end
+
+  def editable
+    false
+  end
 end
