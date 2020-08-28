@@ -2,8 +2,9 @@ require_dependency 'issues_controller'
 
 class IssuesController < ApplicationController
 
-  before_action :set_template, :only => [:new]
+  append_before_action :set_template, :only => [:new]
 
+  append_before_action :keep_sections_values, :only => [:new, :create]
   append_before_action :update_description_with_sections, :only => [:create]
 
   def set_template
@@ -19,6 +20,12 @@ class IssuesController < ApplicationController
         @issue.issue_template = @issue_template
         @issue_template.increment!(:usage)
       end
+    end
+  end
+
+  def keep_sections_values
+    if params[:issue].present? && params[:issue][:issue_template].present? && params[:issue][:issue_template][:descriptions_attributes].present?
+      @sections_attributes = params[:issue][:issue_template][:descriptions_attributes].values
     end
   end
 

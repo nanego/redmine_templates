@@ -19,7 +19,8 @@
                      },
                      :no_label => true,
                      :required => false,
-                     :placeholder => description.placeholder
+                     :placeholder => description.placeholder,
+                     value: reload_current_value(@sections_attributes, description.position) || description.text
   %>
   <%= wikitoolbar_for "issue_issue_template_descriptions_attributes_#{form.index}_text" %>
   <%= form.hidden_field :placeholder, value: description.placeholder %>

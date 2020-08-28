@@ -31,4 +31,14 @@ module IssueTemplatesHelper
                 :data => data)
   end
 
+  def reload_current_value(sections_attributes, current_position)
+    if sections_attributes.present?
+      index = current_position - 1
+      if @sections_attributes[index].present?
+        return @sections_attributes[index]['text']
+      end
+    end
+    return nil
+  end
+
 end

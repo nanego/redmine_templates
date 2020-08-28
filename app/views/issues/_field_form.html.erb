@@ -9,11 +9,12 @@
     <% end %>
   <% end %>
   <%= form.text_field :text,
-                      :cols => 80,
-                      :accesskey => accesskey(:edit),
-                      :no_label => true,
-                      :required => false,
-                      :placeholder => description.placeholder
+                      cols: 80,
+                      accesskey: accesskey(:edit),
+                      no_label: true,
+                      required: false,
+                      placeholder: description.placeholder,
+                      value: reload_current_value(@sections_attributes, description.position) || description.text
   %>
   <%= form.hidden_field :placeholder, value: description.placeholder %>
 </p>
