@@ -40,7 +40,7 @@ class IssuesController < ApplicationController
           # Nothing to add
         when IssueTemplateDescriptionCheckbox.name
           value = description[:text] == '1' ? l(:general_text_Yes) : l(:general_text_No)
-          description_text += "h2. #{split_item.title}: #{value} \r\n\r\n"
+          description_text += "h2. #{split_item.title} : #{value} \r\n\r\n"
           description_text += " \r\n\r\n"
         when IssueTemplateDescriptionDate.name
           description_text += "h2. #{split_item.title} \r\n\r\n"
