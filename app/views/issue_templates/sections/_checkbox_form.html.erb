@@ -2,7 +2,7 @@
   <p>
     <%= label_tag 'Checkbox' %>
     <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 45 %>
-    <%= link_to (template ? "Afficher les détails" : "Masquer les détails"), '#',
+    <%= link_to (template ? "Masquer les détails" : "Afficher les détails"), '#',
                 class: 'expand_collapse',
                 data: {action: "description-item-form#expand_collapse"} %>
   </p>
