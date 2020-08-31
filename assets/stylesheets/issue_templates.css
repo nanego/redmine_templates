@@ -345,3 +345,7 @@ a.list_templates_projects_names.current {
         width: 100%;
     }
 }
+
+#issue-form #attributes label {
+    line-height: 20px;
+}
