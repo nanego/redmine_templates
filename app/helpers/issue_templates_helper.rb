@@ -45,4 +45,8 @@ module IssueTemplatesHelper
     "issue_templates/sections/#{section_class.name.underscore}_form"
   end
 
+  def issue_template_section_form(&block)
+    yield if block_given?
+  end
+
 end

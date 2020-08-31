@@ -19,3 +19,6 @@ end
 
 class IssueTemplateDescriptionSection < IssueTemplateDescription
 end
+
+class IssueTemplateDescriptionSeparator < IssueTemplateDescription
+end

@@ -95,7 +95,8 @@ $(document).ready(function ($) {
                 "section_template",
                 "instruction_template",
                 "checkbox_template",
-                "date_template"
+                "date_template",
+                "separator_template"
             ];
         }
 
@@ -133,8 +134,11 @@ $(document).ready(function ($) {
                 case('5'):
                     template = this.date_templateTarget.outerHTML
                     break
+                case('6'):
+                    template = this.separator_templateTarget.outerHTML
+                    break
             }
-            if(template != undefined){
+            if (template != undefined) {
                 this.appendItem(template.replace(/\$id_section\$/g, index))
             }
         }
@@ -218,9 +222,9 @@ $(document).ready(function ($) {
         expand_collapse(e) {
             e.preventDefault();
             // console.log(e.currentTarget);
-            if ($(e.currentTarget).closest('.split_description')[0].classList.toggle("collapsed")){
+            if ($(e.currentTarget).closest('.split_description')[0].classList.toggle("collapsed")) {
                 e.currentTarget.text = 'Afficher les détails'
-            }else{
+            } else {
                 e.currentTarget.text = 'Masquer les détails'
             }
         }

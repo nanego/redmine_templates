@@ -165,8 +165,11 @@ class IssueTemplate < ActiveRecord::Base
 
   def description_is_empty?(attributes)
     exists = attributes["id"].present?
-    if attributes["type"] == "IssueTemplateDescriptionInstruction"
+    case attributes["type"]
+    when IssueTemplateDescriptionInstruction.name
       empty = attributes["text"].blank?
+    when IssueTemplateDescriptionSeparator.name
+      empty = false # always valid
     else
       empty = attributes["title"].blank?
     end

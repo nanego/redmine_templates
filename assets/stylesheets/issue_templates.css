@@ -308,6 +308,7 @@ a.list_templates_projects_names.current {
     padding: 8px;
     margin-left: 3px;
 }
+
 #split-description-container a.icon-del {
     margin-top: 6px;
     display: inline-flex;
@@ -322,4 +323,30 @@ a.list_templates_projects_names.current {
 
 #split-description-container .split_description.collapsed .collapsible {
     display: none;
+}
+
+.split_description.separator .line {
+    height: 1px;
+    width: 100%;
+    background: lightgray;
+    vertical-align: middle;
+    display: inline-flex;
+    margin-top: 4px;
+    max-width: 350px;
+}
+
+#issue-form #all_attributes .separator {
+    height: 1px;
+    width: 75%;
+    background: lightgray;
+    vertical-align: middle;
+    display: inline-flex;
+    margin: 1em 180px;
+}
+
+@media screen and (max-width: 899px) {
+    #issue-form #all_attributes .separator {
+        margin: 1em 0;
+        width: 100%;
+    }
 }

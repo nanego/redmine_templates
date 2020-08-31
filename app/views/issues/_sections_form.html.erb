@@ -11,6 +11,8 @@
          partial_path = "issues/sections/checkbox_form"
        when IssueTemplateDescriptionDate.name
          partial_path = "issues/sections/date_form"
+       when IssueTemplateDescriptionSeparator.name
+         partial_path = "issues/sections/separator"
        end %>
     <%= render :partial => partial_path, :locals => {form: description_form} if partial_path.present? %>
   <% end %>
