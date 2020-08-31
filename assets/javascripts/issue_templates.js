@@ -213,6 +213,7 @@ $(document).ready(function ($) {
         }
 
         delete(e) {
+            e.preventDefault()
             if (window.confirm("Êtes-vous sûr ?")) {
                 this.element.style.display = "none";
                 this.destroy_hiddenTarget.value = "1";

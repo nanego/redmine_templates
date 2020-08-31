@@ -38,15 +38,42 @@ module IssueTemplatesHelper
         return @sections_attributes[index]['text']
       end
     end
-    return nil
+    nil
   end
 
-  def issue_template_section_form_path(section_class)
-    "issue_templates/sections/#{section_class.name.underscore}_form"
-  end
+  def issue_template_section_form(form, section_class, template, &block)
+    if template
+      template_class = "template"
+      template_target_name = "split-description.#{section_class.short_name}_template"
+      template_style = "display:none;"
+    else
+      template_class = "collapsed"
+      template_target_name = nil
+      template_style = nil
+    end
 
-  def issue_template_section_form(&block)
-    yield if block_given?
+    delete_link = content_tag :span, style: "float: right;" do
+      link_to("Supprimer", '#',
+              class: "icon icon-del link-cursor",
+              data: {action: "description-item-form#delete"}) +
+          form.hidden_field(:_destroy, :value => 0, data: {target: "description-item-form.destroy_hidden"})
+    end
+
+    reorder_handle = reorder_templates_handle(form.object, :url => "#")
+    hidden_position_field = form.hidden_field(:position)
+    hidden_type_field = form.hidden_field :type, :value => section_class.name
+
+    content_tag :div,
+                class: "split_description #{section_class.short_name} #{template_class}",
+                data: {controller: "description-item-form",
+                       target: template_target_name},
+                style: template_style do
+      delete_link +
+          reorder_handle +
+          hidden_position_field +
+          hidden_type_field +
+          capture(&block)
+    end
   end
 
 end

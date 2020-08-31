@@ -9,16 +9,21 @@ class IssueTemplateDescription < ActiveRecord::Base
 end
 
 class IssueTemplateDescriptionDate < IssueTemplateDescription
+  def self.short_name; "date" end
 end
 
 class IssueTemplateDescriptionField < IssueTemplateDescription
+  def self.short_name; "field" end
 end
 
 class IssueTemplateDescriptionCheckbox < IssueTemplateDescription
+  def self.short_name; "checkbox" end
 end
 
 class IssueTemplateDescriptionSection < IssueTemplateDescription
+  def self.short_name; "section" end
 end
 
 class IssueTemplateDescriptionSeparator < IssueTemplateDescription
+  def self.short_name; "separator" end
 end

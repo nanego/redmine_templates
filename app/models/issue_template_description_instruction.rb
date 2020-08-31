@@ -12,4 +12,8 @@ class IssueTemplateDescriptionInstruction < IssueTemplateDescription
   def editable
     false
   end
+
+  def self.short_name
+    "instruction"
+  end
 end
