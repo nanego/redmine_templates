@@ -45,7 +45,8 @@ class IssuesController < ApplicationController
           description_text += "h2. #{split_item.title} : #{value} \r\n\r\n"
         when IssueTemplateDescriptionDate.name
           description_text += "h2. #{split_item.title} : "
-          description_text += "#{Date.parse(description[:text])}\r\n\r\n" if description[:text].present? && Date.parse(description[:text]) rescue nil
+          description_text += "#{Date.parse(description[:text])}" if description[:text].present? && Date.parse(description[:text]) rescue nil
+          description_text += " \r\n\r\n"
         else
           description_text += "h2. #{split_item.title} \r\n\r\n"
           if description[:text].present?
