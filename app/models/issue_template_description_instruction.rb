@@ -9,10 +9,6 @@ class IssueTemplateDescriptionInstruction < IssueTemplateDescription
     ["info", "warning", "note"].collect { |t| [ t.capitalize, t ] }
   end
 
-  def editable
-    false
-  end
-
   def self.short_name
     "instruction"
   end

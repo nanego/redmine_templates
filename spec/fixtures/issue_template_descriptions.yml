@@ -6,6 +6,7 @@ one:
   issue_template_id: 3
   position: 1
   text: "Type here first section content"
+  show_toolbar: true
 two:
   id: 2
   title: "Second section title"
@@ -14,6 +15,7 @@ two:
   issue_template_id: 3
   position: 2
   text: "Type here second section content"
+  show_toolbar: false
 three:
   id: 3
   title: "Section title"
@@ -23,15 +25,17 @@ three:
   position: 1
   text: ""
   placeholder: "No data"
+  show_toolbar: true
 four:
   id: 4
-  title: "Second section title"
+  title: "Second section title without Toolbar"
   description: "Second section description"
   type: "IssueTemplateDescriptionSection"
   issue_template_id: 4
   position: 2
   text: ""
   placeholder: "Nothing to say"
+  show_toolbar: false
 five:
   id: 5
   title: "Section title"
@@ -57,3 +61,22 @@ field:
   position: 3
   text: "Default content for one-line field"
   placeholder: "Field empty"
+date:
+  id: 8
+  title: "New date field"
+  type: "IssueTemplateDescriptionDate"
+  issue_template_id: 3
+  position: 4
+checkbox:
+  id: 9
+  title: "New checkbox field"
+  type: "IssueTemplateDescriptionCheckbox"
+  issue_template_id: 3
+  position: 6
+  text: "1"
+separator:
+  id: 10
+  title: "New fields separator"
+  type: "IssueTemplateDescriptionSeparator"
+  issue_template_id: 3
+  position: 5

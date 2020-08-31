@@ -101,7 +101,7 @@ describe IssuesController, type: :controller do
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title \r\n\r\nSecond test text\r\n\r\n")
+      expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title without Toolbar \r\n\r\nSecond test text\r\n\r\n")
     end
 
     it "uses placeholder if text field is empty" do
@@ -133,7 +133,7 @@ describe IssuesController, type: :controller do
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title \r\n\r\nNothing to say\r\n\r\n")
+      expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title without Toolbar \r\n\r\nNothing to say\r\n\r\n")
     end
 
     it "does not join instructions into description" do
@@ -190,7 +190,7 @@ describe IssuesController, type: :controller do
       issue = Issue.last
       expect(issue).not_to be_nil
       expect(issue.description).to_not eq 'This is the description'
-      expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title \r\n\r\nSecond test text\r\n\r\n")
+      expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title without Toolbar \r\n\r\nSecond test text\r\n\r\n")
 
       mail = ActionMailer::Base.deliveries.last
       mail.parts.each do |part|

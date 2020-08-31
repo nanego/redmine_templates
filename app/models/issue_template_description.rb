@@ -3,7 +3,7 @@ class IssueTemplateDescription < ActiveRecord::Base
 
   # validates_presence_of :title
 
-  def editable
+  def self.editable?
     true
   end
 end
@@ -26,4 +26,5 @@ end
 
 class IssueTemplateDescriptionSeparator < IssueTemplateDescription
   def self.short_name; "separator" end
+  def self.editable?;false end
 end

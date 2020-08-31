@@ -54,9 +54,20 @@ module IssueTemplatesHelper
 
     delete_link = content_tag :span, style: "float: right;" do
       link_to("Supprimer", '#',
-              class: "icon icon-del link-cursor",
+              class: "icon icon-del link-cursor action",
               data: {action: "description-item-form#delete"}) +
           form.hidden_field(:_destroy, :value => 0, data: {target: "description-item-form.destroy_hidden"})
+    end
+
+    if section_class.editable?
+      toggle_display_link = content_tag :span, style: "float: right;margin-right: 2em;" do
+        link_to (template ? "Masquer les détails" : "Afficher les détails"),
+                '#',
+                class: 'icon icon-list expand_collapse action',
+                data: {action: "description-item-form#expand_collapse"}
+      end
+    else
+      toggle_display_link = ""
     end
 
     reorder_handle = reorder_templates_handle(form.object, :url => "#")
@@ -69,6 +80,7 @@ module IssueTemplatesHelper
                        target: template_target_name},
                 style: template_style do
       delete_link +
+          toggle_display_link +
           reorder_handle +
           hidden_position_field +
           hidden_type_field +

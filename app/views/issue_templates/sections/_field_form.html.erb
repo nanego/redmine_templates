@@ -1,10 +1,6 @@
 <%= issue_template_section_form(form, IssueTemplateDescriptionField, template) do %>
   <p>
-    <%= label_tag 'Section courte' %>
-    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :no_label => true, :size => 45 %>
-    <%= link_to (template ? "Masquer les détails" : "Afficher les détails"), '#',
-                class: 'expand_collapse',
-                data: {action: "description-item-form#expand_collapse"} %>
+    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :label => 'Section courte', :size => 45 %>
   </p>
   <div class="collapsible">
     <p>

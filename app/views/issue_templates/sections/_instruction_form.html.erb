@@ -1,10 +1,6 @@
 <%= issue_template_section_form(form, IssueTemplateDescriptionInstruction, template) do %>
   <p>
-    <%= label_tag 'Consigne' %>
-    <%= form.select :instruction_type, IssueTemplateDescriptionInstruction.instruction_types_options, :no_label => true %>
-    <%= link_to (template ? "Masquer les détails" : "Afficher les détails"), '#',
-                class: 'expand_collapse',
-                data: {action: "description-item-form#expand_collapse"} %>
+    <%= form.select :instruction_type, IssueTemplateDescriptionInstruction.instruction_types_options, :label => 'Consigne' %>
   </p>
 
   <div class="collapsible">
