@@ -7,6 +7,7 @@ one:
   position: 1
   text: "Type here first section content"
   show_toolbar: true
+  required: true
 two:
   id: 2
   title: "Second section title"
@@ -16,6 +17,7 @@ two:
   position: 2
   text: "Type here second section content"
   show_toolbar: false
+  required: true
 three:
   id: 3
   title: "Section title"
@@ -26,6 +28,7 @@ three:
   text: ""
   placeholder: "No data"
   show_toolbar: true
+  required: true
 four:
   id: 4
   title: "Second section title without Toolbar"
@@ -36,6 +39,7 @@ four:
   text: ""
   placeholder: "Nothing to say"
   show_toolbar: false
+  required: true
 five:
   id: 5
   title: "Section title"
@@ -45,6 +49,7 @@ five:
   position: 2
   text: ""
   placeholder: "No data"
+  required: true
 six:
   id: 6
   text: "Text of an instruction field"
@@ -52,6 +57,7 @@ six:
   instruction_type: "note"
   issue_template_id: 5
   position: 1
+  required: true
 field:
   id: 7
   title: "New one-line field"
@@ -61,12 +67,14 @@ field:
   position: 3
   text: "Default content for one-line field"
   placeholder: "Field empty"
+  required: true
 date:
   id: 8
   title: "New date field"
   type: "IssueTemplateDescriptionDate"
   issue_template_id: 3
   position: 4
+  required: true
 checkbox:
   id: 9
   title: "New checkbox field"
@@ -74,9 +82,11 @@ checkbox:
   issue_template_id: 3
   position: 6
   text: "1"
+  required: true
 separator:
   id: 10
   title: "New fields separator"
   type: "IssueTemplateDescriptionSeparator"
   issue_template_id: 3
   position: 5
+  required: true

@@ -3,6 +3,9 @@
 <p>
   <%= label_tag do %>
     <%= description.title %>
+    <% if description.required %>
+      <span class="required"> *</span>
+    <% end %>
     <% if description.description.present? %>
       <em class="info" style="padding-top: 3px; line-height: 1.5em;">
         <%= description.description %>
@@ -11,7 +14,7 @@
   <% end %>
   <%= form.check_box :text,
                      no_label: true,
-                     required: false,
+                     required: description.required,
                      checked: (value == '1')
   %>
 </p>

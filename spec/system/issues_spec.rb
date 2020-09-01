@@ -43,6 +43,7 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to have_selector('#issue_issue_template_descriptions_attributes_2_text') #, text: "Default content"
 
       fill_in 'issue_issue_template_descriptions_attributes_2_text', with: 'One-line edited content'
+      fill_in 'issue_issue_template_descriptions_attributes_3_text', with: '01/01/2020'
       click_on 'Create'
 
       expect(page).to have_selector('.description', text: "Type here first section content")

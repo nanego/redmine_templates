@@ -6,5 +6,8 @@
     <p>
       <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
     </p>
+    <p>
+      <%= form.check_box :required, label: "Champ obligatoire" %>
+    </p>
   </div>
 <% end %>

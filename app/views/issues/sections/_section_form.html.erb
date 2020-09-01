@@ -2,6 +2,9 @@
 <p>
   <%= label_tag do %>
     <%= description.title %>
+    <% if description.required %>
+      <span class="required"> *</span>
+    <% end %>
     <% if description.description.present? %>
       <em class="info" style="padding-top: 3px; line-height: 1.5em;">
         <%= description.description %>
@@ -18,7 +21,7 @@
                          :issues_url => auto_complete_issues_path(:project_id => @issue.project, :q => '')
                      },
                      :no_label => true,
-                     :required => false,
+                     :required => description.required,
                      :placeholder => description.placeholder,
                      value: reload_current_value(@sections_attributes, description.position) || description.text
   %>
