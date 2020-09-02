@@ -1,0 +1,21 @@
+<%= issue_template_section_form(form, IssueTemplateDescriptionSelect, template) do %>
+  <p>
+    <%= form.text_field :title,
+                        :placeholder => "Titre (obligatoire)",
+                        :label => 'Liste de valeurs',
+                        :size => 45 %>
+  </p>
+  <div class="collapsible">
+    <p>
+      <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
+    </p>
+    <p>
+      <label>Valeurs possibles</label>
+      <% values = form.object ? form.object.text.split(',') : [] %>
+      <%= select_tag "possible_values_attributes[#{form.index}][possible_values]",
+                     options_for_select(values, values),
+                     {label: "Valeurs possibles",
+                      multiple: true} %>
+    </p>
+  </div>
+<% end %>

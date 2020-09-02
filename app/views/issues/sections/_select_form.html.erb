@@ -1,0 +1,22 @@
+<% description = form.object %>
+<% values = reload_current_value(@sections_attributes, description.position, get_all_attributes: true) || {} %>
+<p>
+  <%= label_tag do %>
+    <%= description.title %>
+    <% if description.required %>
+      <span class="required"> *</span>
+    <% end %>
+    <% if description.description.present? %>
+      <em class="info" style="padding-top: 3px; line-height: 1.5em;">
+        <%= description.description %>
+      </em>
+    <% end %>
+  <% end %>
+  <% form.object.text.split(',').each_with_index do |select_value, index| %>
+    <%= check_box_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]",
+                      '1',
+                      values[index.to_s].present? %>
+    <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]", select_value.to_s, class: "no-style" %>
+    <br>
+  <% end %>
+</p>

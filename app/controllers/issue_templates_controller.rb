@@ -7,6 +7,8 @@ class IssueTemplatesController < ApplicationController
   before_action :find_project, only: [:init]
   before_action :find_optional_project, only: [:index, :new, :edit]
 
+  before_action :convert_possible_values_to_text, only: [:create, :update]
+
   def init
     params[:issue].merge!({project_id: params[:project_id]}) if params[:issue]
     @issue_template = IssueTemplate.new
@@ -159,4 +161,17 @@ class IssueTemplatesController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     render_404
   end
+
+  def convert_possible_values_to_text
+    if params['possible_values_attributes']
+      params['possible_values_attributes'].each do |index, values|
+        if values.present? && values["possible_values"].present?
+          if params['issue_template'] && params['issue_template']['descriptions_attributes'] && params['issue_template']['descriptions_attributes'][index]
+            params['issue_template']['descriptions_attributes'][index]['text'] = values["possible_values"].join(',')
+          end
+        end
+      end
+    end
+  end
+
 end

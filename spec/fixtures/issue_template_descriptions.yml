@@ -90,3 +90,10 @@ separator:
   issue_template_id: 3
   position: 5
   required: true
+select:
+  id: 11
+  title: "New select field"
+  type: "IssueTemplateDescriptionSelect"
+  issue_template_id: 3
+  position: 7
+  required: false

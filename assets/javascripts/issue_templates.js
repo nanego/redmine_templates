@@ -96,7 +96,8 @@ $(document).ready(function ($) {
                 "instruction_template",
                 "checkbox_template",
                 "date_template",
-                "separator_template"
+                "separator_template",
+                "select_template"
             ];
         }
 
@@ -136,6 +137,9 @@ $(document).ready(function ($) {
                     break
                 case('6'):
                     template = this.separator_templateTarget.outerHTML
+                    break
+                case('7'):
+                    template = this.select_templateTarget.outerHTML
                     break
             }
             if (template != undefined) {

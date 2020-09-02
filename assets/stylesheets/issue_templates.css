@@ -349,3 +349,12 @@ a.list_templates_projects_names.current {
 #issue-form #attributes label {
     line-height: 20px;
 }
+
+label.no-style {
+    font-weight: normal;
+    float: none;
+    text-align: left;
+    margin-left: 0;
+    width: 175px;
+    line-height: 24px;
+}
