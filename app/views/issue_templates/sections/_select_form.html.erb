@@ -11,7 +11,7 @@
     </p>
     <p>
       <label>Valeurs possibles</label>
-      <% values = form.object ? form.object.text.split(',') : [] %>
+      <% values = (form.object && form.object.text.present?) ? form.object.text.split(',') : [] %>
       <%= select_tag "possible_values_attributes[#{form.index}][possible_values]",
                      options_for_select(values, values),
                      {label: "Valeurs possibles",

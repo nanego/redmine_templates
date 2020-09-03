@@ -10,19 +10,3 @@
                locals: {form: description_form, template: true} %>
   <% end %>
 <% end %>
-
-<script>
-    $(function() {
-        if ((typeof $().select2) === 'function') {
-            $('.split_description.select select').select2({
-                tags: true,
-                tokenSeparators: [','],
-                containerCss: {
-                    width: '400px',
-                    minwidth: '400px'
-                },
-                width: '400px'
-            });
-        }
-    });
-</script>

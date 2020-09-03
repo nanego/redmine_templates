@@ -37,6 +37,20 @@ $(document).ready(function ($) {
     $("#split-description-container").positionedFormItems();
 });
 
+function applySelect2ToSelects() {
+    if ((typeof $().select2) === 'function') {
+        $('.split_description.select select:visible').select2({
+            tags: true,
+            tokenSeparators: [','],
+            containerCss: {
+                width: '400px',
+                minwidth: '400px'
+            },
+            width: '400px'
+        });
+    }
+}
+
 // Template Form controller
 (function () {
     stimulus_application.register("template-form", class extends Stimulus.Controller {
@@ -56,8 +70,6 @@ $(document).ready(function ($) {
         }
 
         reloadForm(e) {
-            console.log(e.currentTarget.value);
-
             fetch('/issue_templates/custom_form?path=' + e.currentTarget.value)
                 .then(response => response.text())
                 .then(html => {
@@ -102,7 +114,7 @@ $(document).ready(function ($) {
         }
 
         connect() {
-            this.toggleDescriptionField();
+            this.toggleDescriptionField()
         }
 
         toggleDescriptionField() {
@@ -152,6 +164,7 @@ $(document).ready(function ($) {
             this.cleanTemplate(this.description_fieldsTarget.lastChild)
             this.createWikiToolBar(this.description_fieldsTarget.lastChild)
             $("#split-description-container").trigger("sortupdate")
+            applySelect2ToSelects()
         }
 
         cleanTemplate(item) {
@@ -226,11 +239,11 @@ $(document).ready(function ($) {
 
         expand_collapse(e) {
             e.preventDefault();
-            // console.log(e.currentTarget);
             if ($(e.currentTarget).closest('.split_description')[0].classList.toggle("collapsed")) {
                 e.currentTarget.text = 'Afficher les détails'
             } else {
                 e.currentTarget.text = 'Masquer les détails'
+                applySelect2ToSelects()
             }
         }
     });

@@ -18,5 +18,5 @@
                       values[index.to_s].present? %>
     <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]", select_value.to_s, class: "no-style" %>
     <br>
-  <% end %>
+  <% end if form.object.text.present? %>
 </p>
