@@ -26,7 +26,7 @@ three:
   issue_template_id: 4
   position: 1
   text: ""
-  placeholder: "No data"
+  empty_value: "No data"
   show_toolbar: true
   required: true
 four:
@@ -37,7 +37,7 @@ four:
   issue_template_id: 4
   position: 2
   text: ""
-  placeholder: "Nothing to say"
+  empty_value: "Nothing to say"
   show_toolbar: false
   required: true
 five:
@@ -48,7 +48,7 @@ five:
   issue_template_id: 5
   position: 2
   text: ""
-  placeholder: "No data"
+  empty_value: "No data"
   required: true
 six:
   id: 6
@@ -66,7 +66,7 @@ field:
   issue_template_id: 3
   position: 3
   text: "Default content for one-line field"
-  placeholder: "Field empty"
+  empty_value: "Field empty"
   required: true
 date:
   id: 8
@@ -94,6 +94,7 @@ select:
   id: 11
   title: "New select field"
   type: "IssueTemplateDescriptionSelect"
+  text: "value1,value2"
   issue_template_id: 3
   position: 7
   required: false

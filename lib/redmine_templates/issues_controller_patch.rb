@@ -42,8 +42,10 @@ class IssuesController < ApplicationController
           # Nothing to add
         when  IssueTemplateDescriptionSelect.name
           description_text += "h2. #{split_item.title} \r\n\r\n"
-          split_item.text.split(',').each_with_index do |value, index|
-            description_text += "#{value} : #{description[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)} \r\n\r\n"
+          if split_item.text.present?
+            split_item.text.split(',').each_with_index do |value, index|
+              description_text += "#{value} : #{description[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)} \r\n\r\n"
+            end
           end
         when IssueTemplateDescriptionCheckbox.name
           value = description[:text] == '1' ? l(:general_text_Yes) : l(:general_text_No)
@@ -57,7 +59,7 @@ class IssuesController < ApplicationController
           if description[:text].present?
             value = description[:text]
           else
-            value = description[:placeholder]
+            value = description[:empty_value]
           end
           description_text += "#{value}\r\n\r\n"
         end

@@ -26,5 +26,5 @@
                      value: reload_current_value(@sections_attributes, description.position) || description.text
   %>
   <%= wikitoolbar_for "issue_issue_template_descriptions_attributes_#{form.index}_text" if description.show_toolbar %>
-  <%= form.hidden_field :placeholder, value: description.placeholder %>
+  <%= form.hidden_field :empty_value, value: description.empty_value %>
 </p>

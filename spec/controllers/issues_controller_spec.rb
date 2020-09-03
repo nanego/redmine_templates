@@ -104,7 +104,7 @@ describe IssuesController, type: :controller do
       expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title without Toolbar \r\n\r\nSecond test text\r\n\r\n")
     end
 
-    it "uses placeholder if text field is empty" do
+    it "uses empty_value if text field is empty" do
       assert_difference('Issue.count', 1) do
         post :create, :params => {
             :project_id => 1,
@@ -119,11 +119,11 @@ describe IssuesController, type: :controller do
                     :descriptions_attributes => {
                         "0" => {
                             :text => "Test text",
-                            :placeholder => "No data"
+                            :empty_value => "No data"
                         },
                         "1" => {
                             :text => "",
-                            :placeholder => "Nothing to say"
+                            :empty_value => "Nothing to say"
                         }
                     },
                 },
