@@ -332,8 +332,8 @@ a.list_templates_projects_names.current {
 
 #issue-form #all_attributes .separator {
     height: 1px;
-    width: 94%;
-    margin: 1.8em 3% 2em;
+    width: calc(100% + 12px);
+    margin: 1.8em -6px 2em;
     background: lightgray;
     vertical-align: middle;
     display: inline-flex;
@@ -341,8 +341,7 @@ a.list_templates_projects_names.current {
 
 @media screen and (max-width: 899px) {
     #issue-form #all_attributes .separator {
-        margin: 1em 0;
-        width: 100%;
+        margin: 1em -6px;
     }
 }
 
