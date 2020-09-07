@@ -1,7 +1,5 @@
 <% if @issue.safe_attribute? 'description' %>
-  <% if !@issue.persisted? && @issue.issue_template&.split_description %>
-    <%= render 'sections_form', f: f %>
-  <% else %>
+  <% if @issue.persisted? || !@issue.issue_template || (@issue.issue_template && !@issue.issue_template.split_description) %>
     <p>
       <%= f.label_for_field :description, :required => @issue.required_attribute?('description') %>
       <%= link_to_function content_tag(:span, l(:button_edit), :class => 'icon icon-edit'), '$(this).hide(); $("#issue_description_and_toolbar").show()' unless @issue.new_record? %>
