@@ -2,10 +2,32 @@ require_dependency 'issues_controller'
 
 class IssuesController < ApplicationController
 
-  append_before_action :set_template, :only => [:new]
+  prepend_before_action :set_template_as_params, :only => [:new]
+  append_before_action :finish_template_set_up, :only => [:new]
 
   append_before_action :keep_sections_values, :only => [:new, :create]
   append_before_action :update_description_with_sections, :only => [:create]
+
+  def set_template_as_params
+    if params[:template_id] && params[:template_id].to_i.to_s == params[:template_id]
+      permitted_params_override = params[:issue].present? ? params.require(:issue).to_unsafe_h : {}
+      @issue_template = IssueTemplate.find_by_id(params[:template_id])
+      if @issue_template.present?
+        params[:issue] = @issue_template.attributes.slice(*Issue.attribute_names).merge(permitted_params_override)
+      end
+    end
+  end
+
+  def finish_template_set_up
+    if @issue_template
+        @issue.project = @project
+        if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+          @issue.projects = @issue_template.secondary_projects
+        end
+        @issue.issue_template = @issue_template
+        @issue_template.increment!(:usage)
+    end
+  end
 
   def set_template
     if params[:template_id] && params[:template_id].to_i.to_s == params[:template_id]
