@@ -240,7 +240,7 @@ a.list_templates_projects_names.current {
 }
 
 #issue-form .instruction {
-    margin: 2em 0 2em 180px;
+    margin: 1.5em 0 1em 180px;
     min-height: 2em;
     clear: left;
     border: none;
