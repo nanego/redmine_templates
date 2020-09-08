@@ -12,11 +12,23 @@
       </em>
     <% end %>
   <% end %>
-  <% form.object.text.split(',').each_with_index do |select_value, index| %>
-    <%= check_box_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]",
-                      '1',
-                      values[index.to_s].present? %>
-    <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]", select_value.to_s, class: "no-style" %>
-    <br>
-  <% end if form.object.text.present? %>
+
+  <% case description.select_type
+     when 'checkbox' %>
+    <% description.text.split(',').each_with_index do |select_value, index| %>
+      <%= check_box_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]",
+                        '1',
+                        values[index.to_s].present? %>
+      <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]", select_value.to_s, class: "no-style" %>
+      <br>
+    <% end if description.text.present? %>
+  <% when 'monovalue_select' %>
+    <% possible_values = description.text.present? ? description.text.split(',') : [] %>
+    <%= select_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]",
+                   options_for_select(possible_values),
+                   style: "max-width: 40em;width:269px;",
+                   multiple: false %>
+  <% else %>
+    PROBLEM
+  <% end %>
 </p>

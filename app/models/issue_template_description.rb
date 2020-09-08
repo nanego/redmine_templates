@@ -30,5 +30,18 @@ class IssueTemplateDescriptionSeparator < IssueTemplateDescription
 end
 
 class IssueTemplateDescriptionSelect < IssueTemplateDescription
-  def self.short_name; "select" end
+  TYPES = [:checkbox, :monovalue_select]
+
+  after_initialize do
+    self.select_type ||= :checkbox
+  end
+  validates :select_type, :presence => true
+
+  def self.select_types_options
+    TYPES.collect { |t| [ t.to_s.humanize.capitalize, t ] }
+  end
+
+  def self.short_name
+    "select"
+  end
 end

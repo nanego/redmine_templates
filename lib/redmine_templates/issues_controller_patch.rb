@@ -20,12 +20,12 @@ class IssuesController < ApplicationController
 
   def finish_template_set_up
     if @issue_template
-        @issue.project = @project
-        if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
-          @issue.projects = @issue_template.secondary_projects
-        end
-        @issue.issue_template = @issue_template
-        @issue_template.increment!(:usage)
+      @issue.project = @project
+      if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+        @issue.projects = @issue_template.secondary_projects
+      end
+      @issue.issue_template = @issue_template
+      @issue_template.increment!(:usage)
     end
   end
 
@@ -58,15 +58,20 @@ class IssuesController < ApplicationController
       descriptions_attributes.each_with_index do |description, i|
         split_item = @issue.issue_template.descriptions[i]
         case split_item.class.name
-        when  IssueTemplateDescriptionInstruction.name
+        when IssueTemplateDescriptionInstruction.name
           # Nothing to add
-        when  IssueTemplateDescriptionSeparator.name
+        when IssueTemplateDescriptionSeparator.name
           # Nothing to add
-        when  IssueTemplateDescriptionSelect.name
-          description_text += "h2. #{split_item.title} \r\n\r\n"
-          if split_item.text.present?
-            split_item.text.split(',').each_with_index do |value, index|
-              description_text += "#{value} : #{description[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)} \r\n\r\n"
+        when IssueTemplateDescriptionSelect.name
+          case split_item.select_type
+          when "monovalue_select"
+            description_text += "h2. #{split_item.title} : #{description[:text]} \r\n\r\n"
+          else
+            description_text += "h2. #{split_item.title} \r\n\r\n"
+            if split_item.text.present?
+              split_item.text.split(',').each_with_index do |value, index|
+                description_text += "#{value} : #{description[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)} \r\n\r\n"
+              end
             end
           end
         when IssueTemplateDescriptionCheckbox.name
