@@ -257,12 +257,6 @@ a.list_templates_projects_names.current {
     padding-left: 0;
 }
 
-@media screen and (max-width: 899px) {
-    #issue-form .instruction {
-        margin-left: 0;
-    }
-}
-
 .instruction-warning {
     background: #f9d9d8 url(../images/tab_red.png) no-repeat left top;
 }
@@ -339,12 +333,6 @@ a.list_templates_projects_names.current {
     display: inline-flex;
 }
 
-@media screen and (max-width: 899px) {
-    #issue-form #all_attributes .separator {
-        margin: 1em -6px;
-    }
-}
-
 #issue-form #attributes label {
     line-height: 20px;
 }
@@ -356,4 +344,22 @@ label.no-style {
     margin-left: 0;
     width: 175px;
     line-height: 24px;
+}
+
+@media screen and (max-width: 899px) {
+    #issue-form .instruction {
+        margin-left: 0;
+    }
+
+    #issue-form #all_attributes .separator {
+        margin: 1em -6px;
+    }
+
+    #issue-form label {
+        display: inline-block;
+    }
+
+    #issue-form #all_attributes input {
+        width: auto;
+    }
 }
