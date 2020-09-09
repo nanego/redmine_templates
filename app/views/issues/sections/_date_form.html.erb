@@ -17,8 +17,10 @@
                       required: description.required,
                       value: reload_current_value(@sections_attributes, description.position) || description.text
   %>
-  <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text", description.select_type == "datetime") %>
+  <% if Redmine::Plugin.installed?(:redmine_datetime_custom_field) %>
+    <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text", description.select_type == "datetime") %>
+  <% else %>
+    <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text") %>
+  <% end %>
   <%= form.hidden_field :empty_value, value: description.empty_value %>
 </p>
-
-

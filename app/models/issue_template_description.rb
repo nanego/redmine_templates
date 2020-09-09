@@ -26,7 +26,12 @@ class IssueTemplateDescriptionSeparator < IssueTemplateDescription
 end
 
 class IssueTemplateDescriptionDate < IssueTemplateDescription
-  TYPES = [:date, :datetime]
+
+  if Redmine::Plugin.installed?(:redmine_datetime_custom_field)
+    TYPES = [:date, :datetime]
+  else
+    TYPES = [:date]
+  end
 
   after_initialize do
     self.select_type ||= :date
