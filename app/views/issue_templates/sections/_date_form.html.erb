@@ -9,5 +9,11 @@
     <p>
       <%= form.check_box :required, label: "Champ obligatoire" %>
     </p>
+    <p>
+      <%= form.select :select_type,
+                      options_for_select(IssueTemplateDescriptionDate.select_types_options,
+                                         selected: (form.object.present? ? form.object.select_type : '')),
+                      label: "Format" %>
+    </p>
   </div>
 <% end %>

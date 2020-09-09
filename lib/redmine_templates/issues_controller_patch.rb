@@ -70,7 +70,8 @@ class IssuesController < ApplicationController
             description_text += section_title(section.title)
             if section.text.present?
               if section.select_type == 'multivalue_select'
-                description['text'].each do |selected_value|
+                selected_values = description['text'] || []
+                selected_values.each do |selected_value|
                   description_text += "#{selected_value}\r\n\r\n"
                 end
               else
@@ -84,8 +85,7 @@ class IssuesController < ApplicationController
           value = description[:text] == '1' ? l(:general_text_Yes) : l(:general_text_No)
           description_text += section_title(section.title, value)
         when IssueTemplateDescriptionDate.name
-          value = "#{Date.parse(description[:text])}" if description[:text].present? && Date.parse(description[:text]) rescue nil
-          description_text += section_title(section.title, value)
+          description_text += section_title(section.title, description[:text])
         else
           description_text += section_title(section.title)
           value = description[:text].present? ? description[:text] : description[:empty_value]

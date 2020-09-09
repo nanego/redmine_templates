@@ -8,10 +8,6 @@ class IssueTemplateDescription < ActiveRecord::Base
   end
 end
 
-class IssueTemplateDescriptionDate < IssueTemplateDescription
-  def self.short_name; "date" end
-end
-
 class IssueTemplateDescriptionField < IssueTemplateDescription
   def self.short_name; "field" end
 end
@@ -27,6 +23,23 @@ end
 class IssueTemplateDescriptionSeparator < IssueTemplateDescription
   def self.short_name; "separator" end
   def self.editable?;false end
+end
+
+class IssueTemplateDescriptionDate < IssueTemplateDescription
+  TYPES = [:date, :datetime]
+
+  after_initialize do
+    self.select_type ||= :date
+  end
+  validates :select_type, :presence => true
+
+  def self.select_types_options
+    TYPES.collect { |t| [ t.to_s.humanize.capitalize, t ] }
+  end
+
+  def self.short_name
+    "date"
+  end
 end
 
 class IssueTemplateDescriptionSelect < IssueTemplateDescription

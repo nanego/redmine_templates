@@ -19,7 +19,8 @@
     </p>
     <p>
       <%= form.select :select_type,
-                 options_for_select(IssueTemplateDescriptionSelect.select_types_options, selected: (form.object.present? ? form.object.select_type : '')),
+                 options_for_select(IssueTemplateDescriptionSelect.select_types_options,
+                                    selected: (form.object.present? ? form.object.select_type : '')),
                  label: "Type" %>
     </p>
   </div>

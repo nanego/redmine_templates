@@ -12,12 +12,12 @@
     <% end %>
   <% end %>
   <%= form.date_field :text,
-                      size: 10,
+                      size: description.select_type == "datetime" ? 14 : 10,
                       no_label: true,
                       required: description.required,
                       value: reload_current_value(@sections_attributes, description.position) || description.text
   %>
-  <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text") %>
+  <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text", description.select_type == "datetime") %>
   <%= form.hidden_field :empty_value, value: description.empty_value %>
 </p>
 
