@@ -30,7 +30,7 @@ class IssueTemplateDescriptionSeparator < IssueTemplateDescription
 end
 
 class IssueTemplateDescriptionSelect < IssueTemplateDescription
-  TYPES = [:checkbox, :monovalue_select]
+  TYPES = [:checkbox, :radio, :monovalue_select, :multivalue_select]
 
   after_initialize do
     self.select_type ||= :checkbox

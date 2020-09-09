@@ -1,5 +1,7 @@
 <% description = form.object %>
 <% values = reload_current_value(@sections_attributes, description.position, get_all_attributes: true) || {} %>
+<% possible_values = description.text.present? ? description.text.split(',') : [] %>
+
 <p>
   <%= label_tag do %>
     <%= description.title %>
@@ -15,19 +17,35 @@
 
   <% case description.select_type
      when 'checkbox' %>
-    <% description.text.split(',').each_with_index do |select_value, index| %>
+
+    <% possible_values.each_with_index do |select_value, index| %>
       <%= check_box_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]",
                         '1',
                         values[index.to_s].present? %>
       <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]", select_value.to_s, class: "no-style" %>
       <br>
-    <% end if description.text.present? %>
-  <% when 'monovalue_select' %>
-    <% possible_values = description.text.present? ? description.text.split(',') : [] %>
+    <% end %>
+
+  <% when 'radio' %>
+
+    <% possible_values.each do |select_value| %>
+      <%= radio_button_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]",
+                           select_value,
+                           values["text"] == select_value %>
+      <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][text][#{select_value}]",
+                    select_value,
+                    value: select_value,
+                    class: "no-style" %>
+      <br>
+    <% end %>
+
+  <% when 'monovalue_select', 'multivalue_select' %>
+
     <%= select_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]",
-                   options_for_select(possible_values),
+                   options_for_select(possible_values, values['text']),
                    style: "max-width: 40em;width:269px;",
-                   multiple: false %>
+                   multiple: description.select_type == 'multivalue_select' %>
+
   <% else %>
     PROBLEM
   <% end %>

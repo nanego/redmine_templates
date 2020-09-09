@@ -56,42 +56,48 @@ class IssuesController < ApplicationController
       description_text = ""
       descriptions_attributes = params[:issue][:issue_template][:descriptions_attributes].values
       descriptions_attributes.each_with_index do |description, i|
-        split_item = @issue.issue_template.descriptions[i]
-        case split_item.class.name
+        section = @issue.issue_template.descriptions[i]
+        case section.class.name
         when IssueTemplateDescriptionInstruction.name
           # Nothing to add
         when IssueTemplateDescriptionSeparator.name
           # Nothing to add
         when IssueTemplateDescriptionSelect.name
-          case split_item.select_type
-          when "monovalue_select"
-            description_text += "h2. #{split_item.title} : #{description[:text]} \r\n\r\n"
+          case section.select_type
+          when "monovalue_select", "radio"
+            description_text += section_title(section.title, description[:text])
           else
-            description_text += "h2. #{split_item.title} \r\n\r\n"
-            if split_item.text.present?
-              split_item.text.split(',').each_with_index do |value, index|
-                description_text += "#{value} : #{description[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)} \r\n\r\n"
+            description_text += section_title(section.title)
+            if section.text.present?
+              if section.select_type == 'multivalue_select'
+                description['text'].each do |selected_value|
+                  description_text += "#{selected_value}\r\n\r\n"
+                end
+              else
+                section.text.split(',').each_with_index do |value, index|
+                  description_text += "#{value} : #{description[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)} \r\n\r\n"
+                end
               end
             end
           end
         when IssueTemplateDescriptionCheckbox.name
           value = description[:text] == '1' ? l(:general_text_Yes) : l(:general_text_No)
-          description_text += "h2. #{split_item.title} : #{value} \r\n\r\n"
+          description_text += section_title(section.title, value)
         when IssueTemplateDescriptionDate.name
-          description_text += "h2. #{split_item.title} : "
-          description_text += "#{Date.parse(description[:text])}" if description[:text].present? && Date.parse(description[:text]) rescue nil
-          description_text += " \r\n\r\n"
+          value = "#{Date.parse(description[:text])}" if description[:text].present? && Date.parse(description[:text]) rescue nil
+          description_text += section_title(section.title, value)
         else
-          description_text += "h2. #{split_item.title} \r\n\r\n"
-          if description[:text].present?
-            value = description[:text]
-          else
-            value = description[:empty_value]
-          end
+          description_text += section_title(section.title)
+          value = description[:text].present? ? description[:text] : description[:empty_value]
           description_text += "#{value}\r\n\r\n"
         end
         @issue.description = description_text
       end
     end
+  end
+
+  def section_title(title, value = nil)
+    inline_value = ": #{value} " if value.present?
+    "h2. #{title} #{inline_value}\r\n\r\n"
   end
 end
