@@ -87,9 +87,7 @@ class IssuesController < ApplicationController
         when IssueTemplateDescriptionCheckbox.name
           value = description[:text] == '1' ? l(:general_text_Yes) : l(:general_text_No)
           description_text += section_title(section.title, value)
-        when IssueTemplateDescriptionDate.name
-          description_text += section_title(section.title, description[:text])
-        when IssueTemplateDescriptionField.name
+        when IssueTemplateDescriptionField.name, IssueTemplateDescriptionDate.name
           value = description[:text].present? ? description[:text] : description[:empty_value]
           description_text += section_title(section.title, value)
         else

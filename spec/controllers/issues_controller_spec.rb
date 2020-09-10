@@ -71,7 +71,7 @@ describe IssuesController, type: :controller do
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\n")
+      expect(issue.description).to eq("\r\n*Section title :* \r\nTest text\r\n")
     end
 
     it "joins multiple sections into one description" do
@@ -101,7 +101,7 @@ describe IssuesController, type: :controller do
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title without Toolbar \r\n\r\nSecond test text\r\n\r\n")
+      expect(issue.description).to eq("\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
     end
 
     it "uses empty_value if text field is empty" do
@@ -133,7 +133,7 @@ describe IssuesController, type: :controller do
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("h2. Section title \r\n\r\nTest text\r\n\r\nh2. Second section title without Toolbar \r\n\r\nNothing to say\r\n\r\n")
+      expect(issue.description).to eq("\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nNothing to say\r\n")
     end
 
     it "does not join instructions into description" do

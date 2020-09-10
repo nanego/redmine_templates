@@ -273,6 +273,7 @@ a.list_templates_projects_names.current {
     padding: 0;
     margin: 0.5em 0 1em 0;
     font-size: 13px;
+    text-decoration: underline;
 }
 
 #issue-form textarea {
