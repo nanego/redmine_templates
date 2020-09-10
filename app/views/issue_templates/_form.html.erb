@@ -219,7 +219,7 @@
           </span>
           <p data-target="split-description.add_buttons">
             <%= select_tag 'new_section',
-                           options_for_select([['Nouveau sous-titre', 8],
+                           options_for_select([['Nouveau séparateur avec titre', 8],
                                                ['Nouveau séparateur', 6],
                                                ['Nouvelle consigne', 2],
                                                ['Nouveau champ texte (long)', 1],
@@ -239,6 +239,7 @@
     <%= submit_tag l(:button_save_issue_template) %>
 
     <%= javascript_tag "$('#issue_template_template_title').focus();" %>
+
 
     <script type="text/javascript">
         $('#issue-template-form').bind('submit', function () {
