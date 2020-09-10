@@ -61,7 +61,7 @@ class IssuesController < ApplicationController
         when IssueTemplateDescriptionInstruction.name
           # Nothing to add
         when IssueTemplateDescriptionSeparator.name
-          description_text += "\r\n------------------------------\r\n"
+          description_text += "\r\n-----\r\n"
         when IssueTemplateDescriptionTitle.name
           description_text += subtitle(section.title)
         when IssueTemplateDescriptionSelect.name
