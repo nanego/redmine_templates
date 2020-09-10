@@ -1,8 +1,10 @@
 <% if @issue.safe_attribute?('description') && !@issue.persisted? && @issue.issue_template&.split_description %>
   <%= f.fields_for :issue_template, @issue.issue_template do |template_form| %>
+    <%= render 'issues/sections/separator_form' %>
     <%= template_form.fields_for :descriptions, @issue.issue_template.descriptions do |description_form| %>
       <%= render partial: "issues/sections/#{description_form.object.class.short_name}_form",
                  locals: {form: description_form} %>
     <% end %>
+    <%= render 'issues/sections/separator_form' %>
   <% end %>
 <% end %>
