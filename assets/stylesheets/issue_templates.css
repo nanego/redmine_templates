@@ -317,7 +317,7 @@ a.list_templates_projects_names.current {
 .split_description.separator .line {
     height: 1px;
     width: 100%;
-    background: lightgray;
+    background: #e4e4e4;
     vertical-align: middle;
     display: inline-flex;
     margin-top: 4px;
@@ -327,23 +327,33 @@ a.list_templates_projects_names.current {
 #issue-form #all_attributes .separator {
     height: 1px;
     width: calc(100% + 12px);
-    margin: 1.8em -6px 2em;
-    background: lightgray;
+    margin: 22px -6px 2em;
+    background: #e4e4e4;
     vertical-align: middle;
     display: inline-flex;
 }
 
-#issue-form #attributes label {
-    line-height: 20px;
+#issue-form #attributes .subtitle {
+    margin: -24px 0 8px -6px;
+    font-size: 13px;
+    background-color: #e4e4e4;
+    display: block;
+    padding: 0.5em 1em;
+    padding-top: -16px;
+    width: max-content;
 }
 
-label.no-style {
+#issue-form #attributes label.no-style {
     font-weight: normal;
     float: none;
     text-align: left;
     margin-left: 0;
     width: 175px;
     line-height: 24px;
+}
+
+#issue-form #attributes label .info {
+    margin-top: -6px;
 }
 
 @media screen and (max-width: 899px) {

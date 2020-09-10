@@ -61,7 +61,7 @@ class IssuesController < ApplicationController
         when IssueTemplateDescriptionInstruction.name
           # Nothing to add
         when IssueTemplateDescriptionSeparator.name
-          # Nothing to add
+          description_text += "\r\n------------------------------\r\n"
         when IssueTemplateDescriptionTitle.name
           description_text += subtitle(section.title)
         when IssueTemplateDescriptionSelect.name
@@ -105,6 +105,6 @@ class IssuesController < ApplicationController
 
   def section_title(title, value = nil)
     inline_value = value if value.present?
-    "\r\n#{title} : #{inline_value}\r\n"
+    "\r\n*#{title} :* #{inline_value}\r\n"
   end
 end
