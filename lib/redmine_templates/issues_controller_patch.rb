@@ -61,7 +61,7 @@ class IssuesController < ApplicationController
         when IssueTemplateDescriptionInstruction.name
           # Nothing to add
         when IssueTemplateDescriptionSeparator.name
-          description_text += "\r\n-----\r\n"
+          description_text += "-----\r\n"
         when IssueTemplateDescriptionTitle.name
           description_text += subtitle(section.title)
         when IssueTemplateDescriptionSelect.name
@@ -88,6 +88,9 @@ class IssuesController < ApplicationController
           description_text += section_title(section.title, value)
         when IssueTemplateDescriptionDate.name
           description_text += section_title(section.title, description[:text])
+        when IssueTemplateDescriptionField.name
+          value = description[:text].present? ? description[:text] : description[:empty_value]
+          description_text += section_title(section.title, value)
         else
           description_text += section_title(section.title)
           value = description[:text].present? ? description[:text] : description[:empty_value]
