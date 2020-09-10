@@ -109,7 +109,8 @@ function applySelect2ToSelects() {
                 "checkbox_template",
                 "date_template",
                 "separator_template",
-                "select_template"
+                "select_template",
+                "title_template"
             ];
         }
 
@@ -152,6 +153,9 @@ function applySelect2ToSelects() {
                     break
                 case('7'):
                     template = this.select_templateTarget.outerHTML
+                    break
+                case('8'):
+                    template = this.title_templateTarget.outerHTML
                     break
             }
             if (template != undefined) {

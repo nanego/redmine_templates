@@ -62,6 +62,8 @@ class IssuesController < ApplicationController
           # Nothing to add
         when IssueTemplateDescriptionSeparator.name
           # Nothing to add
+        when IssueTemplateDescriptionTitle.name
+          description_text += subtitle(section.title)
         when IssueTemplateDescriptionSelect.name
           case section.select_type
           when "monovalue_select", "radio"
@@ -72,11 +74,11 @@ class IssuesController < ApplicationController
               if section.select_type == 'multivalue_select'
                 selected_values = description['text'] || []
                 selected_values.each do |selected_value|
-                  description_text += "#{selected_value}\r\n\r\n"
+                  description_text += "* #{selected_value}\r\n"
                 end
               else
                 section.text.split(',').each_with_index do |value, index|
-                  description_text += "#{value} : #{description[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)} \r\n\r\n"
+                  description_text += "* #{value} : #{description[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)} \r\n"
                 end
               end
             end
@@ -89,15 +91,20 @@ class IssuesController < ApplicationController
         else
           description_text += section_title(section.title)
           value = description[:text].present? ? description[:text] : description[:empty_value]
-          description_text += "#{value}\r\n\r\n"
+          description_text += "#{value}\r\n"
         end
         @issue.description = description_text
       end
     end
   end
 
-  def section_title(title, value = nil)
+  def subtitle(title, value = nil)
     inline_value = ": #{value} " if value.present?
-    "h2. #{title} #{inline_value}\r\n\r\n"
+    "\r\nh2. #{title} #{inline_value}\r\n\r\n"
+  end
+
+  def section_title(title, value = nil)
+    inline_value = value if value.present?
+    "\r\n#{title} : #{inline_value}\r\n"
   end
 end

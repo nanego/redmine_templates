@@ -25,6 +25,11 @@ class IssueTemplateDescriptionSeparator < IssueTemplateDescription
   def self.editable?;false end
 end
 
+class IssueTemplateDescriptionTitle < IssueTemplateDescription
+  def self.short_name; "title" end
+  def self.editable?;false end
+end
+
 class IssueTemplateDescriptionDate < IssueTemplateDescription
 
   if Redmine::Plugin.installed?(:redmine_datetime_custom_field)
