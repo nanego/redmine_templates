@@ -3,10 +3,10 @@ module PluginTemplates
     def render_menu(menu, project = nil)
 
       if project.present? &&
-          project.issue_templates.present? &&
-          (Issue.allowed_target_trackers(project) & project.issue_templates.map(&:tracker)).any?
+          project.issue_templates.active.present? &&
+          (Issue.allowed_target_trackers(project) & project.issue_templates.active.map(&:tracker)).any?
         Redmine::MenuManager.map :project_menu do |project_menu|
-          project.issue_templates.includes(:tracker).order('trackers.position desc, issue_templates.template_title desc').each do |template|
+          project.issue_templates.active.includes(:tracker).order('trackers.position desc, issue_templates.template_title desc').each do |template|
             unless project_menu.find("new_issue_template_#{template.id}".to_sym)
               project_menu.push "new_issue_template_#{template.id}".to_sym,
                                 {:controller => 'issues', :action => 'new', :template_id => template.id},

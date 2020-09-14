@@ -31,7 +31,8 @@ class IssueTemplate < ActiveRecord::Base
   validates :due_date, :date => true
   # validate :validate_issue, :validate_required_fields
 
-  scope :displayed_on_overview, -> {where(show_on_overview: true)}
+  scope :displayed_on_overview, -> { active.where(show_on_overview: true) }
+  scope :active, -> { where(template_enabled: true) }
 
   safe_attributes :template_project_ids,
                   :secondary_project_ids,
@@ -122,7 +123,7 @@ class IssueTemplate < ActiveRecord::Base
   # read-only fields of each role
   # The result is an array of strings where sustom fields are represented with their ids
   def read_only_attribute_names(user = nil)
-    workflow_rule_by_attribute(user).reject {|attr, rule| rule != 'readonly'}.keys
+    workflow_rule_by_attribute(user).reject { |attr, rule| rule != 'readonly' }.keys
   end
 
   # Returns a hash of the workflow rule by attribute for the given user # TODO : Cleanup these methods
