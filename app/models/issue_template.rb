@@ -22,10 +22,9 @@ class IssueTemplate < ActiveRecord::Base
   end
 
   validates_presence_of :template_title, :tracker, :author, :status, :template_projects
-
-  validates_uniqueness_of :template_title
   validates_length_of :subject, :maximum => 255
   # validates_inclusion_of :done_ratio, :in => 0..100
+
   validates :estimated_hours, :numericality => {:greater_than_or_equal_to => 0, :allow_nil => true, :message => :invalid}
   validates :start_date, :date => true
   validates :due_date, :date => true
