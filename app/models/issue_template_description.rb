@@ -1,10 +1,12 @@
 class IssueTemplateDescription < ActiveRecord::Base
   belongs_to :issue_template
 
-  # validates_presence_of :title
-
   def self.editable?
     true
+  end
+
+  def is_a_separator?
+    false
   end
 end
 
@@ -23,11 +25,13 @@ end
 class IssueTemplateDescriptionSeparator < IssueTemplateDescription
   def self.short_name; "separator" end
   def self.editable?;false end
+  def is_a_separator?;true  end
 end
 
 class IssueTemplateDescriptionTitle < IssueTemplateDescription
   def self.short_name; "title" end
   def self.editable?;false end
+  def is_a_separator?;true  end
 end
 
 class IssueTemplateDescriptionDate < IssueTemplateDescription
@@ -66,5 +70,21 @@ class IssueTemplateDescriptionSelect < IssueTemplateDescription
 
   def self.short_name
     "select"
+  end
+end
+
+class IssueTemplateDescriptionInstruction < IssueTemplateDescription
+  after_initialize do
+    self.instruction_type ||= "note"
+  end
+
+  validates :instruction_type, :presence => true
+
+  def self.instruction_types_options
+    ["info", "warning", "note"].collect { |t| [ t.capitalize, t ] }
+  end
+
+  def self.short_name
+    "instruction"
   end
 end
