@@ -86,6 +86,10 @@ class IssueTemplate < ActiveRecord::Base
     end
   end
 
+  def has_been_deleted?
+    IssueTemplate.where(id: self.id).blank?
+  end
+
   def allowed_target_projects
     Project.where(Project.allowed_to_condition(User.current, :add_issues))
   end

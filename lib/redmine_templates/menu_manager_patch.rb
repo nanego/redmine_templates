@@ -11,11 +11,21 @@ module PluginTemplates
               project_menu.push "new_issue_template_#{template.id}".to_sym,
                                 {:controller => 'issues', :action => 'new', :template_id => template.id},
                                 :param => :project_id,
-                                :caption => Proc.new { template.reload; template.title_with_tracker },
+                                :caption => Proc.new {
+                                  template.reload unless template.has_been_deleted?
+                                  template.title_with_tracker
+                                },
                                 :html => {:accesskey => Redmine::AccessKeys.key_for(:new_issue)},
-                                :if => Proc.new { |project| template.reload; template.template_enabled &&
-                                    Issue.allowed_target_trackers(project).include?(template.tracker) &&
-                                    template.template_projects.include?(project) },
+                                :if => Proc.new { |project|
+                                  if template.has_been_deleted?
+                                    false
+                                  else
+                                    template.reload
+                                    template.template_enabled &&
+                                        Issue.allowed_target_trackers(project).include?(template.tracker) &&
+                                        template.template_projects.include?(project)
+                                  end
+                                },
                                 :permission => :add_issues,
                                 :parent => :new_issue,
                                 :first => true
