@@ -1,3 +1,6 @@
+<% values = (form.object && form.object.text.present?) ? form.object.text.split(',') : [] %>
+<% default_values = (form.object && form.object.placeholder.present?) ? form.object.placeholder.split(',') : [] %>
+
 <%= issue_template_section_form(form, IssueTemplateDescriptionSelect, template) do %>
   <p>
     <%= form.text_field :title,
@@ -9,19 +12,36 @@
     <p>
       <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
     </p>
-    <p>
+
+    <div class="possible-values">
       <label>Valeurs possibles</label>
-      <% values = (form.object && form.object.text.present?) ? form.object.text.split(',') : [] %>
-      <%= select_tag "possible_values_attributes[#{form.index}][possible_values]",
-                     options_for_select(values, values),
-                     {label: "Valeurs possibles",
-                      multiple: true} %>
-    </p>
+      <ul id="possible-values-<%= form.object_id %>">
+        <% values.each do |value| %>
+          <%= render 'issue_templates/sections/select_possible_value', value: value, default_values: default_values %>
+        <% end %>
+      </ul>
+      <%= link_to 'Ajouter une valeur', '#', class: 'add_possible_value' %>
+    </div>
+
+    <%= form.hidden_field :text, id: "possible-values-text-field-#{ form.object_id }", class: 'text' %>
+    <%= form.hidden_field :placeholder, id: "possible-values-text-field-#{ form.object_id }", class: "placeholder" %>
+
     <p>
       <%= form.select :select_type,
-                 options_for_select(IssueTemplateDescriptionSelect.select_types_options,
-                                    selected: (form.object.present? ? form.object.select_type : '')),
-                 label: "Type" %>
+                      options_for_select(IssueTemplateDescriptionSelect.select_types_options,
+                                         selected: (form.object.present? ? form.object.select_type : '')),
+                      label: "Type" %>
     </p>
   </div>
 <% end %>
+
+<script>
+    $(function () {
+        $("#<%= "possible-values-#{form.object_id}" %>").sortable({
+            axis: "y",
+            beforeStop: function () {
+                resetHiddenFields('<%= "possible-values-#{form.object_id}" %>')
+            }
+        })
+    });
+</script>

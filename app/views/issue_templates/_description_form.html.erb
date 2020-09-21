@@ -10,3 +10,51 @@
                locals: {form: description_form, template: true} %>
   <% end %>
 <% end %>
+
+<script>
+    function resetHiddenFields(id) {
+        let ul = $('ul#' + id)
+        let sectionElement = ul.closest('.split_description.select')
+        resetHiddenTextField(sectionElement)
+        resetHiddenPlaceholderField(sectionElement)
+    }
+    function resetHiddenTextField(sectionElement) {
+        let text = $(sectionElement).find('input.text')
+        let ul = $(sectionElement).find('ul')
+        let joined_values = ul.find('li .value').map(function () {
+            return $(this).val()
+        }).get().filter(item => item).join()
+        text.val(joined_values)
+    }
+    function resetHiddenPlaceholderField(sectionElement) {
+        let placeholder = $(sectionElement).find('input.placeholder')
+        let list_of_value = $(sectionElement).find('ul')
+        let joined_values = list_of_value.find('li input[type=checkbox]:checked').map(function () {
+            return $(this).parent().find('.value').val()
+        }).get().filter(item => item).join()
+        placeholder.val(joined_values)
+    }
+    $('form#issue-template-form').on('change', '.possible-values input[type=checkbox]', function(event) {
+        let section = event.target.closest('.split_description.select')
+        resetHiddenPlaceholderField(section)
+    })
+    $('form#issue-template-form').on('click', '.add_possible_value', function(event) {
+        event.preventDefault()
+        let ul = $(event.target).parent().find('ul')
+        ul.append('<%= escape_javascript(render('issue_templates/sections/select_possible_value')) %>')
+    })
+    $('form#issue-template-form').on('keyup change', '.possible-values input.value', function(event) {
+        let ul = $(event.target).closest('ul')
+        resetHiddenFields(ul.attr('id'))
+    })
+    $('form#issue-template-form').on('keyup change', '.possible-values input.value', function(event) {
+        let ul = $(event.target).closest('ul')
+        resetHiddenFields(ul.attr('id'))
+    })
+    $('form#issue-template-form').on('click', '.remove_possible_value', function(event) {
+        event.preventDefault()
+        let ul = $(event.target).closest('ul')
+        $(event.target).parent().remove()
+        resetHiddenFields(ul.attr('id'))
+    })
+</script>
