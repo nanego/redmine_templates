@@ -1,5 +1,6 @@
 <% description = form.object %>
 <% values = reload_current_value(@sections_attributes, description.position, get_all_attributes: true) || {} %>
+<% default_values = description.placeholder.present? ? description.placeholder.split(',') : [] %>
 <% possible_values = description.text.present? ? description.text.split(',') : [] %>
 
 <p>
@@ -21,7 +22,7 @@
     <% possible_values.each_with_index do |select_value, index| %>
       <%= check_box_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]",
                         '1',
-                        values[index.to_s].present? %>
+                        values.present? ? values[index.to_s].present? : default_values.include?(select_value.to_s) %>
       <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]", select_value.to_s, class: "no-style" %>
       <br>
     <% end %>
@@ -31,7 +32,7 @@
     <% possible_values.each do |select_value| %>
       <%= radio_button_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]",
                            select_value,
-                           values["text"] == select_value %>
+                           values.present? ? values["text"] == select_value : default_values.first == select_value %>
       <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][text][#{select_value}]",
                     select_value,
                     value: select_value,
@@ -42,7 +43,7 @@
   <% when 'monovalue_select', 'multivalue_select' %>
 
     <%= select_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]",
-                   options_for_select(possible_values, values['text']),
+                   options_for_select(possible_values, values.present? ? values['text'] : default_values),
                    style: "max-width: 40em;width:269px;",
                    multiple: description.select_type == 'multivalue_select' %>
 
