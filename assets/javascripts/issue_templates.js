@@ -51,6 +51,16 @@ function applySelect2ToSelects() {
     }
 }
 
+function makeListsSortable() {
+    $(".possible-values ul").sortable({
+        axis: "y",
+        beforeStop: function (event) {
+            let ul = $(event.target).closest('ul')
+            resetHiddenFields(ul)
+        }
+    })
+}
+
 // Template Form controller
 (function () {
     stimulus_application.register("template-form", class extends Stimulus.Controller {
@@ -169,6 +179,7 @@ function applySelect2ToSelects() {
             this.createWikiToolBar(this.description_fieldsTarget.lastChild)
             $("#split-description-container").trigger("sortupdate")
             applySelect2ToSelects()
+            makeListsSortable()
         }
 
         cleanTemplate(item) {
@@ -248,6 +259,7 @@ function applySelect2ToSelects() {
             } else {
                 e.currentTarget.text = 'Masquer les détails'
                 applySelect2ToSelects()
+                makeListsSortable()
             }
         }
     });

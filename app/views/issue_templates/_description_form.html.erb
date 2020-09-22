@@ -12,8 +12,7 @@
 <% end %>
 
 <script>
-    function resetHiddenFields(id) {
-        let ul = $('ul#' + id)
+    function resetHiddenFields(ul) {
         let sectionElement = ul.closest('.split_description.select')
         resetHiddenTextField(sectionElement)
         resetHiddenPlaceholderField(sectionElement)
@@ -45,16 +44,16 @@
     })
     $('form#issue-template-form').on('keyup change', '.possible-values input.value', function(event) {
         let ul = $(event.target).closest('ul')
-        resetHiddenFields(ul.attr('id'))
+        resetHiddenFields(ul)
     })
     $('form#issue-template-form').on('keyup change', '.possible-values input.value', function(event) {
         let ul = $(event.target).closest('ul')
-        resetHiddenFields(ul.attr('id'))
+        resetHiddenFields(ul)
     })
     $('form#issue-template-form').on('click', '.remove_possible_value', function(event) {
         event.preventDefault()
         let ul = $(event.target).closest('ul')
         $(event.target).parent().remove()
-        resetHiddenFields(ul.attr('id'))
+        resetHiddenFields(ul)
     })
 </script>

@@ -3,6 +3,6 @@
 <li>
   <span class="icon-only icon-sort-handle"></span>
   <%= check_box_tag :checked, '1', default_values.include?(value) %>
-  <span><%= text_field_tag 'value', value, size: 30, class: 'value' %></span>
+  <span><%= text_field_tag 'value', value, size: 45, class: 'value' %></span>
   <%= link_to 'Supprimer', '#', class: 'remove_possible_value' %>
 </li>

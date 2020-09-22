@@ -1,12 +1,15 @@
 <% values = (form.object && form.object.text.present?) ? form.object.text.split(',') : [] %>
 <% default_values = (form.object && form.object.placeholder.present?) ? form.object.placeholder.split(',') : [] %>
+<% uniq_object_id = form.object.object_id %>
 
 <%= issue_template_section_form(form, IssueTemplateDescriptionSelect, template) do %>
   <p>
     <%= form.text_field :title,
-                        :placeholder => "Titre (obligatoire)",
+                        :placeholder => "Titre",
                         :label => 'Liste de valeurs',
-                        :size => 45 %>
+                        :size => 45,
+                        :required => true
+    %>
   </p>
   <div class="collapsible">
     <p>
@@ -14,8 +17,8 @@
     </p>
 
     <div class="possible-values">
-      <label>Valeurs possibles</label>
-      <ul id="possible-values-<%= form.object_id %>">
+      <label>Valeurs possibles<span class="required"> *</span></label>
+      <ul>
         <% values.each do |value| %>
           <%= render 'issue_templates/sections/select_possible_value', value: value, default_values: default_values %>
         <% end %>
@@ -23,8 +26,8 @@
       <%= link_to 'Ajouter une valeur', '#', class: 'add_possible_value' %>
     </div>
 
-    <%= form.hidden_field :text, id: "possible-values-text-field-#{ form.object_id }", class: 'text' %>
-    <%= form.hidden_field :placeholder, id: "possible-values-text-field-#{ form.object_id }", class: "placeholder" %>
+    <%= form.hidden_field :text, class: 'text' %>
+    <%= form.hidden_field :placeholder, class: "placeholder" %>
 
     <p>
       <%= form.select :select_type,
@@ -34,14 +37,3 @@
     </p>
   </div>
 <% end %>
-
-<script>
-    $(function () {
-        $("#<%= "possible-values-#{form.object_id}" %>").sortable({
-            axis: "y",
-            beforeStop: function () {
-                resetHiddenFields('<%= "possible-values-#{form.object_id}" %>')
-            }
-        })
-    });
-</script>

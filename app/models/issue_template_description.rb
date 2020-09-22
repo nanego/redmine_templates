@@ -1,4 +1,5 @@
 class IssueTemplateDescription < ActiveRecord::Base
+
   belongs_to :issue_template
 
   def self.editable?
@@ -11,14 +12,17 @@ class IssueTemplateDescription < ActiveRecord::Base
 end
 
 class IssueTemplateDescriptionField < IssueTemplateDescription
+  validates_presence_of :title
   def self.short_name; "field" end
 end
 
 class IssueTemplateDescriptionCheckbox < IssueTemplateDescription
+  validates_presence_of :title
   def self.short_name; "checkbox" end
 end
 
 class IssueTemplateDescriptionSection < IssueTemplateDescription
+  validates_presence_of :title
   def self.short_name; "section" end
 end
 
@@ -35,6 +39,7 @@ class IssueTemplateDescriptionTitle < IssueTemplateDescription
 end
 
 class IssueTemplateDescriptionDate < IssueTemplateDescription
+  validates_presence_of :title
 
   if Redmine::Plugin.installed?(:redmine_datetime_custom_field)
     TYPES = [:date, :datetime]
@@ -57,6 +62,8 @@ class IssueTemplateDescriptionDate < IssueTemplateDescription
 end
 
 class IssueTemplateDescriptionSelect < IssueTemplateDescription
+  validates_presence_of :title
+
   TYPES = [:checkbox, :radio, :monovalue_select, :multivalue_select]
 
   after_initialize do
@@ -88,3 +95,4 @@ class IssueTemplateDescriptionInstruction < IssueTemplateDescription
     "instruction"
   end
 end
+# Instructions must the last subclass (insert new class before if needed)

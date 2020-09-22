@@ -1,5 +1,5 @@
 <%= issue_template_section_form(form, IssueTemplateDescriptionTitle, template) do %>
   <p>
-    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :label => 'Séparateur avec titre', :size => 45 %>
+    <%= form.text_field :title, :placeholder => "Titre", :label => 'Séparateur avec titre', :size => 45, :required => false %>
   </p>
 <% end %>

@@ -1,6 +1,6 @@
 <%= issue_template_section_form(form, IssueTemplateDescriptionCheckbox, template) do %>
   <p>
-    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :label => 'Checkbox', :size => 45 %>
+    <%= form.text_field :title, :placeholder => "Titre", :label => 'Checkbox', :size => 45, :required => true %>
   </p>
   <div class="collapsible">
     <p>

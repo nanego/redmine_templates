@@ -1,6 +1,6 @@
 <%= issue_template_section_form(form, IssueTemplateDescriptionSection, template) do %>
   <p>
-    <%= form.text_field :title, :placeholder => "Titre (obligatoire)", :label => 'Section', :size => 45 %>
+    <%= form.text_field :title, :placeholder => "Titre", :label => 'Section', :size => 45, :required => true %>
   </p>
   <div class="collapsible">
     <p>
