@@ -41,6 +41,7 @@ fr:
   setting_disable_templates: "Pouvoir rendre inactif les modèles"
   modify_projects: "Modifier la liste"
   usage: "Usage"
+  issues_count: "Demandes"
   label_other_issue: "Demande libre"
   custom_form_path: "Chemin vers le formulaire"
   form_type: "Type de formulaire"

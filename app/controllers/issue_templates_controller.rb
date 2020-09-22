@@ -79,7 +79,7 @@ class IssueTemplatesController < ApplicationController
   end
 
   def index
-    @templates = IssueTemplate.order("custom_form desc, tracker_id desc, usage desc").all
+    @templates = IssueTemplate.order("custom_form desc, tracker_id desc, usage desc").includes(:issues)
   end
 
   # Updates the template form when changing the project, status or tracker on template creation/update

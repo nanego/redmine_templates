@@ -38,5 +38,6 @@ en:
   setting_disable_templates: "Be able to disable templates"
   modify_projects: "Edit projects list"
   usage: "Usage"
+  issues_count: "Issues"
   label_other_issue: "Other issue"
   disabled_tracker_for_this_project: Disabled tracker for this project

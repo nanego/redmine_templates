@@ -12,6 +12,8 @@ class IssueTemplate < ActiveRecord::Base
   belongs_to :priority, :class_name => 'IssuePriority', :foreign_key => 'priority_id'
   belongs_to :category, :class_name => 'IssueCategory', :foreign_key => 'category_id'
 
+  has_many :issues
+
   has_many :descriptions, -> { order(:position) }, :class_name => "IssueTemplateDescription", :dependent => :destroy
   accepts_nested_attributes_for :descriptions, :reject_if => :description_is_empty?, :allow_destroy => true
 
@@ -172,7 +174,7 @@ class IssueTemplate < ActiveRecord::Base
     case attributes["type"]
     when IssueTemplateDescriptionInstruction.name
       empty = attributes["text"].blank?
-    when IssueTemplateDescriptionSeparator.name
+    when IssueTemplateDescriptionSeparator.name, IssueTemplateDescriptionTitle.name
       empty = false # always valid
     else
       empty = attributes["title"].blank?

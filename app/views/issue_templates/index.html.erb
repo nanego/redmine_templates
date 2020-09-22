@@ -33,6 +33,7 @@
         <th class="template_subject"><%= l(:field_subject) %></th>
         <th class="template_projects"><%= l(:field_project).pluralize %></th>
         <th class="template_usage"><%= l(:usage) %></th>
+        <th class="template_issues_count"><%= l(:issues_count) %></th>
         <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
           <th class="center template_enable"><%= l(:label_enabled) %></th>
         <% end %>
@@ -89,6 +90,7 @@
             </div>
           </td>
           <td><%= issue_template.usage %></td>
+          <td><%= issue_template.issues.size %></td>
           <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
             <td class="center image_enabled_<%= issue_template.id %>">
               <%= render "issue_templates/enable_form", issue_template: issue_template %>
