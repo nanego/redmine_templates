@@ -73,7 +73,7 @@ describe "IssueTemplate" do
   end
 
   it "should save section if it has a title and a description" do
-    template = IssueTemplate.new(:project_id => 1,
+    template = IssueTemplate.create(:project_id => 1,
                                  :tracker_id => 1,
                                  :status_id => 1,
                                  :author_id => 2,
@@ -87,11 +87,13 @@ describe "IssueTemplate" do
                                     :type => "IssueTemplateDescriptionSection"
                                  }]
                                 )
+    expect(template.valid?).to eq true
     expect(template.descriptions.size).to eq 1
+    expect(template.descriptions.first).to be_persisted
   end
 
   it "shouldn't save section with no title" do
-    template = IssueTemplate.new(:project_id => 1,
+    template = IssueTemplate.create(:project_id => 1,
                                  :tracker_id => 1,
                                  :status_id => 1,
                                  :author_id => 2,
@@ -104,11 +106,13 @@ describe "IssueTemplate" do
                                     :type => "IssueTemplateDescriptionSection"
                                  }]
                                 )
-    expect(template.descriptions.size).to eq 0
+    expect(template.valid?).to eq false
+    expect(template.descriptions.size).to eq 1
+    expect(template.descriptions.first).to_not be_persisted
   end
 
   it "should save instruction if it has a text" do
-    template = IssueTemplate.new(:project_id => 1,
+    template = IssueTemplate.create(:project_id => 1,
                                  :tracker_id => 1,
                                  :status_id => 1,
                                  :author_id => 2,
@@ -121,7 +125,9 @@ describe "IssueTemplate" do
                                     :type => "IssueTemplateDescriptionInstruction"
                                  }]
                                 )
+    expect(template.valid?).to eq true
     expect(template.descriptions.size).to eq 1
+    expect(template.descriptions.first).to be_persisted
   end
 
   it "shouldn't save instruction with no text" do
