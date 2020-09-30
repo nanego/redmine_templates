@@ -14,13 +14,13 @@ class IssuesController < ApplicationController
       @issue_template = IssueTemplate.find_by_id(params[:template_id])
       if @issue_template.present?
         params[:issue] = @issue_template.attributes.slice(*Issue.attribute_names).merge(permitted_params_override)
+        params[:issue][:project_id] = params[:project_id]
       end
     end
   end
 
   def finish_template_set_up
     if @issue_template
-      @issue.project = @project
       if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
         @issue.projects = @issue_template.secondary_projects
       end
