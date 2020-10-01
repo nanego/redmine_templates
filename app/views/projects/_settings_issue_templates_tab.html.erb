@@ -33,7 +33,7 @@
               <% if @project.trackers.exclude? issue_template.tracker %>
                 <span class="icon icon-warning" style="margin-left: 8px;" title="<%= t('disabled_tracker_for_this_project') %>"></span>
               <% end %>
-              <%= issue_template.tracker.name %>
+              <%= issue_template.tracker.name if issue_template.tracker.present? %>
             </td>
             <td><%= issue_template.subject %></td>
             <td class="template_projects">

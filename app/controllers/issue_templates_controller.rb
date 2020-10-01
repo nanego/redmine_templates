@@ -131,7 +131,7 @@ class IssueTemplatesController < ApplicationController
         @similar_templates << {:id => t.id,
                                 :subject => t.subject,
                                 :description => t.description,
-                                :tracker => t.tracker.name,
+                                :tracker => t.tracker.try(:name),
                                 :similarity => Integer(taux)
                               }
       end
