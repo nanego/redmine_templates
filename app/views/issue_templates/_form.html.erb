@@ -126,6 +126,8 @@
 
         <%= render "limited_visibility_fields" if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
 
+        <%= render "typology_field", f: f if Redmine::Plugin.installed?(:redmine_typologies) %>
+
         <p><%= f.text_field :subject, :size => 80, :maxlength => 255, :required => true %></p>
 
         <p data-target="split-description.description_field">

@@ -1,0 +1,5 @@
+<p>
+  <%= f.select :typology_id,
+               Typology.active.collect { |t| [t.name, t.id] },
+               include_blank: true %>
+</p>

@@ -1,3 +1,5 @@
+require_dependency 'issue_template_description'
+
 class IssueTemplate < ActiveRecord::Base
   include Redmine::SafeAttributes
 
@@ -70,7 +72,8 @@ class IssueTemplate < ActiveRecord::Base
                   :custom_form_path,
                   :tracker_read_only,
                   :descriptions_attributes,
-                  :split_description
+                  :split_description,
+                  :typology_id
 
   def to_s
     template_title
