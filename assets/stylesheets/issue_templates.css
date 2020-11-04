@@ -340,10 +340,14 @@ a.list_templates_projects_names.current {
     width: max-content;
 }
 
+#split-description-container .split_description.title, #split-description-container .split_description.separator {
+    background-color: #e4e4e4;
+}
+
 .split_description.separator .line {
     height: 1px;
     width: 100%;
-    background: #e4e4e4;
+    background: #c0c0c0;
     vertical-align: middle;
     display: inline-flex;
     margin-top: 4px;
