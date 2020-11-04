@@ -52,7 +52,10 @@
                                       # ,:project_id => project.id
             }, {:title => title }
           end %>
-          <td><%= image_tag 'icons8-form-50.png', plugin: 'redmine_templates' if issue_template.custom_form? %></td>
+          <td>
+            <%= image_tag 'icons8-form-50.png', plugin: 'redmine_templates' if issue_template.custom_form? %>
+            <%= image_tag 'icons8-form-64.png', plugin: 'redmine_templates', style: 'width: 40px;padding: 5px;' if issue_template.split_description? %>
+          </td>
           <td><%= link_to_edition.call h(issue_template.template_title), issue_template.template_title %></td>
           <td><%= (link_to_edition.call h(issue_template.tracker.name), issue_template.tracker.name) if issue_template.tracker.present? %></td>
           <td><%= link_to_edition.call h(issue_template.subject), issue_template.subject %></td>
