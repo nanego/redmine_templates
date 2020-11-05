@@ -10,9 +10,13 @@ function updateIssueTemplateFrom(url) {
 (function ($) {
     $.fn.positionedFormItems = function (sortableOptions, options) {
         var sortable = this.sortable($.extend({
+            placeholder: "ui-state-highlight",
             axis: 'y',
             handle: ".sort-handle",
-        }, sortableOptions));
+            start: function(e,ui){
+                ui.placeholder.height(ui.helper.outerHeight());
+            }
+        }, sortableOptions)).disableSelection();
 
         this.on("sortupdate", function (event, ui) {
             var sortable = $(this);
