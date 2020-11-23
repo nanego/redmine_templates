@@ -1,6 +1,6 @@
 <%= issue_template_section_form(form, IssueTemplateDescriptionInstruction, template) do %>
   <p>
-    <%= form.select :instruction_type, IssueTemplateDescriptionInstruction.instruction_types_options, :label => 'Consigne' %>
+    <%= form.select :instruction_type, IssueTemplateDescriptionInstruction::TYPES.collect { |type| [ t(type), type ] }, :label => 'Consigne' %>
   </p>
 
   <div class="collapsible">

@@ -269,6 +269,11 @@ a.list_templates_projects_names.current {
     background: #d5e9f6 url(../images/tab_info.png) no-repeat left top;
 }
 
+#issue-form .instruction.instruction-comment {
+    font-style: italic;
+    padding: 0;
+}
+
 .issue .description h2 {
     padding: 0;
     text-decoration: underline;

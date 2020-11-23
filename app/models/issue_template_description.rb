@@ -81,18 +81,17 @@ class IssueTemplateDescriptionSelect < IssueTemplateDescription
 end
 
 class IssueTemplateDescriptionInstruction < IssueTemplateDescription
+
+  TYPES = ["info", "warning", "note", "comment"]
+
   after_initialize do
     self.instruction_type ||= "note"
   end
 
   validates :instruction_type, :presence => true
 
-  def self.instruction_types_options
-    ["info", "warning", "note"].collect { |t| [ t.capitalize, t ] }
-  end
-
   def self.short_name
     "instruction"
   end
 end
-# Instructions must the last subclass (insert new class before if needed)
+# Instruction must be the last subclass (insert new class before if needed)
