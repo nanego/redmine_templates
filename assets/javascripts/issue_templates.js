@@ -45,7 +45,7 @@ function applySelect2ToSelects() {
     if ((typeof $().select2) === 'function') {
         $('.split_description.select select:visible').select2({
             tags: true,
-            tokenSeparators: [','],
+            tokenSeparators: [';'],
             containerCss: {
                 width: '400px',
                 minwidth: '400px'

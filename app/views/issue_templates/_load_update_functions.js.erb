@@ -19,7 +19,7 @@ function updateCustomFieldsValues() {
         // checkboxes
         $('[name="'+field.name+'"]').each(function (index){
           elem = $('[name="'+field.name+'"]')[index];
-          if ($.inArray(elem.value, '<%= custom_value.value.to_a.join(',') %>'.split(",") ) >= 0) {
+          if ($.inArray(elem.value, '<%= custom_value.value.to_a.join(';') %>'.split(";") ) >= 0) {
             $('[name="' + elem.name + '"][value="'+elem.value+'"]').prop('checked', 'true');
           }
         });
@@ -27,7 +27,7 @@ function updateCustomFieldsValues() {
         // select multivalue
         $('select[name="'+field.name+'"] option').each(function (index){
           elem = $('select[name="'+field.name+'"] option')[index];
-          if ($.inArray(elem.value, '<%= custom_value.value.to_a.join(',') %>'.split(",") ) >= 0) {
+          if ($.inArray(elem.value, '<%= custom_value.value.to_a.join(';') %>'.split(";") ) >= 0) {
             $('select[name="'+field.name+'"] option[value="'+elem.value+'"]').prop('selected', 'true');
           }
         });

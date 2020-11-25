@@ -1,7 +1,7 @@
 <% description = form.object %>
 <% values = reload_current_value(@sections_attributes, description.position, get_all_attributes: true) || {} %>
-<% default_values = description.placeholder.present? ? description.placeholder.split(',') : [] %>
-<% possible_values = description.text.present? ? description.text.split(',') : [] %>
+<% default_values = description.placeholder.present? ? description.placeholder.split(';') : [] %>
+<% possible_values = description.text.present? ? description.text.split(';') : [] %>
 
 <p>
   <%= label_tag do %>

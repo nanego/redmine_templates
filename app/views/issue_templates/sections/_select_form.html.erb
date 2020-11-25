@@ -1,5 +1,5 @@
-<% values = (form.object && form.object.text.present?) ? form.object.text.split(',') : [] %>
-<% default_values = (form.object && form.object.placeholder.present?) ? form.object.placeholder.split(',') : [] %>
+<% values = (form.object && form.object.text.present?) ? form.object.text.split(';') : [] %>
+<% default_values = (form.object && form.object.placeholder.present?) ? form.object.placeholder.split(';') : [] %>
 
 <%= issue_template_section_form(form, IssueTemplateDescriptionSelect, template) do %>
   <p>

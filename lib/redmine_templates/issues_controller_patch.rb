@@ -77,7 +77,7 @@ class IssuesController < ApplicationController
                   description_text += textile_item(selected_value)
                 end
               else
-                section.text.split(',').each_with_index do |value, index|
+                section.text.split(';').each_with_index do |value, index|
                   boolean_value = description[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)
                   description_text += textile_item(value, boolean_value)
                 end
