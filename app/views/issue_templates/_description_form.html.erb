@@ -22,7 +22,7 @@
         let ul = $(sectionElement).find('ul')
         let joined_values = ul.find('li .value').map(function () {
             return $(this).val()
-        }).get().filter(item => item).join()
+        }).get().filter(item => item).join(';')
         text.val(joined_values)
     }
     function resetHiddenPlaceholderField(sectionElement) {
@@ -30,7 +30,7 @@
         let list_of_value = $(sectionElement).find('ul')
         let joined_values = list_of_value.find('li input[type=checkbox]:checked').map(function () {
             return $(this).parent().find('.value').val()
-        }).get().filter(item => item).join()
+        }).get().filter(item => item).join(';')
         placeholder.val(joined_values)
     }
     $('form#issue-template-form').on('change', '.possible-values input[type=checkbox]', function(event) {
