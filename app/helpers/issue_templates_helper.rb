@@ -92,4 +92,12 @@ module IssueTemplatesHelper
     end
   end
 
+  def link_to_issue_template(template)
+    if template
+      link_to "##{template.id} - #{template.template_title}", edit_issue_template_path(template)
+    else
+      ""
+    end
+  end
+
 end

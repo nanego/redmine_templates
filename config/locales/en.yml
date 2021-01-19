@@ -42,3 +42,4 @@ en:
   label_other_issue: "Other issue"
   disabled_tracker_for_this_project: Disabled tracker for this project
   comment: Comment
+  template: "Issue template"

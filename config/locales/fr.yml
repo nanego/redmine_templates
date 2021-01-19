@@ -47,3 +47,4 @@ fr:
   form_type: "Type de formulaire"
   disabled_tracker_for_this_project: "Tracker désactivé sur ce projet"
   comment: Commentaire
+  label_issue_template: "Modèle de demande"
