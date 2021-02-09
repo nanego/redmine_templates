@@ -4,7 +4,8 @@ require_dependency File.expand_path('../../../app/models/issue_template', __FILE
 require_dependency 'project'
 class Project < ActiveRecord::Base
 
-  has_and_belongs_to_many :issue_templates, -> { order("custom_form desc, tracker_id desc, usage desc") }, join_table: "issue_templates_projects"
+  has_many :issue_template_projects
+  has_many :issue_templates, -> { order("custom_form desc, tracker_id desc, usage desc") }, through: :issue_template_projects
 
   safe_attributes :issue_templates, :issue_template_ids
 
