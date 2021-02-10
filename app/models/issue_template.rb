@@ -19,7 +19,7 @@ class IssueTemplate < ActiveRecord::Base
   has_many :descriptions, -> { order(:position) }, :class_name => "IssueTemplateDescription", :dependent => :destroy
   accepts_nested_attributes_for :descriptions, :reject_if => :description_is_empty?, :allow_destroy => true
 
-  has_many :issue_template_projects
+  has_many :issue_template_projects, dependent: :destroy
   has_many :template_projects, through: :issue_template_projects, source: :project
 
   if Redmine::Plugin.installed?(:redmine_multiprojects_issue)

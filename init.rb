@@ -5,6 +5,7 @@ ActiveSupport::Reloader.to_prepare do
   require_dependency 'redmine_templates/redmine_core_patch'
   require_dependency 'redmine_templates/menu_manager_patch'
   require_dependency 'redmine_templates/issues_controller_patch'
+  require_dependency 'redmine_templates/projects_controller_patch'
 
   require_dependency 'redmine_templates/helpers/projects_helper_patch'
 end

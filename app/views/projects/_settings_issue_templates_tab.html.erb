@@ -1,12 +1,18 @@
 <fieldset class="box">
   <legend>Modèles disponibles pour ce projet</legend>
 
+  <% @available_functions = Function.available_functions_for(@project).sorted %>
+  <% @selected_functions_by_template = @project.issue_template_projects.map { |itp|
+    { itp.issue_template_id => Function.where(id: itp.visibility&.split('|')) } }.reduce(:merge) %>
+
   <%= form_for @project,
                :method => :put,
                :url => project_path(@project, tab: :issue_templates),
-               :html => {:id => "templates-form"} do |f| %>
+               :html => { :id => "templates-form" } do |f| %>
 
     <%= hidden_field_tag "project[issue_template_ids][]", nil %>
+
+    <p><%= submit_tag l(:button_save) %></p>
 
     <p>
     <div>
@@ -15,7 +21,11 @@
         <tr>
           <th class="template_title"><%= l(:project_module_issue_templates) %></th>
           <th class="template_id"><%= l(:field_tracker) %></th>
-          <th class="template_subject"><%= l(:field_subject) %></th>
+          <% if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
+            <th class="template_forced_visibility"><%= l(:field_authorized_viewers) %></th>
+          <% else %>
+            <th class="template_subject"><%= l(:field_subject) %></th>
+          <% end %>
           <th class="template_projects"><%= l(:field_project).pluralize %></th>
           <th></th>
         </tr>
@@ -35,7 +45,16 @@
               <% end %>
               <%= issue_template.tracker.name if issue_template.tracker.present? %>
             </td>
-            <td><%= issue_template.subject %></td>
+            <td>
+              <% if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
+                <% selected_functions = @selected_functions_by_template[issue_template.id].pluck(:id) if @selected_functions_by_template[issue_template.id] %>
+                <%= select_tag "project[issue_templates_functions][#{issue_template.id}][]",
+                               options_from_collection_for_select(@available_functions, "id", "name", selected: selected_functions),
+                               multiple: true, class: "project_issue_templates_functions_selects" %>
+              <% else %>
+                <%= issue_template.subject %>
+              <% end %>
+            </td>
             <td class="template_projects">
               <div>
                 <%
@@ -87,3 +106,14 @@
     <p><%= submit_tag l(:button_save) %></p>
   <% end %>
 </fieldset>
+
+<script type="text/javascript">
+    $(function () {
+        if ((typeof $().select2) === 'function') {
+            $('.project_issue_templates_functions_selects').select2({
+                containerCss: {width: '300px', minwidth: '300px'},
+                width: 'style'
+            });
+        }
+    });
+</script>
