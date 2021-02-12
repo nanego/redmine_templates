@@ -47,7 +47,7 @@
             </td>
             <td>
               <% if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
-                <% selected_functions = @selected_functions_by_template[issue_template.id].pluck(:id) if @selected_functions_by_template[issue_template.id] %>
+                <% selected_functions = @selected_functions_by_template[issue_template.id].pluck(:id) if @selected_functions_by_template.present? && @selected_functions_by_template[issue_template.id] %>
                 <%= select_tag "project[issue_templates_functions][#{issue_template.id}][]",
                                options_from_collection_for_select(@available_functions, "id", "name", selected: selected_functions),
                                multiple: true, class: "project_issue_templates_functions_selects" %>
