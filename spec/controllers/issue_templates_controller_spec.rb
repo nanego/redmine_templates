@@ -7,7 +7,7 @@ describe IssueTemplatesController, type: :controller do
   render_views
 
   fixtures :issue_templates, :projects, :users, :issue_statuses, :trackers, :enumerations,
-           :roles, :members, :member_roles, :issue_template_descriptions, :issue_templates_projects
+           :roles, :members, :member_roles, :issue_template_descriptions, :issue_template_projects
 
   let(:template) { IssueTemplate.find(1) }
   let(:role) { Role.find(1) }

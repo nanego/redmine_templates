@@ -24,7 +24,7 @@ RSpec.describe "creating issues with templates", type: :system do
            :trackers, :projects_trackers, :enabled_modules, :issue_statuses, :issues,
            :enumerations, :custom_fields, :custom_values, :custom_fields_trackers,
            :watchers, :journals, :journal_details, :versions,
-           :workflows, :issue_templates, :issue_templates_projects, :issue_template_descriptions
+           :workflows, :issue_templates, :issue_template_projects, :issue_template_descriptions
 
   let(:template_with_sections) { IssueTemplate.find(3) }
   let(:project) { Project.find(2) }

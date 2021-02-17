@@ -33,7 +33,7 @@ describe IssuesController, type: :controller do
            :repositories,
            :changesets,
            :watchers,
-           :issue_templates, :issue_template_descriptions, :issue_templates_projects
+           :issue_templates, :issue_template_descriptions, :issue_template_projects
 
   include Redmine::I18n
 
