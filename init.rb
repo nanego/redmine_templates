@@ -16,7 +16,7 @@ Redmine::Plugin.register :redmine_templates do
   author 'Vincent ROBERT'
   author_url 'mailto:contact@vincent-robert.com'
   version '0.1'
-  url 'https://github.com/nanego/redmine_issue_templates'
+  url 'https://github.com/nanego/redmine_templates'
   requires_redmine :version_or_higher => '2.5.0'
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
   requires_redmine_plugin :redmine_base_stimulusjs, :version_or_higher => '1.1.1'
