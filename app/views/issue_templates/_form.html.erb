@@ -185,34 +185,16 @@
 
 
         <% if Redmine::Plugin.installed?(:redmine_multiprojects_issue) %>
-
           <p id="projects_form">
             <% select_options = project_tree_options_for_select((@issue_template.allowed_target_projects | @issue_template.secondary_projects) - [@issue_template.project], :selected => [@issue_template.project] | @issue_template.secondary_projects) %>
-            <%= f.select :secondary_project_ids, select_options, {:required => true, :label => l("related_projects")},
-                         {:multiple => true, style: "display:none;"} %>
-            <%= render 'issues/projects_list', issue: @issue_template, selected_projects: @issue_template.secondary_projects %>
-            <%= link_to l('modify_projects'),
-                        plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue_template.id, :project_id => @issue_template.project.try(:id), :select_tag_id => "issue_template_secondary_project_ids"),
-                        remote: true,
-                        id: "loadModalProjectsSelection",
-                        class: "load-modal-projects-selection" %>
-            <label id=answers-on-secondary-projects class="inline answers-on-secondary-projects" style="<%= "display:none;" if @issue_template.secondary_projects.none? %>">
-              <%= f.check_box :answers_on_secondary_projects, :no_label => true %>
-              <%= l(:field_answers_on_secondary_projects) %>
-            </label>
+            <%= f.select :secondary_project_ids,
+                         select_options,
+                         {:required => true, :label => l("related_projects")},
+                         {:multiple => true} %>
           </p>
-
           <script>
-              $("#loadModalProjectsSelection").click(function (e) {
-                  var ids = $('#issue_template_secondary_project_ids').val();
-                  if (ids == null) {
-                      ids = ''
-                  }
-                  var sep = ($(this).attr('href').indexOf('?') != -1) ? '&' : '?';
-                  $(this).attr('href', $(this).attr('href') + sep + 'project_ids=' + ids);
-              });
+            $('#issue_template_secondary_project_ids').select2();
           </script>
-
         <% end %>
 
         <div id="template_sections" style="display: none;" data-target="split-description.template_sections">
