@@ -8,14 +8,16 @@ class IssueTemplatesController < ApplicationController
   before_action :find_optional_project, only: [:index, :new, :edit]
 
   def init
-    params[:issue].merge!({project_id: params[:project_id]}) if params[:issue]
+    params[:issue].merge!({ project_id: params[:project_id] }) if params[:issue]
     @issue_template = IssueTemplate.new
     @issue_template.safe_attributes = params[:issue]
     @issue_template.project = @project
     @issue_template.template_projects = [@project]
     @issue_template.author ||= User.current
     @issue_template.template_title = @issue_template.subject
-    @issue_template.secondary_project_ids = params[:issue][:project_ids] if params[:issue]
+    if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+      @issue_template.secondary_project_ids = params[:issue][:project_ids] if params[:issue]
+    end
 
     @priorities = IssuePriority.active
     render :new
@@ -128,15 +130,15 @@ class IssueTemplatesController < ApplicationController
       end
       taux = taux / sims.size
       if taux > 61.0
-        @similar_templates << {:id => t.id,
+        @similar_templates << { :id => t.id,
                                 :subject => t.subject,
                                 :description => t.description,
                                 :tracker => t.tracker.try(:name),
                                 :similarity => Integer(taux)
-                              }
+        }
       end
     end
-    @similar_templates.sort! { |a,b| b[:similarity] <=> a[:similarity] }
+    @similar_templates.sort! { |a, b| b[:similarity] <=> a[:similarity] }
     respond_to do |format|
       format.json {
         render json: @similar_templates.to_json
