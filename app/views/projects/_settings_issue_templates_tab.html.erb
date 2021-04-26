@@ -1,9 +1,11 @@
 <fieldset class="box">
   <legend>Modèles disponibles pour ce projet</legend>
 
-  <% @available_functions = Function.available_functions_for(@project).sorted %>
-  <% @selected_functions_by_template = @project.issue_template_projects.map { |itp|
-    { itp.issue_template_id => Function.where(id: itp.visibility&.split('|')) } }.reduce(:merge) %>
+  <% if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
+    <% @available_functions = Function.available_functions_for(@project).sorted %>
+    <% @selected_functions_by_template = @project.issue_template_projects.map { |itp|
+      { itp.issue_template_id => Function.where(id: itp.visibility&.split('|')) } }.reduce(:merge) %>
+  <% end %>
 
   <%= form_for @project,
                :method => :put,

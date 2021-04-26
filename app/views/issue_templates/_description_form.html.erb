@@ -46,10 +46,6 @@
         let ul = $(event.target).closest('ul')
         resetHiddenFields(ul)
     })
-    $('form#issue-template-form').on('keyup change', '.possible-values input.value', function(event) {
-        let ul = $(event.target).closest('ul')
-        resetHiddenFields(ul)
-    })
     $('form#issue-template-form').on('click', '.remove_possible_value', function(event) {
         event.preventDefault()
         let ul = $(event.target).closest('ul')
