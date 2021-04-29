@@ -43,3 +43,4 @@ en:
   disabled_tracker_for_this_project: Disabled tracker for this project
   comment: Comment
   template: "Issue template"
+  default_template_visibility: "Default template visibility"

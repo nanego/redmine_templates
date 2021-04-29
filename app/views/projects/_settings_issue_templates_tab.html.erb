@@ -53,6 +53,11 @@
                 <%= select_tag "project[issue_templates_functions][#{issue_template.id}][]",
                                options_from_collection_for_select(@available_functions, "id", "name", selected: selected_functions),
                                multiple: true, class: "project_issue_templates_functions_selects" %>
+                <div style="max-width: 500px;white-space: initial;color:darkgrey;">
+                  <% default_visibility = Function.where(id: issue_template.authorized_viewer_ids.split('|')).map(&:name).join(', ') %>
+                  <%= t('default_template_visibility') %>
+                  : <%= default_visibility.present? ? default_visibility : t('label_none') %>
+                </div>
               <% else %>
                 <%= issue_template.subject %>
               <% end %>
