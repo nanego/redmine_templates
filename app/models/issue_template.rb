@@ -105,8 +105,8 @@ class IssueTemplate < ActiveRecord::Base
   end
 
   def assignable_users
-    if project
-      users = project.assignable_users.to_a
+    if template_projects.any?
+      users = template_projects.map(&:assignable_users).flatten.uniq
     else
       users = []
     end
