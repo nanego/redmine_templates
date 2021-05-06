@@ -40,7 +40,7 @@
 
         let group_to_copy = $("#" + event.target.getAttribute("data-group-id"))
         let new_group = group_to_copy.clone()
-        let new_group_id = new_group.attr('id') + "-" + $('.repeatable_group').length
+        let new_group_id = new_group.attr('id') + "-" + Date.now()
         new_group.attr("id", "")
 
         let add_link_container = $(event.target).parent()
