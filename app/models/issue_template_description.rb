@@ -9,6 +9,10 @@ class IssueTemplateDescription < ActiveRecord::Base
   def is_a_separator?
     false
   end
+
+  def last?
+    issue_template.descriptions.last == self || issue_template.descriptions[self.position]&.is_a_separator?
+  end
 end
 
 class IssueTemplateDescriptionField < IssueTemplateDescription
@@ -34,7 +38,6 @@ end
 
 class IssueTemplateDescriptionTitle < IssueTemplateDescription
   def self.short_name; "title" end
-  def self.editable?;false end
   def is_a_separator?;true  end
 end
 

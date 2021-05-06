@@ -17,7 +17,8 @@
                       no_label: true,
                       required: description.required,
                       placeholder: description.placeholder,
-                      value: reload_current_value(@sections_attributes, description.position) || description.text
+                      value: reload_current_value(@sections_attributes, description.position) || description.text,
+                      multiple: repeatable_group.present?
   %>
   <%= form.hidden_field :empty_value, value: description.empty_value %>
 </p>

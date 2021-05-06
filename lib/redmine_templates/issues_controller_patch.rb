@@ -53,50 +53,92 @@ class IssuesController < ApplicationController
 
   def update_description_with_sections
     if @issue.issue_template&.split_description && params[:issue][:issue_template].present?
-      description_text = ""
+
+      issue_description = ""
+      repeatable_group = false
+      repeatable_group_size = 0
+      repeatable_group_descriptions = []
+
       descriptions_attributes = params[:issue][:issue_template][:descriptions_attributes].values
-      descriptions_attributes.each_with_index do |description, i|
-        section = @issue.issue_template.descriptions[i]
-        case section.class.name
-        when IssueTemplateDescriptionInstruction.name
-          # Nothing to add
-        when IssueTemplateDescriptionSeparator.name
-          description_text += textile_separator
-        when IssueTemplateDescriptionTitle.name
-          description_text += textile_separator_with_title(section.title)
-        when IssueTemplateDescriptionSelect.name
-          case section.select_type
-          when "monovalue_select", "radio"
-            description_text += section_title(section.title, description[:text])
+
+      descriptions_attributes.each_with_index do |description_attributes, section_index|
+
+        section = @issue.issue_template.descriptions[section_index]
+
+        if repeatable_group
+          if description_attributes[:text].is_a?(Array)
+            repeatable_group_size = description_attributes[:text].size-1
+          end
+          (0..repeatable_group_size).each do |repeatable_group_index|
+            repeatable_group_descriptions[repeatable_group_index] ||= ""
+            repeatable_group_descriptions[repeatable_group_index] += section_value(section, description_attributes, repeatable_group_index)
+          end
+        else
+          issue_description += section_value(section, description_attributes)
+        end
+
+        repeatable_group = section.repeatable? if section.is_a_separator? # Init new repeatable group
+        if repeatable_group && (section.last? || descriptions_attributes.last == description_attributes) # End current repeatable group
+          repeatable_group_descriptions.each_with_index do |group_description, index|
+            issue_description += textile_separator if index != 0
+            issue_description += group_description
+          end
+          repeatable_group = false
+        end
+      end
+
+      @issue.description = issue_description
+    end
+  end
+
+  private
+
+  def section_value(section, description_attributes, repeatable_group_index=0)
+    case section.class.name
+    when IssueTemplateDescriptionInstruction.name
+      '' # Nothing to add
+    when IssueTemplateDescriptionSeparator.name
+      textile_separator
+    when IssueTemplateDescriptionTitle.name
+      textile_separator_with_title(section.title)
+    when IssueTemplateDescriptionSelect.name
+      case section.select_type
+      when "monovalue_select", "radio"
+        section_title(section.title, description_attributes[:text])
+      else
+        description_text = section_title(section.title)
+        if section.text.present?
+          if section.select_type == 'multivalue_select'
+            selected_values = description_attributes['text'] || []
+            selected_values.each do |selected_value|
+              description_text += textile_item(selected_value)
+            end
           else
-            description_text += section_title(section.title)
-            if section.text.present?
-              if section.select_type == 'multivalue_select'
-                selected_values = description['text'] || []
-                selected_values.each do |selected_value|
-                  description_text += textile_item(selected_value)
-                end
-              else
-                section.text.split(';').each_with_index do |value, index|
-                  boolean_value = description[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)
-                  description_text += textile_item(value, boolean_value)
-                end
-              end
+            section.text.split(';').each_with_index do |value, index|
+              boolean_value = description_attributes[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)
+              description_text += textile_item(value, boolean_value)
             end
           end
-        when IssueTemplateDescriptionCheckbox.name
-          value = description[:text] == '1' ? l(:general_text_Yes) : l(:general_text_No)
-          description_text += section_title(section.title, value)
-        when IssueTemplateDescriptionField.name, IssueTemplateDescriptionDate.name
-          value = description[:text].present? ? description[:text] : description[:empty_value]
-          description_text += section_title(section.title, value)
-        else
-          description_text += section_title(section.title)
-          value = description[:text].present? ? description[:text] : description[:empty_value]
-          description_text += textile_entry(value)
         end
-        @issue.description = description_text
+        description_text
       end
+    when IssueTemplateDescriptionCheckbox.name
+      value = description_attributes[:text] == '1' ? l(:general_text_Yes) : l(:general_text_No)
+      section_title(section.title, value)
+    when IssueTemplateDescriptionField.name, IssueTemplateDescriptionDate.name
+      value = value_from_text_attribute(description_attributes, repeatable_group_index)
+      section_title(section.title, value)
+    else #IssueTemplateDescriptionSection
+      value = value_from_text_attribute(description_attributes, repeatable_group_index)
+      section_title(section.title) + textile_entry(value)
+    end
+  end
+
+  def value_from_text_attribute(attributes, array_index)
+    if attributes[:text].is_a?(Array)
+      attributes[:text][array_index].present? ? attributes[:text][array_index] : attributes[:empty_value]
+    else
+      attributes[:text].present? ? attributes[:text] : attributes[:empty_value]
     end
   end
 
@@ -121,4 +163,5 @@ class IssuesController < ApplicationController
   def textile_entry(value)
     "#{value}\r\n"
   end
+
 end

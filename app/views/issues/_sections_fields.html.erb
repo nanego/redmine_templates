@@ -6,12 +6,45 @@
       <%= render 'issues/sections/separator_form' %>
     <% end %>
 
+    <% repeatable_group = false %>
+    <% repeatable_group_id = "" %>
     <%= template_form.fields_for :descriptions, @issue.issue_template.descriptions do |description_form| %>
+
+      <% if description_form.object.is_a_separator? %>
+        <% repeatable_group = description_form.object.repeatable? %>
+      <% end %>
+
       <%= render partial: "issues/sections/#{description_form.object.class.short_name}_form",
-                 locals: {form: description_form} %>
+                 locals: { form: description_form, repeatable_group: repeatable_group } %>
+
+      <% if repeatable_group && description_form.object.is_a_separator? %>
+        <% repeatable_group_id = "repeatable_group_#{description_form.object.id}" %>
+        <div id="<%= repeatable_group_id %>" class="repeatable_group">
+      <% end %>
+      <% if repeatable_group && description_form.object.last? %>
+        </div>
+        <p style="margin-top: 0.5em"><%= link_to 'Ajouter une valeur', '#', class: 'append_sections_group icon icon-add', data: { group_id: "#{repeatable_group_id}" } %></p>
+      <% end %>
+
     <% end %>
 
     <%= render 'issues/sections/separator_form' %>
 
   <% end %>
 <% end %>
+
+<script>
+    $('form#issue-form').on('click', '.append_sections_group', function (event) {
+        event.preventDefault()
+        console.log("append_sections_group : " + event.target.getAttribute("data-group-id"))
+
+        let group_to_copy = $("#" + event.target.getAttribute("data-group-id"))
+        let new_group = group_to_copy.clone()
+        new_group.attr("id", new_group.attr('id') + "-" + $('.repeatable_group').length)
+
+        let add_link_container = $(event.target).parent()
+        $('<div style="height: 1.4em" />').insertBefore(add_link_container)
+        new_group.insertBefore(add_link_container)
+
+    })
+</script>

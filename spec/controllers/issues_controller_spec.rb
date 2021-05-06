@@ -45,27 +45,28 @@ describe IssuesController, type: :controller do
 
   let(:template) { IssueTemplate.find(4) }
   let(:template_with_instruction) { IssueTemplate.find(5) }
+  let(:template_with_repeatable_sections) { IssueTemplate.find(6) }
 
   context "POST create" do
     it "shows multiple description sections" do
       assert_difference('Issue.count', 1) do
         post :create, :params => {
-            :project_id => 1,
-            :issue => {
-                :tracker_id => 3,
-                :status_id => 2,
-                :subject => 'This is the test_new issue',
-                :description => 'This is the description',
-                :priority_id => 5,
-                :issue_template_id => template.id,
-                :issue_template => {
-                    :descriptions_attributes => {
-                        "0" => {
-                            :text => "Test text"
-                        }
-                    },
-                },
+          :project_id => 1,
+          :issue => {
+            :tracker_id => 3,
+            :status_id => 2,
+            :subject => 'This is the test_new issue',
+            :description => 'This is the description',
+            :priority_id => 5,
+            :issue_template_id => template.id,
+            :issue_template => {
+              :descriptions_attributes => {
+                "0" => {
+                  :text => "Test text"
+                }
+              },
             },
+          },
         }
       end
 
@@ -77,25 +78,25 @@ describe IssuesController, type: :controller do
     it "joins multiple sections into one description" do
       assert_difference('Issue.count', 1) do
         post :create, :params => {
-            :project_id => 1,
-            :issue => {
-                :tracker_id => 3,
-                :status_id => 2,
-                :subject => 'This is the test_new issue',
-                :description => 'This is the description',
-                :priority_id => 5,
-                :issue_template_id => template.id,
-                :issue_template => {
-                    :descriptions_attributes => {
-                        "0" => {
-                            :text => "Test text"
-                        },
-                        "1" => {
-                            :text => "Second test text"
-                        }
-                    },
+          :project_id => 1,
+          :issue => {
+            :tracker_id => 3,
+            :status_id => 2,
+            :subject => 'This is the test_new issue',
+            :description => 'This is the description',
+            :priority_id => 5,
+            :issue_template_id => template.id,
+            :issue_template => {
+              :descriptions_attributes => {
+                "0" => {
+                  :text => "Test text"
                 },
+                "1" => {
+                  :text => "Second test text"
+                }
+              },
             },
+          },
         }
       end
 
@@ -104,30 +105,80 @@ describe IssuesController, type: :controller do
       expect(issue.description).to eq("\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
     end
 
+    it "allows repeatable sections and joins them into one description" do
+      assert_difference('Issue.count', 1) do
+        post :create, :params => {
+          :project_id => 1,
+          :issue => {
+            :tracker_id => 3,
+            :status_id => 2,
+            :subject => 'This is the test_new issue',
+            :description => 'This is the description',
+            :priority_id => 5,
+            :issue_template_id => template_with_repeatable_sections.id,
+            :issue_template => {
+              :descriptions_attributes => {
+                "0" => { "id" => "12" },
+                "1" => {
+                  :text => ["First line", "second line"],
+                  :id => "13",
+                  :empty_value => ""
+                },
+                "2" => { "id" => "14" },
+                "3" => {
+                  :text => ["2021-01-01", "2020-12-31"],
+                  :id => "15"
+                },
+                "4" => {
+                  :text => ["Long first text...", "Second content"],
+                  :id => "16",
+                }
+              },
+            },
+          },
+        }
+      end
+
+      issue = Issue.last
+      expect(issue).not_to be_nil
+      expect(issue.description).to eq(<<~DESCRIPTION
+        \r\n-----\r
+        \r\nh2. Title repeatable group\r\n\r
+        \r\n*New one-line field :* First line\r
+        \r\n*New date field :* 2021-01-01\r
+        \r\n*New long text area :* \r\nLong first text...\r
+        \r\n-----\r
+        \r\n*New one-line field :* second line\r
+        \r\n*New date field :* 2020-12-31\r
+        \r\n*New long text area :* \r\nSecond content\r
+                                   DESCRIPTION
+                                   )
+    end
+
     it "uses empty_value if text field is empty" do
       assert_difference('Issue.count', 1) do
         post :create, :params => {
-            :project_id => 1,
-            :issue => {
-                :tracker_id => 3,
-                :status_id => 2,
-                :subject => 'This is the test_new issue',
-                :description => 'This is the description',
-                :priority_id => 5,
-                :issue_template_id => template.id,
-                :issue_template => {
-                    :descriptions_attributes => {
-                        "0" => {
-                            :text => "Test text",
-                            :empty_value => "No data"
-                        },
-                        "1" => {
-                            :text => "",
-                            :empty_value => "Nothing to say"
-                        }
-                    },
+          :project_id => 1,
+          :issue => {
+            :tracker_id => 3,
+            :status_id => 2,
+            :subject => 'This is the test_new issue',
+            :description => 'This is the description',
+            :priority_id => 5,
+            :issue_template_id => template.id,
+            :issue_template => {
+              :descriptions_attributes => {
+                "0" => {
+                  :text => "Test text",
+                  :empty_value => "No data"
                 },
+                "1" => {
+                  :text => "",
+                  :empty_value => "Nothing to say"
+                }
+              },
             },
+          },
         }
       end
 
@@ -139,22 +190,22 @@ describe IssuesController, type: :controller do
     it "does not join instructions into description" do
       assert_difference('Issue.count', 1) do
         post :create, :params => {
-            :project_id => 1,
-            :issue => {
-                :tracker_id => 3,
-                :status_id => 2,
-                :subject => 'This is the test_new issue',
-                :description => 'Ignore default description',
-                :priority_id => 5,
-                :issue_template_id => template_with_instruction.id,
-                :issue_template => {
-                    :descriptions_attributes => {
-                        "0" => {
-                            :text => "Text in a section field"
-                        }
-                    },
-                },
+          :project_id => 1,
+          :issue => {
+            :tracker_id => 3,
+            :status_id => 2,
+            :subject => 'This is the test_new issue',
+            :description => 'Ignore default description',
+            :priority_id => 5,
+            :issue_template_id => template_with_instruction.id,
+            :issue_template => {
+              :descriptions_attributes => {
+                "0" => {
+                  :text => "Text in a section field"
+                }
+              },
             },
+          },
         }
       end
 
@@ -165,25 +216,25 @@ describe IssuesController, type: :controller do
 
     it "sends a notification by mail with multiple sections concatenated into one description" do
       post :create, :params => {
-          :project_id => 1,
-          :issue => {
-              :tracker_id => 3,
-              :status_id => 2,
-              :subject => 'This is the test_new issue',
-              :description => 'This is the description',
-              :priority_id => 5,
-              :issue_template_id => template.id,
-              :issue_template => {
-                  :descriptions_attributes => {
-                      "0" => {
-                          :text => "Test text"
-                      },
-                      "1" => {
-                          :text => "Second test text"
-                      }
-                  },
+        :project_id => 1,
+        :issue => {
+          :tracker_id => 3,
+          :status_id => 2,
+          :subject => 'This is the test_new issue',
+          :description => 'This is the description',
+          :priority_id => 5,
+          :issue_template_id => template.id,
+          :issue_template => {
+            :descriptions_attributes => {
+              "0" => {
+                :text => "Test text"
               },
+              "1" => {
+                :text => "Second test text"
+              }
+            },
           },
+        },
       }
       expect(ActionMailer::Base.deliveries).to_not be_empty
 

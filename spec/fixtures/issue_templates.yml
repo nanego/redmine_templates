@@ -46,3 +46,13 @@ five:
   template_title: 'New template with instructions'
   template_enabled: true
   split_description: '1'
+six:
+  id: 6
+  author_id: 2
+  project_id: 1
+  status_id: 2
+  subject: "Issue created with template 6"
+  tracker_id: 3
+  template_title: "Template with repeatable sections"
+  template_enabled: true
+  split_description: '1'

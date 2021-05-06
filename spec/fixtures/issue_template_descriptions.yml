@@ -98,3 +98,47 @@ select:
   issue_template_id: 3
   position: 7
   required: false
+twelve:
+  id: 12
+  title: "Title repeatable group"
+  type: "IssueTemplateDescriptionTitle"
+  issue_template_id: 6
+  position: 1
+  repeatable: true
+thirteen:
+  id: 13
+  title: "New one-line field"
+  description: "Short description of the field"
+  type: "IssueTemplateDescriptionField"
+  issue_template_id: 6
+  position: 2
+  text: "Default content for one-line field"
+  empty_value: "Field empty"
+  required: true
+fourteen:
+  id: 14
+  title: "Just a comment"
+  description: ""
+  type: "IssueTemplateDescriptionInstruction"
+  issue_template_id: 6
+  position: 3
+  text: "Somes instructions"
+  instruction_type: "note"
+fifteen:
+  id: 15
+  title: "New date field"
+  type: "IssueTemplateDescriptionDate"
+  issue_template_id: 6
+  position: 4
+  required: true
+sixteen:
+  id: 16
+  title: "New long text area"
+  description: "Description of the field"
+  type: "IssueTemplateDescriptionSection"
+  issue_template_id: 6
+  position: 5
+  text: "Default content"
+  empty_value: "Field empty"
+  required: true
+
