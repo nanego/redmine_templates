@@ -94,7 +94,7 @@ select:
   id: 11
   title: "New select field"
   type: "IssueTemplateDescriptionSelect"
-  text: "value1,value2"
+  text: "value1;value2"
   issue_template_id: 3
   position: 7
   required: false
@@ -141,4 +141,20 @@ sixteen:
   text: "Default content"
   empty_value: "Field empty"
   required: true
-
+checkbox_seventeen:
+  id: 17
+  title: "Checkbox field"
+  type: "IssueTemplateDescriptionCheckbox"
+  issue_template_id: 6
+  position: 6
+  text: "1"
+  required: true
+repeatable_select:
+  id: 18
+  title: "Select field"
+  type: "IssueTemplateDescriptionSelect"
+  text: "value1;value2"
+  issue_template_id: 6
+  position: 7
+  required: false
+  select_type: "checkbox"

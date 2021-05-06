@@ -27,7 +27,7 @@ describe ProjectsController, type: :controller do
       end
       new_project = Project.find('copy-with-templates')
       assert_equal source_project.issue_templates, new_project.issue_templates, "All issue_templates were not copied"
-      expect(new_project.issue_templates.size).to eq 5
+      expect(new_project.issue_templates.size).to eq 6
     end
   end
 

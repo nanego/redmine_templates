@@ -132,6 +132,15 @@ describe IssuesController, type: :controller do
                 "4" => {
                   :text => ["Long first text...", "Second content"],
                   :id => "16",
+                },
+                "5" => {
+                  :text => ["1", "0"],
+                  :id => "17",
+                },
+                "6" => {
+                  "0" => ["1", "0"],
+                  "1" => ["0", "1"],
+                  :id => "18",
                 }
               },
             },
@@ -147,10 +156,18 @@ describe IssuesController, type: :controller do
         \r\n*New one-line field :* First line\r
         \r\n*New date field :* 2021-01-01\r
         \r\n*New long text area :* \r\nLong first text...\r
+        \r\n*Checkbox field :* Yes\r
+        \r\n*Select field :* \r
+        * value1 : Yes \r
+        * value2 : No \r
         \r\n-----\r
         \r\n*New one-line field :* second line\r
         \r\n*New date field :* 2020-12-31\r
         \r\n*New long text area :* \r\nSecond content\r
+        \r\n*Checkbox field :* No\r
+        \r\n*Select field :* \r
+        * value1 : No \r
+        * value2 : Yes \r
                                    DESCRIPTION
                                    )
     end

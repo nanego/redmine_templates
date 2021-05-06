@@ -67,7 +67,7 @@ class IssuesController < ApplicationController
 
         if repeatable_group
           if description_attributes[:text].is_a?(Array)
-            repeatable_group_size = description_attributes[:text].size-1
+            repeatable_group_size = description_attributes[:text].size - 1
           end
           (0..repeatable_group_size).each do |repeatable_group_index|
             repeatable_group_descriptions[repeatable_group_index] ||= ""
@@ -93,7 +93,7 @@ class IssuesController < ApplicationController
 
   private
 
-  def section_value(section, description_attributes, repeatable_group_index=0)
+  def section_value(section, description_attributes, repeatable_group_index = 0)
     case section.class.name
     when IssueTemplateDescriptionInstruction.name
       '' # Nothing to add
@@ -115,7 +115,7 @@ class IssuesController < ApplicationController
             end
           else
             section.text.split(';').each_with_index do |value, index|
-              boolean_value = description_attributes[index.to_s] == '1' ? l(:general_text_Yes) : l(:general_text_No)
+              boolean_value = value_from_boolean_attribute(description_attributes[index.to_s], repeatable_group_index)
               description_text += textile_item(value, boolean_value)
             end
           end
@@ -123,14 +123,23 @@ class IssuesController < ApplicationController
         description_text
       end
     when IssueTemplateDescriptionCheckbox.name
-      value = description_attributes[:text] == '1' ? l(:general_text_Yes) : l(:general_text_No)
+      value = value_from_boolean_attribute(description_attributes[:text], repeatable_group_index)
       section_title(section.title, value)
     when IssueTemplateDescriptionField.name, IssueTemplateDescriptionDate.name
       value = value_from_text_attribute(description_attributes, repeatable_group_index)
       section_title(section.title, value)
-    else #IssueTemplateDescriptionSection
+    else
+      # IssueTemplateDescriptionSection
       value = value_from_text_attribute(description_attributes, repeatable_group_index)
       section_title(section.title) + textile_entry(value)
+    end
+  end
+
+  def value_from_boolean_attribute(attribute, array_index)
+    if attribute.is_a?(Array)
+      attribute[array_index] == '1' ? l(:general_text_Yes) : l(:general_text_No)
+    else
+      attribute == '1' ? l(:general_text_Yes) : l(:general_text_No)
     end
   end
 
