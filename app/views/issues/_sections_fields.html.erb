@@ -23,7 +23,7 @@
       <% end %>
       <% if repeatable_group && description_form.object.last? %>
         </div>
-        <p style="margin-top: 0.5em"><%= link_to 'Ajouter une valeur', '#', class: 'append_sections_group icon icon-add', data: { group_id: "#{repeatable_group_id}" } %></p>
+        <p style="margin-top: 0.5em"><%= link_to 'Ajouter un bloc', '#', class: 'append_sections_group icon icon-add', data: { group_id: "#{repeatable_group_id}" } %></p>
       <% end %>
 
     <% end %>
@@ -34,17 +34,26 @@
 <% end %>
 
 <script>
+
     $('form#issue-form').on('click', '.append_sections_group', function (event) {
         event.preventDefault()
-        console.log("append_sections_group : " + event.target.getAttribute("data-group-id"))
 
         let group_to_copy = $("#" + event.target.getAttribute("data-group-id"))
         let new_group = group_to_copy.clone()
-        new_group.attr("id", new_group.attr('id') + "-" + $('.repeatable_group').length)
+        let new_group_id = new_group.attr('id') + "-" + $('.repeatable_group').length
+        new_group.attr("id", "")
 
         let add_link_container = $(event.target).parent()
-        $('<div style="height: 1.4em" />').insertBefore(add_link_container)
-        new_group.insertBefore(add_link_container)
+        new_group_container = $('<div id="' + new_group_id + '" style="margin-top: 1.4em"></div>')
+        new_group_container.append(new_group)
+        new_group_container.append($('<p><a href="#" class="destroy_sections_group icon icon-del" data-group-id="' + new_group_id + '" >Supprimer ce bloc</a></p>'))
+        new_group_container.insertBefore(add_link_container)
 
+    })
+
+    $('form#issue-form').on('click', '.destroy_sections_group', function (event) {
+        event.preventDefault()
+        let group_to_destroy = $("#" + event.target.getAttribute("data-group-id"))
+        group_to_destroy.remove()
     })
 </script>
