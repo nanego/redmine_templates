@@ -97,7 +97,7 @@ class IssueTemplate < ActiveRecord::Base
   end
 
   def allowed_target_projects
-    Project.where(Project.allowed_to_condition(User.current, :add_issues))
+    Project.active
   end
 
   def disabled_projects
