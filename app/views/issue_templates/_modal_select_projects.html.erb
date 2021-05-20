@@ -115,4 +115,8 @@
     $(".select_box_custom_field_value").prop('selectedIndex',0);
   }
 
+  $('#project_nested_list').on('change', "input:checkbox[name='template_project_ids[]']", function(event) {
+      $(event.target).closest('li').find("input:checkbox[name='template_project_ids[]']").prop('checked', $(event.target).is(':checked'));
+  })
+
 </script>
