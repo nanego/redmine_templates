@@ -72,10 +72,10 @@ class IssuesController < ApplicationController
           end
           (0..repeatable_group_size).each do |repeatable_group_index|
             repeatable_group_descriptions[repeatable_group_index] ||= ""
-            repeatable_group_descriptions[repeatable_group_index] += section_value(section, description_attributes, repeatable_group_index)
+            repeatable_group_descriptions[repeatable_group_index] += section.rendered_value(description_attributes, repeatable_group_index)
           end
         else
-          issue_description += section_value(section, description_attributes)
+          issue_description += section.rendered_value(description_attributes)
         end
 
         repeatable_group = section.repeatable? if section.is_a_separator? # Init new repeatable group
@@ -95,90 +95,8 @@ class IssuesController < ApplicationController
   def update_subject_when_autocomplete
     issue_template = @issue.issue_template
     if issue_template.present? && issue_template.autocomplete_subject && issue_template.subject.present?
-      @issue.subject = @issue.generated_subject(pattern: issue_template.subject)
+      @issue.subject = @issue.generated_subject(pattern: issue_template.subject, sections_params: @sections_attributes)
     end
-  end
-
-  private
-
-  def section_value(section, description_attributes, repeatable_group_index = 0)
-    case section.class.name
-    when IssueTemplateDescriptionInstruction.name
-      '' # Nothing to add
-    when IssueTemplateDescriptionSeparator.name
-      textile_separator
-    when IssueTemplateDescriptionTitle.name
-      textile_separator_with_title(section.title)
-    when IssueTemplateDescriptionSelect.name
-      case section.select_type
-      when "monovalue_select", "radio"
-        section_title(section.title, description_attributes[:text])
-      else
-        description_text = section_title(section.title)
-        if section.text.present?
-          if section.select_type == 'multivalue_select'
-            selected_values = description_attributes['text'] || []
-            selected_values.each do |selected_value|
-              description_text += textile_item(selected_value)
-            end
-          else
-            section.text.split(';').each_with_index do |value, index|
-              boolean_value = value_from_boolean_attribute(description_attributes[index.to_s], repeatable_group_index)
-              description_text += textile_item(value, boolean_value)
-            end
-          end
-        end
-        description_text
-      end
-    when IssueTemplateDescriptionCheckbox.name
-      value = value_from_boolean_attribute(description_attributes[:text], repeatable_group_index)
-      section_title(section.title, value)
-    when IssueTemplateDescriptionField.name, IssueTemplateDescriptionDate.name
-      value = value_from_text_attribute(description_attributes, repeatable_group_index)
-      section_title(section.title, value)
-    else
-      # IssueTemplateDescriptionSection
-      value = value_from_text_attribute(description_attributes, repeatable_group_index)
-      section_title(section.title) + textile_entry(value)
-    end
-  end
-
-  def value_from_boolean_attribute(attribute, array_index)
-    if attribute.is_a?(Array)
-      attribute[array_index] == '1' ? l(:general_text_Yes) : l(:general_text_No)
-    else
-      attribute == '1' ? l(:general_text_Yes) : l(:general_text_No)
-    end
-  end
-
-  def value_from_text_attribute(attributes, array_index)
-    if attributes[:text].is_a?(Array)
-      attributes[:text][array_index].present? ? attributes[:text][array_index] : attributes[:empty_value]
-    else
-      attributes[:text].present? ? attributes[:text] : attributes[:empty_value]
-    end
-  end
-
-  def textile_separator_with_title(title)
-    "#{textile_separator}\r\nh2. #{title}\r\n\r\n"
-  end
-
-  def section_title(title, value = nil)
-    inline_value = value if value.present?
-    "\r\n*#{title} :* #{inline_value}\r\n"
-  end
-
-  def textile_separator
-    "\r\n-----\r\n"
-  end
-
-  def textile_item(label, inline_value = nil)
-    inline_value = " : #{inline_value} " if inline_value.present?
-    "* #{label}#{inline_value}\r\n"
-  end
-
-  def textile_entry(value)
-    "#{value}\r\n"
   end
 
 end
