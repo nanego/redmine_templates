@@ -1,0 +1,37 @@
+<div class="modal" id="help_autocomplete_subject" style="display:none;">
+
+  <h3 class="title"><%= l(:field_autocomplete_subject) %></h3>
+
+  <p>
+    Si le sujet est généré automatiquement, le champ n'apparait pas dans le formulaire de création des demandes.
+  </p>
+
+  <p>
+  Exemple : {tracker} {project} → {fixed_version}
+  </p>
+
+  Les variables disponibles sont :
+  <ul>
+    <li><b>Les champs personnalisés</b> :
+      <ul>
+        <li>par id : {cf_1}</li>
+        <li>par nom : {cf_nom_du_champ} <br>(remplacer les espaces par des _)</li>
+      </ul>
+    </li>
+    <li><b>Les attributs standards</b> :
+      <ul>
+        <li>{tracker}</li>
+        <li>{priority}</li>
+        <li>{fixed_version}</li>
+        <li>{status}</li>
+        <li>etc...</li>
+      </ul>
+    </li>
+
+    <!--
+    <li><b>Les sections générant la description</b> : {section_1}, {section_2}, etc.</li>
+    -->
+
+  </ul>
+
+</div>

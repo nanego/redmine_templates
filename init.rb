@@ -6,7 +6,7 @@ ActiveSupport::Reloader.to_prepare do
   require_dependency 'redmine_templates/menu_manager_patch'
   require_dependency 'redmine_templates/issues_controller_patch'
   require_dependency 'redmine_templates/projects_controller_patch' if Redmine::Plugin.installed?(:redmine_limited_visibility)
-
+  require_dependency 'redmine_templates/issue_patch'
   require_dependency 'redmine_templates/helpers/projects_helper_patch'
 end
 

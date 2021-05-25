@@ -129,6 +129,15 @@
         <%= render "typology_field", f: f if Redmine::Plugin.installed?(:redmine_typologies) %>
 
         <p><%= f.text_field :subject, :size => 80, :maxlength => 255, :required => true %></p>
+        <p>
+          <%= f.check_box :autocomplete_subject %>
+          <%= link_to l(:label_open_functions_activated_description), '#',
+                      class: 'icon-only icon-help',
+                      style: "margin-top: -3px;margin-left: 4px;",
+                      title: l(:label_open_functions_activated_description),
+                      onclick: "showModal('help_autocomplete_subject', '500px'); return false;" %>
+        </p>
+        <%= render partial: 'issue_templates/help_autocomplete_subject' %>
 
         <p data-target="split-description.description_field">
           <%= f.label_for_field :description, :required => false %>

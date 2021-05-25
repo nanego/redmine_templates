@@ -8,6 +8,15 @@ Deface::Override.new :virtual_path => 'issues/_form_with_positions',
                      :replace      => 'p:contains("f.select :tracker_id")',
                      :partial      => "issues/tracker_field_with_read_only"
 
+Deface::Override.new :virtual_path => 'issues/_form',
+                     :name         => 'hide_subject_field_when_autocomplete',
+                     :replace      => 'p:contains("f.text_field :subject")',
+                     :partial      => "issues/subject_field"
+Deface::Override.new :virtual_path => 'issues/_form_with_positions',
+                     :name         => 'hide_subject_field_when_autocomplete',
+                     :replace      => 'p:contains("f.text_field :subject")',
+                     :partial      => "issues/subject_field"
+
 Deface::Override.new :virtual_path      => "issues/_form",
                      :name              => "display_description_field_with_sections",
                      :replace            => "erb[silent]:contains(\"if @issue.safe_attribute? 'description' \")",

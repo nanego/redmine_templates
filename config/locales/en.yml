@@ -44,3 +44,4 @@ en:
   comment: Comment
   template: "Issue template"
   default_template_visibility: "Default template visibility"
+  field_autocomplete_subject: "Autocomplete subject"

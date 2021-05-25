@@ -7,6 +7,7 @@ class IssuesController < ApplicationController
 
   append_before_action :keep_sections_values, :only => [:new, :create]
   append_before_action :update_description_with_sections, :only => [:create]
+  append_before_action :update_subject_when_autocomplete, :only => [:create]
 
   def set_template_as_params
     if params[:template_id] && params[:template_id].to_i.to_s == params[:template_id]
@@ -88,6 +89,13 @@ class IssuesController < ApplicationController
       end
 
       @issue.description = issue_description
+    end
+  end
+
+  def update_subject_when_autocomplete
+    issue_template = @issue.issue_template
+    if issue_template.present? && issue_template.autocomplete_subject && issue_template.subject.present?
+      @issue.subject = @issue.generated_subject(pattern: issue_template.subject)
     end
   end
 

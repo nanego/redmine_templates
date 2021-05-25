@@ -74,7 +74,8 @@ class IssueTemplate < ActiveRecord::Base
                   :tracker_read_only,
                   :descriptions_attributes,
                   :split_description,
-                  :typology_id
+                  :typology_id,
+                  :autocomplete_subject
 
   def to_s
     template_title
