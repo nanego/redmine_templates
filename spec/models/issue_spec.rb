@@ -2,9 +2,10 @@ require "spec_helper"
 
 describe "Issue" do
 
-  fixtures :issues
+  fixtures :issues, :issue_templates, :issue_template_descriptions
 
   let!(:issue) { Issue.find(1) }
+  let!(:issue_template) { IssueTemplate.find(3) }
 
   describe :generated_subject_from_pattern do
 
@@ -53,18 +54,17 @@ describe "Issue" do
     describe :sections_attributes do
 
       let!(:sections_params) {
-        [{ "id" => "42" },
-         { "text" => "0", "id" => "34" },
-         { "text" => "", "empty_value" => "No hurry!", "id" => "41" },
-         { "id" => "43" },
-         { "text" => "Main site", "id" => "48" },
-         { "text" => "", "empty_value" => "Not set", "id" => "44" },
-         { "id" => "51" },
-         { "text" => "", "empty_value" => "To be defined", "id" => "37" }] }
+        [{ :text => "" },
+         { :text => "" },
+         { :text => "Value field section", :empty_value => "No hurry!" }] }
+
+      before do
+        issue.issue_template = issue_template
+      end
 
       it "replaces sections variable with value in params" do
-        pattern = "{section_4}: Cannot add articles to shopping cart"
-        expect(issue.generated_subject(pattern: pattern, sections_params: sections_params)).to eq "Main site: Cannot add articles to shopping cart"
+        pattern = "{section_2}: Cannot add articles to shopping cart"
+        expect(issue.generated_subject(pattern: pattern, sections_params: sections_params)).to eq "Value field section: Cannot add articles to shopping cart"
       end
 
     end

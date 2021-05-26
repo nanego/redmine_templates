@@ -14,7 +14,7 @@ class IssueTemplateDescription < ActiveRecord::Base
     issue_template.descriptions.last == self || issue_template.descriptions[self.position]&.is_a_separator?
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0)
+  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     # Defined in subclasses
   end
 
@@ -24,9 +24,14 @@ class IssueTemplateDescriptionField < IssueTemplateDescription
   validates_presence_of :title
   def self.short_name; "field" end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0)
+  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     value = value_from_text_attribute(section_attributes, repeatable_group_index)
-    section_title(self.title, value)
+    if value_only
+      section_basic_entry(value, textile: textile)
+    else
+      section_title(title, value, textile: textile)
+    end
+
   end
 end
 
@@ -34,9 +39,13 @@ class IssueTemplateDescriptionCheckbox < IssueTemplateDescription
   validates_presence_of :title
   def self.short_name; "checkbox" end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0)
+  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     value = value_from_boolean_attribute(section_attributes[:text], repeatable_group_index)
-    section_title(title, value)
+    if value_only
+      section_basic_entry(value, textile: textile)
+    else
+      section_title(title, value, textile: textile)
+    end
   end
 end
 
@@ -44,9 +53,13 @@ class IssueTemplateDescriptionSection < IssueTemplateDescription
   validates_presence_of :title
   def self.short_name; "section" end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0)
+  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     value = value_from_text_attribute(section_attributes, repeatable_group_index)
-    section_title(self.title) + textile_entry(value)
+    if value_only
+      section_basic_entry(value, textile: textile)
+    else
+      section_title(title, textile: textile) + section_basic_entry(value, textile: textile)
+    end
   end
 end
 
@@ -55,8 +68,8 @@ class IssueTemplateDescriptionSeparator < IssueTemplateDescription
   def self.editable?;false end
   def is_a_separator?;true  end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0)
-    textile_separator
+  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
+    textile_separator if textile
   end
 end
 
@@ -64,8 +77,8 @@ class IssueTemplateDescriptionTitle < IssueTemplateDescription
   def self.short_name; "title" end
   def is_a_separator?;true  end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0)
-    textile_separator_with_title(title)
+  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
+    textile_separator_with_title(title) if textile
   end
 end
 
@@ -91,9 +104,14 @@ class IssueTemplateDescriptionDate < IssueTemplateDescription
     "date"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0)
+  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     value = value_from_text_attribute(section_attributes, repeatable_group_index)
-    section_title(self.title, value)
+    if value_only
+      section_basic_entry(value, textile: textile)
+    else
+      section_title(title, value, textile: textile)
+    end
+
   end
 
 end
@@ -116,22 +134,26 @@ class IssueTemplateDescriptionSelect < IssueTemplateDescription
     "select"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0)
+  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     case self.select_type
     when "monovalue_select", "radio"
-      section_title(self.title, section_attributes[:text])
+      if value_only
+        section_basic_entry(section_attributes[:text], textile: textile)
+      else
+        section_title(title, section_attributes[:text], textile: textile)
+      end
     else
-      description_text = section_title(self.title)
+      description_text = value_only ? "" : section_title(title, textile: textile)
       if self.text.present?
         if self.select_type == 'multivalue_select'
-          selected_values = section_attributes['text'] || []
+          selected_values = section_attributes[:text] || []
           selected_values.each do |selected_value|
-            description_text += textile_item(selected_value)
+            description_text += section_item(selected_value, textile: textile)
           end
         else
           self.text.split(';').each_with_index do |value, index|
             boolean_value = value_from_boolean_attribute(section_attributes[index.to_s], repeatable_group_index)
-            description_text += textile_item(value, boolean_value)
+            description_text += section_item(value, boolean_value, textile: textile)
           end
         end
       end
@@ -154,7 +176,7 @@ class IssueTemplateDescriptionInstruction < IssueTemplateDescription
     "instruction"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0)
+  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     '' # Nothing to render
   end
 end
@@ -182,20 +204,31 @@ def textile_separator_with_title(title)
   "#{textile_separator}\r\nh2. #{title}\r\n\r\n"
 end
 
-def section_title(title, value = nil)
-  inline_value = value if value.present?
-  "\r\n*#{title} :* #{inline_value}\r\n"
-end
-
 def textile_separator
   "\r\n-----\r\n"
 end
 
-def textile_item(label, inline_value = nil)
-  inline_value = " : #{inline_value} " if inline_value.present?
-  "* #{label}#{inline_value}\r\n"
+def section_title(title, value = nil, textile: true)
+  if textile
+    "\r\n*#{title} :* #{value}\r\n"
+  else
+    "#{title} : #{value}"
+  end
 end
 
-def textile_entry(value)
-  "#{value}\r\n"
+def section_item(label, inline_value = nil, textile: true)
+  inline_value = " : #{inline_value} " if inline_value.present?
+  if textile
+    "* #{label}#{inline_value}\r\n"
+  else
+    "#{label}#{inline_value}"
+  end
+end
+
+def section_basic_entry(value, textile: true)
+  if textile
+    "#{value}\r\n"
+  else
+    "#{value}"
+  end
 end
