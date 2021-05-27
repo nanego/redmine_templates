@@ -1,13 +1,13 @@
 <%= f.fields_for :descriptions do |description_form| %>
   <%= render partial: "issue_templates/sections/#{description_form.object.class.short_name}_form",
-             locals: {form: description_form, template: false} %>
+             locals: { form: description_form, template: false } %>
 <% end %>
 
 <%# Empty templates %>
 <% IssueTemplateDescription.subclasses.each do |klass| %>
   <%= f.fields_for :descriptions_attributes, index: "$id_section$" do |description_form| %>
     <%= render partial: "issue_templates/sections/#{klass.short_name}_form",
-               locals: {form: description_form, template: true} %>
+               locals: { form: description_form, template: true } %>
   <% end %>
 <% end %>
 
@@ -17,6 +17,7 @@
         resetHiddenTextField(sectionElement)
         resetHiddenPlaceholderField(sectionElement)
     }
+
     function resetHiddenTextField(sectionElement) {
         let text = $(sectionElement).find('input.text')
         let ul = $(sectionElement).find('ul')
@@ -25,6 +26,7 @@
         }).get().filter(item => item).join(';')
         text.val(joined_values)
     }
+
     function resetHiddenPlaceholderField(sectionElement) {
         let placeholder = $(sectionElement).find('input.placeholder')
         let list_of_value = $(sectionElement).find('ul')
@@ -33,23 +35,31 @@
         }).get().filter(item => item).join(';')
         placeholder.val(joined_values)
     }
-    $('form#issue-template-form').on('change', '.possible-values input[type=checkbox]', function(event) {
+
+    $('form#issue-template-form').on('change', '.possible-values input[type=checkbox]', function (event) {
         let section = event.target.closest('.split_description.select')
         resetHiddenPlaceholderField(section)
     })
-    $('form#issue-template-form').on('click', '.add_possible_value', function(event) {
+    $('form#issue-template-form').on('click', '.add_possible_value', function (event) {
         event.preventDefault()
         let ul = $(event.target).parent().find('ul')
         ul.append('<%= escape_javascript(render('issue_templates/sections/select_possible_value')) %>')
     })
-    $('form#issue-template-form').on('keyup change', '.possible-values input.value', function(event) {
+    $('form#issue-template-form').on('keyup change', '.possible-values input.value', function (event) {
         let ul = $(event.target).closest('ul')
         resetHiddenFields(ul)
     })
-    $('form#issue-template-form').on('click', '.remove_possible_value', function(event) {
+    $('form#issue-template-form').on('click', '.remove_possible_value', function (event) {
         event.preventDefault()
         let ul = $(event.target).closest('ul')
         $(event.target).parent().remove()
         resetHiddenFields(ul)
+    })
+    $('#split-description-container').on('mouseenter', '.split_description', function () {
+        $(this).find('.position-section-tooltip').html($(this).prevAll('.split_description').length)
+        $(this).addClass("hover")
+    })
+    $('#split-description-container').on('mouseleave', '.split_description', function () {
+        $(this).removeClass("hover")
     })
 </script>

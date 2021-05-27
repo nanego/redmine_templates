@@ -303,10 +303,23 @@ a.list_templates_projects_names.current {
     padding-left: 22px;
 }
 
+#split-description-container .position-section-tooltip {
+    position: absolute;
+    padding: 7px 0 0 0;
+    font-size: larger;
+    color: darkgray;
+    display: none;
+    margin-left: 23px;
+}
+
+#split-description-container .split_description.hover .position-section-tooltip {
+    display: inline;
+}
+
 #split-description-container .sort-handle {
     position: absolute;
     padding: 8px;
-    margin-left: 3px;
+    margin-left: 2px;
 }
 
 #split-description-container a.icon-del, #split-description-container a.expand_collapse {
@@ -390,6 +403,8 @@ a.list_templates_projects_names.current {
 #issue-form #attributes label .info {
     margin-top: -6px;
 }
+
+
 
 @media screen and (max-width: 899px) {
     #issue-form .instruction {

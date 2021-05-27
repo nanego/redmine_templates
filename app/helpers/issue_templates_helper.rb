@@ -4,7 +4,7 @@ module IssueTemplatesHelper
     s = ''
     project_tree(projects) do |project, level|
       name_prefix = (level > 0 ? '&nbsp;' * 2 * level + '&#187; ' : '').html_safe
-      tag_options = {:value => project.id}
+      tag_options = { :value => project.id }
       if project == options[:selected] || (options[:selected].respond_to?(:include?) && options[:selected].include?(project))
         tag_options[:selected] = 'selected'
       else
@@ -23,8 +23,8 @@ module IssueTemplatesHelper
 
   def reorder_templates_handle(object, options = {})
     data = {
-        :reorder_url => options[:url] || url_for(object),
-        :reorder_param => options[:param] || object.class.name.underscore
+      :reorder_url => options[:url] || url_for(object),
+      :reorder_param => options[:param] || object.class.name.underscore
     }
     content_tag('span', '',
                 :class => "icon-only icon-sort-handle sort-handle",
@@ -59,8 +59,8 @@ module IssueTemplatesHelper
     delete_link = content_tag :span, style: "float: right;" do
       link_to("Supprimer", '#',
               class: "icon icon-del link-cursor action",
-              data: {action: "description-item-form#delete"}) +
-          form.hidden_field(:_destroy, :value => 0, data: {target: "description-item-form.destroy_hidden"})
+              data: { action: "description-item-form#delete" }) +
+        form.hidden_field(:_destroy, :value => 0, data: { target: "description-item-form.destroy_hidden" })
     end
 
     if section_class.editable?
@@ -68,27 +68,29 @@ module IssueTemplatesHelper
         link_to (template ? "Masquer les détails" : "Afficher les détails"),
                 '#',
                 class: 'icon icon-list expand_collapse action',
-                data: {action: "description-item-form#expand_collapse"}
+                data: { action: "description-item-form#expand_collapse" }
       end
     else
       toggle_display_link = ""
     end
 
     reorder_handle = reorder_templates_handle(form.object, :url => "#")
+    position_section_tooltip = content_tag('span', '0', :class => "position-section-tooltip")
     hidden_position_field = form.hidden_field(:position)
     hidden_type_field = form.hidden_field :type, :value => section_class.name
 
     content_tag :div,
                 class: "split_description #{section_class.short_name} #{template_class}",
-                data: {controller: "description-item-form",
-                       target: template_target_name},
+                data: { controller: "description-item-form",
+                        target: template_target_name },
                 style: template_style do
       delete_link +
-          toggle_display_link +
-          reorder_handle +
-          hidden_position_field +
-          hidden_type_field +
-          capture(&block)
+        toggle_display_link +
+        position_section_tooltip +
+        reorder_handle +
+        hidden_position_field +
+        hidden_type_field +
+        capture(&block)
     end
   end
 
