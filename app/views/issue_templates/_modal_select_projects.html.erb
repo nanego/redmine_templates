@@ -1,58 +1,69 @@
-<%# TODO Vérifier l'utilité de ce fichier ... %>
-
 <% template_projects = @issue_template.template_projects
-   allowed_projects =  @issue_template.allowed_target_projects.includes(:custom_values)
+   allowed_projects = @issue_template.allowed_target_projects.includes(:custom_values)
    custom_fields = CustomField.select("id, name").where("type = ? AND name IN (?)", "ProjectCustomField", Setting["plugin_redmine_templates"]['custom_fields'])
-   concerned_projects_ids = (allowed_projects|template_projects).map(&:id)
-   custom_values = {}
-   CustomValue.where(customized_type: 'Project', customized_id: concerned_projects_ids, custom_field_id: custom_fields.map(&:id)).each do |v|
-     custom_values[v.customized_id] ||= {}
-     custom_values[v.customized_id][v.custom_field_id] = v.value
-   end
+   concerned_projects_ids = (allowed_projects | template_projects).map(&:id)
+
    options_for_selects = {}
    custom_fields.each do |field|
      options_for_selects.merge!(field.name.parameterize => [])
    end
 
-   nested_projects_list = render_project_nested_lists(allowed_projects|template_projects) do |project|
+   custom_values = {}
+   CustomValue.where(customized_type: 'Project', customized_id: concerned_projects_ids, custom_field_id: custom_fields.map(&:id)).each do |v|
+     custom_values[v.customized_id] ||= {}
+     custom_values[v.customized_id][v.custom_field_id] = v.value
+
+     cf = v.custom_field
+     value = v.value
+
+     if value.present?
+       if cf.field_format == "enumeration"
+         enum_item = CustomFieldEnumeration.where(id: value).first
+         options_for_selects[cf.name.parameterize] << [enum_item.name, value]
+       else
+         if value.is_a?(Array)
+           value.each do |val|
+             options_for_selects[cf.name.parameterize] << val
+           end
+         else
+           options_for_selects[cf.name.parameterize] << value
+         end
+       end
+     end
+     options_for_selects[cf.name.parameterize].uniq!
+
+   end
+
+   nested_projects_list = render_project_nested_lists(allowed_projects | template_projects) do |project|
      custom_fields_data = {}
      if allowed_projects.include?(project)
        custom_fields.each do |f|
-         value = custom_values[project.id][f.id]
-         custom_fields_data.merge!(f.name.parameterize => value)
-         if value.is_a?(Array)
-           value.each do |val|
-             options_for_selects[f.name.parameterize] << val unless val.blank? || options_for_selects[f.name.parameterize].include?(val)
-           end
-         else
-           options_for_selects[f.name.parameterize] << value unless value.blank? || options_for_selects[f.name.parameterize].include?(value)
-         end
-
+         custom_fields_data.merge!(f.name.parameterize => custom_values[project.id][f.id])
        end
      end
      content_tag('label',
-       check_box_tag(
-           'template_project_ids[]',
-           project.id,
-           @issue_template != nil && template_projects.include?(project),
-           disabled: allowed_projects.include?(project) ? false : true,
-           :class => ("inactive" unless allowed_projects.include?(project)),
-           data: custom_fields_data
-       ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
+                 check_box_tag(
+                   'template_project_ids[]',
+                   project.id,
+                   @issue_template != nil && template_projects.include?(project),
+                   disabled: allowed_projects.include?(project) ? false : true,
+                   :class => ("inactive" unless allowed_projects.include?(project)),
+                   data: custom_fields_data
+                 ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
      )
    end
 %>
 
-  <h3 class="title"><%=l(:field_project).pluralize%> TEMPLATE</h3>
+<h3 class="title"><%= l(:field_project).pluralize %> TEMPLATE</h3>
 
-  <div class="actions_links">
+<div class="actions_links">
   <%= l("Selection") %> :
-  <%= link_to l("select_all"), '#', id: "link_select_all", :onclick=> "select_all()" %>
+  <%= link_to l("select_all"), '#', id: "link_select_all", :onclick => "select_all()" %>
   |
-  <%= link_to l("select_none"), '#', id: "link_select_all", :onclick=> "select_none()" %>
+  <%= link_to l("select_none"), '#', id: "link_select_all", :onclick => "select_none()" %>
   <% custom_fields.each do |field| %>
     |
-    <%= select_tag field.name.parameterize, options_for_select(options_for_selects[field.name.parameterize]), :prompt=>field.name, :id => "select_#{field.name.parameterize}", :class => "select_box_custom_field_value", :onchange=> "select_from_custom_field('#{field.name.parameterize}')" %>
+    <%= select_tag field.name.parameterize, options_for_select(options_for_selects[field.name.parameterize]), :prompt => field.name, :id => "select_#{field.name.parameterize}", :class => "select_box_custom_field_value", :onchange => "select_from_custom_field('#{field.name.parameterize}')" %>
   <% end %>
 </div>
 
@@ -63,60 +74,57 @@
 </div>
 
 <p class="buttons">
-  <%= submit_tag l(:button_apply), :name => nil, :onclick => "updateSelectedProjects();hideModal(this);", :type => 'button', :id=> 'button_apply_projects' %>
+  <%= submit_tag l(:button_apply), :name => nil, :onclick => "updateSelectedProjects();hideModal(this);", :type => 'button', :id => 'button_apply_projects' %>
 </p>
 
 <script type="text/javascript">
 
-  function updateSelectedProjects() {
-    $("select#issue_template_template_project_ids option").each(function() { this.selected = ""; });
-    var htmlContent = "";
-    $("input:checkbox[name='template_project_ids[]']:checked").each(function()
-    {
-      $("#issue_template_template_project_ids option[value=" + $(this).val() +"]").prop("selected",true);
-    });
+    function updateSelectedProjects() {
+        $("select#issue_template_template_project_ids option").each(function () {
+            this.selected = "";
+        });
+        var htmlContent = "";
+        $("input:checkbox[name='template_project_ids[]']:checked").each(function () {
+            $("#issue_template_template_project_ids option[value=" + $(this).val() + "]").prop("selected", true);
+        });
 
-    $("input:checkbox[name='template_project_ids[]']:checked:not(.inactive)").each(function()
-    {
-      htmlContent += "<span class=\"list_templates_projects_names\">"+ $(this).closest('label').text() + "</span>";
-    });
-    $("#my_projects").html(htmlContent);
-    if (htmlContent == ""){
-      $(".and_x_other_projects").css("display", "none");
-    } else{
-      $(".and_x_other_projects").css("display","inline");
+        $("input:checkbox[name='template_project_ids[]']:checked:not(.inactive)").each(function () {
+            htmlContent += "<span class=\"list_templates_projects_names\">" + $(this).closest('label').text() + "</span>";
+        });
+        $("#my_projects").html(htmlContent);
+        if (htmlContent == "") {
+            $(".and_x_other_projects").css("display", "none");
+        } else {
+            $(".and_x_other_projects").css("display", "inline");
+        }
     }
-  }
 
-  function select_all(){
-    $("input:checkbox[name='template_project_ids[]']").each(function()
-    {
-      this.setAttribute("checked", "checked");
-      this.checked = true;
-    });
-  }
+    function select_all() {
+        $("input:checkbox[name='template_project_ids[]']").each(function () {
+            this.setAttribute("checked", "checked");
+            this.checked = true;
+        });
+    }
 
-  function select_none(){
-    $("input:checkbox[name='template_project_ids[]']:checked:not(.inactive)").each(function()
-    {
-      $(this).attr("checked", "");
-      $(this).removeAttr("checked");
-      $(this).checked = false;
-    });
-  }
+    function select_none() {
+        $("input:checkbox[name='template_project_ids[]']:checked:not(.inactive)").each(function () {
+            $(this).attr("checked", "");
+            $(this).removeAttr("checked");
+            $(this).checked = false;
+        });
+    }
 
-  function select_from_custom_field(id) {
-    select_none();
-    $("input:checkbox[name='template_project_ids[]']:checkbox[data-"+id+"='"+ $("#select_" + id).val() +"']").each(function()
-    {
-      $(this).attr("checked","checked") ;
-      this.checked = true;
-    });
-    $(".select_box_custom_field_value").prop('selectedIndex',0);
-  }
+    function select_from_custom_field(id) {
+        select_none();
+        $("input:checkbox[name='template_project_ids[]']:checkbox[data-" + id + "='" + $("#select_" + id).val() + "']").each(function () {
+            $(this).attr("checked", "checked");
+            this.checked = true;
+        });
+        $(".select_box_custom_field_value").prop('selectedIndex', 0);
+    }
 
-  $('#project_nested_list').on('change', "input:checkbox[name='template_project_ids[]']", function(event) {
-      $(event.target).closest('li').find("input:checkbox[name='template_project_ids[]']").prop('checked', $(event.target).is(':checked'));
-  })
+    $('#project_nested_list').on('change', "input:checkbox[name='template_project_ids[]']", function (event) {
+        $(event.target).closest('li').find("input:checkbox[name='template_project_ids[]']").prop('checked', $(event.target).is(':checked'));
+    })
 
 </script>
