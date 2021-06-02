@@ -4,7 +4,7 @@ module PluginRedmineTemplates
   module ProjectsHelper
     def project_settings_tabs
       super.tap do |tabs|
-        if User.current.allowed_to?(:manage_project_issue_templates, @project)
+        if User.current.allowed_to?(:manage_project_issue_templates, @project) || User.current.allowed_to?(:manage_issue_templates_visibility_per_project, @project)
           tabs << {
             name: 'issue_templates',
             action: :issue_templates,

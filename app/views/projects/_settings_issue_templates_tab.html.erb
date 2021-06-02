@@ -12,7 +12,8 @@
                :url => project_path(@project, tab: :issue_templates),
                :html => { :id => "templates-form" } do |f| %>
 
-    <%= hidden_field_tag "project[issue_template_ids][]", nil %>
+    <%= hidden_field_tag("project[issue_template_ids][]", nil) if User.current.allowed_to?(:manage_project_issue_templates, @project) %>
+    <%= hidden_field_tag("project[issue_templates_functions][0][]", nil) if User.current.allowed_to?(:manage_issue_templates_visibility_per_project, @project) %>
 
     <p><%= submit_tag l(:button_save) %></p>
 
@@ -37,7 +38,10 @@
           <tr class="issue_template issue">
             <td>
               <%= label_tag do %>
-                <%= check_box_tag "project[issue_template_ids][]", issue_template.id, @project.issue_templates.include?(issue_template) %>
+                <%= check_box_tag "project[issue_template_ids][]",
+                                  issue_template.id,
+                                  @project.issue_templates.include?(issue_template),
+                                  disabled: !User.current.allowed_to?(:manage_project_issue_templates, @project) %>
                 <%= issue_template.template_title %>
               <% end %>
             </td>
@@ -52,7 +56,9 @@
                 <% selected_functions = @selected_functions_by_template[issue_template.id].pluck(:id) if @selected_functions_by_template.present? && @selected_functions_by_template[issue_template.id] %>
                 <%= select_tag "project[issue_templates_functions][#{issue_template.id}][]",
                                options_from_collection_for_select(@available_functions, "id", "name", selected: selected_functions),
-                               multiple: true, class: "project_issue_templates_functions_selects" %>
+                               multiple: true,
+                               disabled: !User.current.allowed_to?(:manage_issue_templates_visibility_per_project, @project),
+                               class: "project_issue_templates_functions_selects" %>
                 <div style="max-width: 500px;white-space: initial;color:darkgrey;">
                   <% default_visibility = Function.where(id: issue_template.authorized_viewer_ids.split('|')).map(&:name).join(', ') %>
                   <%= t('default_template_visibility') %>
