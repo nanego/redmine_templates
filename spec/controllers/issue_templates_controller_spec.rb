@@ -9,9 +9,9 @@ describe IssueTemplatesController, type: :controller do
   fixtures :issue_templates, :projects, :users, :issue_statuses, :trackers, :enumerations,
            :roles, :members, :member_roles, :issue_template_descriptions, :issue_template_projects
 
-  let(:template) { IssueTemplate.find(1) }
-  let(:role) { Role.find(1) }
-  let(:template_with_instruction) { IssueTemplate.find(5) }
+  let!(:template) { IssueTemplate.find(1) }
+  let!(:role) { Role.find(1) }
+  let!(:template_with_instruction) { IssueTemplate.find(5) }
 
   before do
     @request.session[:user_id] = 2
