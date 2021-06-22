@@ -46,3 +46,5 @@ en:
   template: "Issue template"
   default_template_visibility: "Default template visibility"
   field_autocomplete_subject: "Autocomplete subject"
+  field_issue_templates: "Actives issue templates"
+  field_issue_template_id: "Active issue template"

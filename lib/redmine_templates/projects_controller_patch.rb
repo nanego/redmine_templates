@@ -21,4 +21,20 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def issue_template_map
+    @issue_template_map ||= Rails.cache.fetch("issue_templates-#{IssueTemplate.maximum("created_at").to_i}") do
+      
+      templates_by_project_map = {}
+
+      @entries.each do |p|
+        issue_templates = p.send("issue_templates")
+        templates_by_project_map[p.id] = issue_templates.pluck(:template_title).compact.join(', ').html_safe
+      end
+      templates_by_project_map
+
+    end 
+  end
+
+  helper_method :issue_template_map
+
 end

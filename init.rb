@@ -8,6 +8,8 @@ ActiveSupport::Reloader.to_prepare do
   require_dependency 'redmine_templates/projects_controller_patch' if Redmine::Plugin.installed?(:redmine_limited_visibility)
   require_dependency 'redmine_templates/issue_patch'
   require_dependency 'redmine_templates/helpers/projects_helper_patch'
+  require_dependency 'redmine_templates/project_query_patch'
+  require_dependency 'redmine_templates/queries_helper_patch'
 end
 
 Redmine::Plugin.register :redmine_templates do
