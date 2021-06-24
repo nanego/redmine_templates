@@ -22,7 +22,7 @@ class ProjectsController < ApplicationController
   end
 
   def issue_template_map
-    @issue_template_map ||= Rails.cache.fetch("issue_templates-#{IssueTemplate.maximum("created_at").to_i}") do
+    #@issue_template_map ||= Rails.cache.fetch("issue_templates-#{IssueTemplate.maximum("created_at").to_i}") do
       
       templates_by_project_map = {}
 
@@ -32,7 +32,7 @@ class ProjectsController < ApplicationController
       end
       templates_by_project_map
 
-    end 
+    #end 
   end
 
   helper_method :issue_template_map
