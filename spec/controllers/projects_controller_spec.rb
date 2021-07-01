@@ -85,7 +85,7 @@ describe ProjectsController, type: :controller do
 
       lines = response.body.chomp.split("\n")
       
-      expect(lines[0].split(',')[1]).to eq "Active issue template"
+      expect(lines[0].split(',')[1]).to eq "Issue template"
       expect(lines[1].split(',')[0]).to eq Project.find(6).name
       expect(lines[1].split(',')[1]).to eq template.template_title
     end
