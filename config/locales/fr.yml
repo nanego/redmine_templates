@@ -51,5 +51,5 @@ fr:
   label_issue_template: "Modèle de demande"
   default_template_visibility: "Visibilité par défaut du modèle"
   field_autocomplete_subject: "Générer le sujet"
-  field_issue_templates: "Modèles de demande actifs"
-  field_issue_template_id: "Modèle de demande actif"
+  field_issue_templates: "Modèles de demande"
+  field_issue_template_id: "Modèle de demande"

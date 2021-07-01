@@ -7,7 +7,9 @@ module PluginRedmineTemplates
       if item.is_a? Project
         case column.name
         when :issue_template_id
-          issue_template_map[item.id]
+          if issue_template_map[item.id].present?
+            issue_template_map[item.id].map(&:template_title).compact.join(', ')
+          end
         else
           super
         end
@@ -16,16 +18,18 @@ module PluginRedmineTemplates
       end
     end
 
-    def csv_content(column, project)
-      case column.name
-      when   :issue_template_id
-        value = issue_template_map[project.id]
+    def csv_content(column, item)
+      if item.is_a? Project
+        case column.name
+        when :issue_template_id
+          value = issue_template_map[item.id].present? ? issue_template_map[item.id].map(&:template_title).compact.join(', ') : ''
+        else
+          return super
+        end
+        csv_value(column, item, value)
       else
-        return super
+        super
       end
-      
-      csv_value(column, project, value) 
-
     end
   end
 end
