@@ -9,7 +9,7 @@ describe "ProjectQuery" do
 
   def find_projects_with_query(query)
     Project.where(
-        query.statement
+      query.statement
     ).all
   end
 
@@ -27,35 +27,35 @@ describe "ProjectQuery" do
   it "should ProjectQuery have available_filters issue_templates" do
     query = ProjectQuery.new
     expect(query.available_filters).to include 'issue_templates'
-  end 
+  end
 
   describe "should filter projects with issue_templates" do
     it "operator equal =" do
       add_new_issue_template
       project = Project.find(2)
-      query = ProjectQuery.new(:name => '_', :filters => { 'issue_templates' => {:operator => '=', :values => [1] } })    
+      query = ProjectQuery.new(:name => '_', :filters => { 'issue_templates' => { :operator => '=', :values => [1] } })
       result = find_projects_with_query(query)
       expect(result).to include project
     end
 
     it "operator not equal !" do
       project = Project.find(2)
-      query = ProjectQuery.new(:name => '_', :filters => { 'issue_templates' => {:operator => '!', :values => [1] } })    
+      query = ProjectQuery.new(:name => '_', :filters => { 'issue_templates' => { :operator => '!', :values => [1] } })
       result = find_projects_with_query(query)
       expect(result).not_to include project
     end
 
     it "operator all *" do
       add_new_issue_template
-      query = ProjectQuery.new(:name => '_', :filters => { 'issue_templates' => {:operator => '*', :values => [1] } })    
-      result = find_projects_with_query(query)       
+      query = ProjectQuery.new(:name => '_', :filters => { 'issue_templates' => { :operator => '*', :values => [1] } })
+      result = find_projects_with_query(query)
       expect(result.count).to eq 2
     end
 
-    it "operator any !*" do    
-      query = ProjectQuery.new(:name => '_', :filters => { 'issue_templates' => {:operator => '!*', :values => [1] } })    
+    it "operator any !*" do
+      query = ProjectQuery.new(:name => '_', :filters => { 'issue_templates' => { :operator => '!*', :values => [1] } })
       result = find_projects_with_query(query)
       expect(result.count).to eq 5
     end
-  end  
+  end
 end

@@ -25,14 +25,14 @@ describe IssueTemplatesController, type: :controller do
     end
 
     it "should succeed with project id" do
-      post :init, params: {:project_id => 1}
+      post :init, params: { :project_id => 1 }
       expect(response).to be_successful
       assert_template 'new'
     end
 
     it "forbids to init new template if user has no permission" do
       role.remove_permission!(:create_issue_templates)
-      post :init, params: {:project_id => 1}
+      post :init, params: { :project_id => 1 }
       expect(response).to have_http_status(:forbidden)
     end
   end
@@ -55,12 +55,12 @@ describe IssueTemplatesController, type: :controller do
   context "GET edit" do
     it "forbids issue modification if user has no permission" do
       role.remove_permission!(:create_issue_templates)
-      get :edit, params: {id: template.id}
+      get :edit, params: { id: template.id }
       expect(response).to have_http_status(:forbidden)
     end
 
     it "should succeed with an id" do
-      get :edit, params: {id: IssueTemplate.first.id}
+      get :edit, params: { id: IssueTemplate.first.id }
       expect(response).to be_successful
       assert_template 'edit'
       expect(assigns(:issue_template).descriptions).to_not be_nil
@@ -72,17 +72,17 @@ describe IssueTemplatesController, type: :controller do
       role.remove_permission!(:create_issue_templates)
 
       expect {
-        put :update, params: {:id => template.id, issue_template: {subject: "Modified subject"}}
+        put :update, params: { :id => template.id, issue_template: { subject: "Modified subject" } }
       }.to_not change { template.subject }
 
       expect(response).to have_http_status(:forbidden)
     end
 
     it "should succeed and update the first template" do
-      post :create, params: {:issue_template => {subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1]}}
+      post :create, params: { :issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] } }
       template = IssueTemplate.last
       assert_no_difference('IssueTemplate.count') do
-        put :update, params: {:id => template.id, issue_template: {subject: "Modified subject"}}
+        put :update, params: { :id => template.id, issue_template: { subject: "Modified subject" } }
       end
       expect(response).to redirect_to edit_issue_template_path(template)
       template.reload
@@ -104,23 +104,23 @@ describe IssueTemplatesController, type: :controller do
 
       assert_difference('IssueTemplateDescription.count', 1) do
         put :update, params: {
-            :id => template_with_instruction.id,
-            issue_template: {
-                descriptions_attributes: {
-                    "0" => {
-                        :id => template_with_instruction.descriptions.first.id,
-                        :text => template_with_instruction.descriptions.first.text,
-                        :type => template_with_instruction.descriptions.first.type,
-                        :position => 2,
-                    },
-                    "1" => {
-                        :text => "Text of an other instruction field 2",
-                        :type => "IssueTemplateDescriptionInstruction",
-                        :instruction_type => 'warning',
-                        :position => 1,
-                    }
-                }
+          :id => template_with_instruction.id,
+          issue_template: {
+            descriptions_attributes: {
+              "0" => {
+                :id => template_with_instruction.descriptions.first.id,
+                :text => template_with_instruction.descriptions.first.text,
+                :type => template_with_instruction.descriptions.first.type,
+                :position => 2,
+              },
+              "1" => {
+                :text => "Text of an other instruction field 2",
+                :type => "IssueTemplateDescriptionInstruction",
+                :instruction_type => 'warning',
+                :position => 1,
+              }
             }
+          }
         }
       end
 
@@ -138,7 +138,7 @@ describe IssueTemplatesController, type: :controller do
     it "forbids to init a new template if user has no permission" do
       role.remove_permission!(:create_issue_templates)
 
-      post :init, params: {:project_id => '1', :tracker_id => '1'}
+      post :init, params: { :project_id => '1', :tracker_id => '1' }
 
       expect(response).to have_http_status(:forbidden)
     end
@@ -147,14 +147,14 @@ describe IssueTemplatesController, type: :controller do
       role.remove_permission!(:create_issue_templates)
 
       expect {
-        post :create, params: {:issue_template => {subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1]}}
+        post :create, params: { :issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] } }
       }.to_not change(IssueTemplate, :count)
 
       expect(response).to have_http_status(:forbidden)
     end
 
     it "should succeed and assign a new template" do
-      post :create, params: {:issue_template => {subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1]}}
+      post :create, params: { :issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] } }
       new_template = IssueTemplate.last
       expect(response).to redirect_to(edit_issue_template_path(new_template))
       expect(flash[:notice]).to eq "New issue template successfully created!"
@@ -162,23 +162,23 @@ describe IssueTemplatesController, type: :controller do
     end
 
     it "should add issue template through the init new template screen" do
-      post :init, params: {:project_id => '1', :tracker_id => '1'}
+      post :init, params: { :project_id => '1', :tracker_id => '1' }
       expect(response).to be_successful
       assert_template 'new'
 
-      post :create, params: {:issue_template => {:tracker_id => '1',
-                                                 :start_date => "2006-12-26",
-                                                 :priority_id => "4",
-                                                 :subject => "new test template subject",
-                                                 :description => "new template description",
-                                                 :done_ratio => "0",
-                                                 :due_date => "",
-                                                 :assigned_to_id => "",
-                                                 :template_title => "Init new template",
-                                                 :template_enabled => true,
-                                                 :project_id => '1',
-                                                 :template_project_ids => ['1'],
-                                                 :status_id => '1'}}
+      post :create, params: { :issue_template => { :tracker_id => '1',
+                                                   :start_date => "2006-12-26",
+                                                   :priority_id => "4",
+                                                   :subject => "new test template subject",
+                                                   :description => "new template description",
+                                                   :done_ratio => "0",
+                                                   :due_date => "",
+                                                   :assigned_to_id => "",
+                                                   :template_title => "Init new template",
+                                                   :template_enabled => true,
+                                                   :project_id => '1',
+                                                   :template_project_ids => ['1'],
+                                                   :status_id => '1' } }
 
       # find created template
       template = IssueTemplate.find_by_template_title("Init new template")
