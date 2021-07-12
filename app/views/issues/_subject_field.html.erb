@@ -1,4 +1,5 @@
-<% unless @issue.issue_template.present? &&
+<% unless @issue.new_record? &&
+  @issue.issue_template.present? &&
   @issue.issue_template.autocomplete_subject &&
   @issue.issue_template.subject.present? %>
   <p><%= f.text_field :subject, :size => 80, :maxlength => 255, :required => true %></p>
