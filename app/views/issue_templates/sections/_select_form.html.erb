@@ -40,6 +40,7 @@
                       options_for_select(IssueTemplateDescription::DISPLAY_MODES.collect { |mode| [l(mode), mode] },
                                          selected: (form.object.present? ? form.object.display_mode : '')),
                       label: l('display_mode') %>
+      <span><i>Option active uniquement pour les champs de type "Checkbox"</i></span>
     </p>
   </div>
 <% end %>
