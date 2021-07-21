@@ -48,3 +48,6 @@ en:
   field_autocomplete_subject: "Autocomplete subject"
   field_issue_templates: "Issue templates"
   field_issue_template_id: "Issue template"
+  all_values: All values
+  selected_values_only: Selected values only
+  display_mode: Display mode

@@ -34,5 +34,12 @@
                                          selected: (form.object.present? ? form.object.select_type : '')),
                       label: "Type" %>
     </p>
+
+    <p>
+      <%= form.select :display_mode,
+                      options_for_select(IssueTemplateDescription::DISPLAY_MODES.collect { |mode| [l(mode), mode] },
+                                         selected: (form.object.present? ? form.object.display_mode : '')),
+                      label: l('display_mode') %>
+    </p>
   </div>
 <% end %>

@@ -98,6 +98,7 @@ select:
   issue_template_id: 3
   position: 7
   required: false
+  display_mode: "all_values"
 twelve:
   id: 12
   title: "Title repeatable group"
@@ -158,3 +159,13 @@ repeatable_select:
   position: 7
   required: false
   select_type: "checkbox"
+select_with_display_mode:
+  id: 19
+  title: "New select field displaying only selected values"
+  type: "IssueTemplateDescriptionSelect"
+  text: "value-1;value-2"
+  issue_template_id: 6
+  position: 8
+  required: true
+  select_type: "checkbox"
+  display_mode: "selected_values_only"

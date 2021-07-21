@@ -175,7 +175,12 @@ describe IssuesController, type: :controller do
                   "0" => ["1", "0"],
                   "1" => ["0", "1"],
                   :id => "18",
-                }
+                },
+                "7" => {
+                  "0" => ["1", "0"],
+                  "1" => ["0", "1"],
+                  :id => "19",
+                },
               },
             },
           },
@@ -194,6 +199,8 @@ describe IssuesController, type: :controller do
         \r\n*Select field :* \r
         * value1 : Yes \r
         * value2 : No \r
+        \r\n*New select field displaying only selected values :* \r
+        * value-1 : Yes \r
         \r\n-----\r
         \r\n*New one-line field :* second line\r
         \r\n*New date field :* 2020-12-31\r
@@ -202,6 +209,8 @@ describe IssuesController, type: :controller do
         \r\n*Select field :* \r
         * value1 : No \r
         * value2 : Yes \r
+        \r\n*New select field displaying only selected values :* \r
+        * value-2 : Yes \r
                                    DESCRIPTION
                                    )
     end

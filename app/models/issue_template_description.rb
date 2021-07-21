@@ -2,6 +2,8 @@ class IssueTemplateDescription < ActiveRecord::Base
 
   belongs_to :issue_template
 
+  DISPLAY_MODES = [:all_values, :selected_values_only]
+
   def self.editable?
     true
   end
@@ -153,13 +155,20 @@ class IssueTemplateDescriptionSelect < IssueTemplateDescription
         else
           self.text.split(';').each_with_index do |value, index|
             boolean_value = value_from_boolean_attribute(section_attributes[index.to_s], repeatable_group_index)
-            description_text += section_item(value, boolean_value, textile: textile)
+            unless value_hidden_by_display_mode(boolean_value)
+              description_text += section_item(value, boolean_value, textile: textile)
+            end
           end
         end
       end
       description_text
     end
   end
+
+  def value_hidden_by_display_mode(boolean_value)
+    self.display_mode == "selected_values_only" && boolean_value == l(:general_text_No)
+  end
+
 end
 
 class IssueTemplateDescriptionInstruction < IssueTemplateDescription

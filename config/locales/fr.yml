@@ -53,3 +53,6 @@ fr:
   field_autocomplete_subject: "Générer le sujet"
   field_issue_templates: "Modèles de demande"
   field_issue_template_id: "Modèle de demande"
+  all_values: Toutes les valeurs
+  selected_values_only: Seulement les valeurs sélectionnées
+  display_mode: Type de rendu
