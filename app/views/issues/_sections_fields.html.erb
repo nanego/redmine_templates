@@ -35,11 +35,22 @@
 
 <script>
 
+    var resetAllFields = function (element) {
+        $(element).find('input').val('');
+        $(element).find('textarea').val('');
+        $(element).find('select').prop('selectedIndex', 0);
+        $(element).find('input').attr('checked', false);
+    }
+
     $('form#issue-form').on('click', '.append_sections_group', function (event) {
         event.preventDefault()
 
         let group_to_copy = $("#" + event.target.getAttribute("data-group-id"))
         let new_group = group_to_copy.clone()
+
+        // Reset new group fields
+        resetAllFields(new_group)
+
         let new_group_id = new_group.attr('id') + "-" + Date.now()
         new_group.attr("id", "")
 
