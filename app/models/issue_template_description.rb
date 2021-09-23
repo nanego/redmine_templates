@@ -14,7 +14,7 @@ class IssueTemplateDescription < ActiveRecord::Base
 
   def last?
     if issue_template.descriptions.present?
-      issue_template.descriptions.last == self || issue_template.descriptions[self.position]&.is_a_separator?
+      issue_template.descriptions.last == self || issue_template.descriptions[self.position.to_i]&.is_a_separator?
     else
       false
     end
