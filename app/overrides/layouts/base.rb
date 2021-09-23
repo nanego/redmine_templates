@@ -1,4 +1,4 @@
-Deface::Override.new :virtual_path => 'layouts/base',
+    Deface::Override.new :virtual_path => 'layouts/base',
                      :original => '6d866be07ab71d8f7331eb997afc62950e6558ac',
                      :name => 'add-js-script-to-layout',
                      :insert_bottom => 'body' do

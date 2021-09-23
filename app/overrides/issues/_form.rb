@@ -1,3 +1,4 @@
+
 Deface::Override.new :virtual_path => 'issues/_form',
                      :name         => 'insert_tracker_field_with_read_only_mode',
                      :replace      => 'p:contains("f.select :tracker_id")',
@@ -19,7 +20,7 @@ Deface::Override.new :virtual_path => 'issues/_form_with_positions',
 
 Deface::Override.new :virtual_path      => "issues/_form",
                      :name              => "display_description_field_with_sections",
-                     :replace            => "erb[silent]:contains(\"if @issue.safe_attribute? 'description' \")",
+                     :replace           => "erb[silent]:contains(\"if @issue.safe_attribute? 'description' \")",
                      :original          => "0dbbe91b2f6ecf9a66aa7e994df6381f90f19219",
                      :closing_selector  => "erb[silent]:contains('end')",
                      :partial           => "issues/description_field"
@@ -29,6 +30,7 @@ Deface::Override.new :virtual_path      => "issues/_form_with_positions",
                      :original          => "0dbbe91b2f6ecf9a66aa7e994df6381f90f19219",
                      :closing_selector  => "erb[silent]:contains('end')",
                      :partial           => "issues/description_field"
+
 Deface::Override.new :virtual_path      => "issues/_form",
                      :name              => "add_sections_fields",
                      :insert_bottom     => "#attributes",
@@ -39,4 +41,3 @@ Deface::Override.new :virtual_path      => "issues/_form_with_positions",
                      :insert_bottom     => "#attributes",
                      :original          => "0dbbe91b2f6ecf9a66aa7e994df6381f90f19219",
                      :partial           => "issues/sections_fields"
-

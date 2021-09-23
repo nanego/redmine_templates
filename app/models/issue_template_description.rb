@@ -4,6 +4,8 @@ class IssueTemplateDescription < ActiveRecord::Base
 
   DISPLAY_MODES = [:all_values, :selected_values_only]
 
+  validates_presence_of :position
+
   def self.editable?
     true
   end
@@ -13,11 +15,7 @@ class IssueTemplateDescription < ActiveRecord::Base
   end
 
   def last?
-    if issue_template.descriptions.present?
-      issue_template.descriptions.last == self || issue_template.descriptions[self.position.to_i]&.is_a_separator?
-    else
-      false
-    end
+    issue_template.descriptions.last == self || issue_template.descriptions[self.position]&.is_a_separator?
   end
 
   def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
