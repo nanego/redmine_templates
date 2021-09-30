@@ -5,6 +5,7 @@ class IssueTemplateDescription < ActiveRecord::Base
   DISPLAY_MODES = [:all_values, :selected_values_only]
 
   validates_presence_of :position
+  acts_as_list scope: [:issue_template_id]
 
   def self.editable?
     true

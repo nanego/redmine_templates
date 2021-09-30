@@ -84,7 +84,8 @@ describe "IssueTemplate" do
                                  :descriptions_attributes => [{
                                     :title => "Section title",
                                     :description => "Section description",
-                                    :type => "IssueTemplateDescriptionSection"
+                                    :type => "IssueTemplateDescriptionSection",
+                                    :position => 1
                                  }]
                                 )
     expect(template.valid?).to eq true
@@ -103,7 +104,8 @@ describe "IssueTemplate" do
                                  :template_project_ids => [1],
                                  :descriptions_attributes => [{
                                     :description => "Section description",
-                                    :type => "IssueTemplateDescriptionSection"
+                                    :type => "IssueTemplateDescriptionSection",
+                                    :position => 1
                                  }]
                                 )
     expect(template.valid?).to eq false
@@ -122,7 +124,8 @@ describe "IssueTemplate" do
                                  :template_project_ids => [1],
                                  :descriptions_attributes => [{
                                     :text => "Consigne pour remplir le formulaire de création d'une demande",
-                                    :type => "IssueTemplateDescriptionInstruction"
+                                    :type => "IssueTemplateDescriptionInstruction",
+                                    :position => 1
                                  }]
                                 )
     expect(template.valid?).to eq true
@@ -140,7 +143,8 @@ describe "IssueTemplate" do
                                  :template_enabled => true,
                                  :template_project_ids => [1],
                                  :descriptions_attributes => [{
-                                    :type => "IssueTemplateDescriptionInstruction"
+                                    :type => "IssueTemplateDescriptionInstruction",
+                                    :position => 1
                                  }]
                                 )
     expect(template.descriptions.size).to eq 0
@@ -160,7 +164,8 @@ describe "IssueTemplate" do
                                    :descriptions_attributes => [{
                                       :title => "Section title",
                                       :description => "Section description",
-                                      :type => "IssueTemplateDescriptionSection"
+                                      :type => "IssueTemplateDescriptionSection",
+                                      :position => 1
                                    }]
                                   )
       template.save
@@ -198,13 +203,13 @@ describe "IssueTemplate" do
                                    :descriptions_attributes => [{
                                       :title => "Section title",
                                       :description => "Section description",
-                                      :type => "IssueTemplateDescriptionSection"
+                                      :type => "IssueTemplateDescriptionSection",
+                                      :position => 1
                                    }]
                                   )
 
-      template.save
+      expect(template.save).to be_truthy
       template.reload
-
       expect(template.descriptions.size).to eq 1
     end
   end

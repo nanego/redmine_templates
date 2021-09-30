@@ -104,20 +104,20 @@ describe IssueTemplatesController, type: :controller do
 
       assert_difference('IssueTemplateDescription.count', 1) do
         put :update, params: {
-          :id => template_with_instruction.id,
+          id: template_with_instruction.id,
           issue_template: {
             descriptions_attributes: {
               "0" => {
                 :id => template_with_instruction.descriptions.first.id,
                 :text => template_with_instruction.descriptions.first.text,
                 :type => template_with_instruction.descriptions.first.type,
-                :position => 2,
+                :position => 1
               },
               "1" => {
                 :text => "Text of an other instruction field 2",
                 :type => "IssueTemplateDescriptionInstruction",
                 :instruction_type => 'warning',
-                :position => 1,
+                :position => 2
               }
             }
           }
@@ -127,9 +127,10 @@ describe IssueTemplatesController, type: :controller do
       expect(response).to redirect_to edit_issue_template_path(template_with_instruction)
       template_with_instruction.reload
       assert_match /updated/, flash[:notice]
-      expect(template_with_instruction.descriptions.first.text).to eq "Text of an other instruction field 2"
+      expect(template_with_instruction.descriptions.size).to eq 2
+      expect(template_with_instruction.descriptions.first.text).to eq "Text of an instruction field"
       expect(template_with_instruction.descriptions.first.position).to eq 1
-      expect(template_with_instruction.descriptions.second.text).to eq "Text of an instruction field"
+      expect(template_with_instruction.descriptions.second.text).to eq "Text of an other instruction field 2"
       expect(template_with_instruction.descriptions.second.position).to eq 2
     end
   end
