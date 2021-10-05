@@ -27,6 +27,7 @@ RSpec.describe "creating issues with templates", type: :system do
            :workflows, :issue_templates, :issue_template_projects, :issue_template_descriptions
 
   let(:template_with_sections) { IssueTemplate.find(3) }
+  let(:template_4) { IssueTemplate.find(4) }
   let(:project) { Project.find(2) }
 
   before do
@@ -41,6 +42,7 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to_not have_selector("description")
       expect(page).to have_selector('#issue_issue_template_descriptions_attributes_0_text', text: "Type here first section content")
       expect(page).to have_selector('#issue_issue_template_descriptions_attributes_2_text') #, text: "Default content"
+      expect(page).to have_selector('#attachments_form')
 
       fill_in 'issue_issue_template_descriptions_attributes_2_text', with: 'One-line edited content'
       fill_in 'issue_issue_template_descriptions_attributes_3_text', with: '01/01/2020'
@@ -49,6 +51,14 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to have_selector('.description', text: "Type here first section content")
       expect(page).to have_selector('.description', text: "Type here second section content")
       expect(page).to have_selector('.description', text: 'One-line edited content')
+    end
+  end
+
+  describe "hidden fields" do
+    it "can hide file attachment part" do
+      visit new_issue_path(project_id: project.identifier, template_id: template_4.id)
+      expect(page).to have_field('Subject', with: 'test_create')
+      expect(page).to_not have_selector('#attachments_form')
     end
   end
 

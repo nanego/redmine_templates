@@ -1,0 +1,5 @@
+<% unless @issue.new_record? &&
+  @issue.issue_template.present? &&
+  @issue.issue_template.hide_file_attachment %>
+  <p id="attachments_form"><label><%= l(:label_attachment_plural) %></label><%= render :partial => 'attachments/form', :locals => {:container => @issue} %></p>
+<% end %>

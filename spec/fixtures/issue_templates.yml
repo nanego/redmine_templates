@@ -7,6 +7,7 @@ one:
   tracker_id: 1
   template_title: "Template title one"
   split_description: '0'
+  hide_file_attachment: false
 two:
   id: 2
   author_id: 1
@@ -16,6 +17,7 @@ two:
   tracker_id: 3
   template_title: "Template title two"
   split_description: '0'
+  hide_file_attachment: false
 three:
   id: 3
   author_id: 2
@@ -26,6 +28,7 @@ three:
   template_title: "Template with sections"
   template_enabled: true
   split_description: '1'
+  hide_file_attachment: false
 four:
   id: 4
   author_id: 2
@@ -36,6 +39,7 @@ four:
   template_title: "Template 4"
   template_enabled: true
   split_description: '1'
+  hide_file_attachment: true
 five:
   id: 5
   author_id: 2
@@ -46,6 +50,7 @@ five:
   template_title: 'New template with instructions'
   template_enabled: true
   split_description: '1'
+  hide_file_attachment: false
 six:
   id: 6
   author_id: 2
@@ -56,3 +61,4 @@ six:
   template_title: "Template with repeatable sections"
   template_enabled: true
   split_description: '1'
+  hide_file_attachment: false

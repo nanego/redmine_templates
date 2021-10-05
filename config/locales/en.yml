@@ -6,6 +6,8 @@ en:
   button_save_issue_template: "Save this template"
   field_template_title: "Template name"
   field_tracker_read_only: "Tracker read only"
+  field_hide_file_attachment: "Hide file attachment field"
+  field_template_enabled: "Enabled"
   field_split_description: Replace standard description field with sections
   template_is_enabled: "Template enabled"
   label_issue_templates: "Issue templates"

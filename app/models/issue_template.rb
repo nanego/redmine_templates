@@ -49,6 +49,7 @@ class IssueTemplate < ActiveRecord::Base
                   :template_image,
                   :template_enabled,
                   :show_on_overview,
+                  :hide_file_attachment,
                   :is_private,
                   :status_id,
                   :category_id,
