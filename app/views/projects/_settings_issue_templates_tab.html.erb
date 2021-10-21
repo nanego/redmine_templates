@@ -34,7 +34,7 @@
         </tr>
         </thead>
         <tbody>
-        <% IssueTemplate.order("custom_form desc, tracker_id desc, usage desc").each do |issue_template| %>
+        <% IssueTemplate.active.order("custom_form desc, tracker_id desc, usage desc").each do |issue_template| %>
           <tr class="issue_template issue">
             <td>
               <%= label_tag do %>
