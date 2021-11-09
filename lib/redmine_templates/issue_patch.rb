@@ -4,12 +4,12 @@ class Issue < ActiveRecord::Base
 
   # Subtitute variables with values
   def substituted(text, sections_params = [])
-    text.gsub(/{\w+}/) do |attribute|
+    text.gsub(/{[[:word:]]*}/) do |attribute|
       attribute = attribute.delete_prefix("{").delete_suffix("}")
       case attribute
       when /^cf_\d+/
         custom_field_value_by_id(attribute.delete_prefix("cf_"))
-      when /^cf_\w+/
+      when /^cf_[[:word:]]*/
         custom_field_value_by_name(attribute.delete_prefix("cf_"))
       when /^section_\d+/
         section_value_by_id(attribute.delete_prefix("section_"), sections_params)

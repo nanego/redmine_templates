@@ -49,6 +49,11 @@ describe "Issue" do
         expect(issue.substituted(pattern)).to eq "125: Cannot add articles to shopping cart"
       end
 
+      it "replaces custom_field variable with blank value if custom field does not exist" do
+        pattern = "Issue created by {cf_prénom}"
+        expect(issue.substituted(pattern)).to eq "Issue created by "
+      end
+
     end
 
     describe :sections_attributes do
