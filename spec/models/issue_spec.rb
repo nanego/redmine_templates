@@ -64,7 +64,7 @@ describe "Issue" do
 
       it "replaces sections variable with value in params" do
         pattern = "{section_2}: Cannot add articles to shopping cart"
-        expect(issue.substituted(pattern, sections_params: sections_params)).to eq "Value field section: Cannot add articles to shopping cart"
+        expect(issue.substituted(pattern, sections_params)).to eq "Value field section: Cannot add articles to shopping cart"
       end
 
     end
