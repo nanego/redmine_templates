@@ -88,14 +88,14 @@ class IssuesController < ApplicationController
         end
       end
 
-      @issue.description = issue_description
+      @issue.description = @issue.substituted(issue_description, @sections_attributes)
     end
   end
 
   def update_subject_when_autocomplete
     issue_template = @issue.issue_template
     if issue_template.present? && issue_template.autocomplete_subject && issue_template.subject.present?
-      @issue.subject = @issue.generated_subject(pattern: issue_template.subject, sections_params: @sections_attributes)
+      @issue.subject = @issue.substituted(issue_template.subject, @sections_attributes)
     end
   end
 

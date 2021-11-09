@@ -105,6 +105,36 @@ describe IssuesController, type: :controller do
       expect(issue.description).to eq("\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
     end
 
+    it "joins multiple sections into one description and substitute variables with values" do
+      assert_difference('Issue.count', 1) do
+        post :create, :params => {
+          :project_id => 1,
+          :issue => {
+            :tracker_id => 3,
+            :status_id => 2,
+            :subject => 'This is the test_new issue',
+            :description => 'This is the description',
+            :priority_id => 5,
+            :issue_template_id => template.id,
+            :issue_template => {
+              :descriptions_attributes => {
+                "0" => {
+                  :text => "Test text {tracker}"
+                },
+                "1" => {
+                  :text => "Second test text"
+                }
+              },
+            },
+          },
+        }
+      end
+
+      issue = Issue.last
+      expect(issue).not_to be_nil
+      expect(issue.description).to eq("\r\n*Section title :* \r\nTest text Support request\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
+    end
+
     it "joins multiple sections and use them to generate the subject" do
       template.autocomplete_subject = true
       template.subject = "{section_0} -> {section_1}"
