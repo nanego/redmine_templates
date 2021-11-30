@@ -23,11 +23,66 @@ class IssueTemplateDescription < ActiveRecord::Base
     # Defined in subclasses
   end
 
+  def value_from_boolean_attribute(attribute, array_index)
+    if attribute.is_a?(Array)
+      attribute[array_index] == '1' ? l(:general_text_Yes) : l(:general_text_No)
+    else
+      attribute == '1' ? l(:general_text_Yes) : l(:general_text_No)
+    end
+  end
+
+  def value_from_text_attribute(attributes, array_index)
+    if attributes[:text].is_a?(Array) && array_index.present?
+      attributes[:text][array_index].present? ? attributes[:text][array_index] : attributes[:empty_value]
+    elsif attributes[:text].is_a?(Hash) && array_index.present?
+      values = attributes[:text].map { |k, v| v }
+      values[array_index].present? ? values[array_index] : attributes[:empty_value]
+    else
+      attributes[:text].present? ? attributes[:text] : attributes[:empty_value]
+    end
+  end
+
+  def textile_separator_with_title(title)
+    "#{textile_separator}\r\nh2. #{title}\r\n\r\n"
+  end
+
+  def textile_separator
+    "\r\n-----\r\n"
+  end
+
+  def section_title(title, value = nil, textile: true)
+    if textile
+      "\r\n*#{title} :* #{value}\r\n"
+    else
+      "#{title} : #{value}"
+    end
+  end
+
+  def section_item(label, inline_value = nil, textile: true)
+    inline_value = " : #{inline_value} " if inline_value.present?
+    if textile
+      "* #{label}#{inline_value}\r\n"
+    else
+      "#{label}#{inline_value}"
+    end
+  end
+
+  def section_basic_entry(value, textile: true)
+    if textile
+      "#{value}\r\n"
+    else
+      "#{value}"
+    end
+  end
+
 end
 
 class IssueTemplateDescriptionField < IssueTemplateDescription
   validates_presence_of :title
-  def self.short_name; "field" end
+
+  def self.short_name
+    "field"
+  end
 
   def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     value = value_from_text_attribute(section_attributes, repeatable_group_index)
@@ -42,7 +97,10 @@ end
 
 class IssueTemplateDescriptionCheckbox < IssueTemplateDescription
   validates_presence_of :title
-  def self.short_name; "checkbox" end
+
+  def self.short_name
+    "checkbox"
+  end
 
   def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     value = value_from_boolean_attribute(section_attributes[:text], repeatable_group_index)
@@ -56,7 +114,10 @@ end
 
 class IssueTemplateDescriptionSection < IssueTemplateDescription
   validates_presence_of :title
-  def self.short_name; "section" end
+
+  def self.short_name
+    "section"
+  end
 
   def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     value = value_from_text_attribute(section_attributes, repeatable_group_index)
@@ -69,9 +130,17 @@ class IssueTemplateDescriptionSection < IssueTemplateDescription
 end
 
 class IssueTemplateDescriptionSeparator < IssueTemplateDescription
-  def self.short_name; "separator" end
-  def self.editable?;false end
-  def is_a_separator?;true  end
+  def self.short_name
+    "separator"
+  end
+
+  def self.editable?
+    false
+  end
+
+  def is_a_separator?
+    true
+  end
 
   def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     textile_separator if textile
@@ -79,8 +148,13 @@ class IssueTemplateDescriptionSeparator < IssueTemplateDescription
 end
 
 class IssueTemplateDescriptionTitle < IssueTemplateDescription
-  def self.short_name; "title" end
-  def is_a_separator?;true  end
+  def self.short_name
+    "title"
+  end
+
+  def is_a_separator?
+    true
+  end
 
   def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
     textile_separator_with_title(title) if textile
@@ -102,7 +176,7 @@ class IssueTemplateDescriptionDate < IssueTemplateDescription
   validates :select_type, :presence => true
 
   def self.select_types_options
-    TYPES.collect { |t| [ t.to_s.humanize.capitalize, t ] }
+    TYPES.collect { |t| [t.to_s.humanize.capitalize, t] }
   end
 
   def self.short_name
@@ -132,40 +206,53 @@ class IssueTemplateDescriptionSelect < IssueTemplateDescription
   validates :select_type, :presence => true
 
   def self.select_types_options
-    TYPES.collect { |t| [ t.to_s.humanize.capitalize, t ] }
+    TYPES.collect { |t| [t.to_s.humanize.capitalize, t] }
   end
 
   def self.short_name
     "select"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
+  def rendered_value(section_attributes, repeatable_group_index = nil, textile: true, value_only: false)
     case self.select_type
     when "monovalue_select", "radio"
+      value = value_from_text_attribute(section_attributes, repeatable_group_index)
       if value_only
-        section_basic_entry(section_attributes[:text], textile: textile)
+        section_basic_entry(value, textile: textile)
       else
-        section_title(title, section_attributes[:text], textile: textile)
+        section_title(title, value, textile: textile)
       end
     else
       description_text = value_only ? "" : section_title(title, textile: textile)
       if self.text.present?
         if self.select_type == 'multivalue_select'
+          # MultiValueSelect
           selected_values = section_attributes[:text] || []
           selected_values.each do |selected_value|
             description_text += section_item(selected_value, textile: textile)
           end
         else
-          self.text.split(';').each_with_index do |value, index|
-            boolean_value = value_from_boolean_attribute(section_attributes[index.to_s], repeatable_group_index)
-            unless value_hidden_by_display_mode(boolean_value)
-              description_text += section_item(value, boolean_value, textile: textile)
-            end
-          end
+          # MultiCheckboxes
+          possible_values = self.text.split(';')
+          description_text += rendered_multicheckbox_values(possible_values, section_attributes, repeatable_group_index, textile: textile)
         end
       end
       description_text
     end
+  end
+
+  def rendered_multicheckbox_values(possible_values, section_attributes, repeatable_group_index, textile: true)
+    description_text = ""
+    attributes = repeatable_group_index.present? ? section_attributes['values'].values[repeatable_group_index].values : section_attributes.values
+
+    possible_values.each_with_index do |value, index|
+      boolean_value = value_from_boolean_attribute(attributes[index], repeatable_group_index)
+      unless value_hidden_by_display_mode(boolean_value)
+        description_text += section_item(value, boolean_value, textile: textile)
+      end
+    end
+
+    description_text
   end
 
   def value_hidden_by_display_mode(boolean_value)
@@ -192,55 +279,5 @@ class IssueTemplateDescriptionInstruction < IssueTemplateDescription
     '' # Nothing to render
   end
 end
+
 # Instruction must be the last subclass (insert new class before if needed)
-
-private
-
-def value_from_boolean_attribute(attribute, array_index)
-  if attribute.is_a?(Array)
-    attribute[array_index] == '1' ? l(:general_text_Yes) : l(:general_text_No)
-  else
-    attribute == '1' ? l(:general_text_Yes) : l(:general_text_No)
-  end
-end
-
-def value_from_text_attribute(attributes, array_index)
-  if attributes[:text].is_a?(Array)
-    attributes[:text][array_index].present? ? attributes[:text][array_index] : attributes[:empty_value]
-  else
-    attributes[:text].present? ? attributes[:text] : attributes[:empty_value]
-  end
-end
-
-def textile_separator_with_title(title)
-  "#{textile_separator}\r\nh2. #{title}\r\n\r\n"
-end
-
-def textile_separator
-  "\r\n-----\r\n"
-end
-
-def section_title(title, value = nil, textile: true)
-  if textile
-    "\r\n*#{title} :* #{value}\r\n"
-  else
-    "#{title} : #{value}"
-  end
-end
-
-def section_item(label, inline_value = nil, textile: true)
-  inline_value = " : #{inline_value} " if inline_value.present?
-  if textile
-    "* #{label}#{inline_value}\r\n"
-  else
-    "#{label}#{inline_value}"
-  end
-end
-
-def section_basic_entry(value, textile: true)
-  if textile
-    "#{value}\r\n"
-  else
-    "#{value}"
-  end
-end

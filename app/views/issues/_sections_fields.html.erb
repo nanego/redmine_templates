@@ -36,7 +36,7 @@
 <script>
 
     var resetAllFields = function (element) {
-        $(element).find('input').val('');
+        $(element).find('input[type=text]').val('');
         $(element).find('textarea').val('');
         $(element).find('select').prop('selectedIndex', 0);
         $(element).find('input').attr('checked', false);
@@ -53,6 +53,24 @@
 
         let new_group_id = new_group.attr('id') + "-" + Date.now()
         new_group.attr("id", "")
+
+        // Adapt new group radio fields
+        new_group.find('input[type="radio"]').each(function () {
+            label_el = new_group.find('label[for=' + this['id'] + ']')
+            this['name'] = this['name'].replace("[0]", '[' + new_group_id + ']')
+            this['id'] = this['id'].replace("text_0_", 'text_' + new_group_id + '_')
+            label_el.attr("for", this['id'])
+        });
+
+        // Adapt new group checkboxes fields
+        new_group.find('input[type="checkbox"]').each(function () {
+            label_el = new_group.find('label[for=' + this['id'] + ']')
+            hidden_el = new_group.find('input[type="hidden"][name="' + this['name'] + '"]')
+            this['name'] = this['name'].replace("[firstgroup]", '[' + new_group_id + ']')
+            this['id'] = this['id'].replace("_firstgroup_", '_' + new_group_id + '_')
+            label_el.attr("for", this['id'])
+            hidden_el.attr("name", this['name'])
+        });
 
         let add_link_container = $(event.target).parent()
         new_group_container = $('<div id="' + new_group_id + '" style="margin-top: 1.4em"></div>')

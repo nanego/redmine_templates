@@ -202,15 +202,21 @@ describe IssuesController, type: :controller do
                   :id => "17",
                 },
                 "6" => {
-                  "0" => ["1", "0"],
-                  "1" => ["0", "1"],
+                  values: {
+                    "0": { "0" => "1", "1" => '0' },
+                    "1": { "0" => "0", "1" => '1' },
+                  },
                   :id => "18",
                 },
                 "7" => {
-                  "0" => ["1", "0"],
-                  "1" => ["0", "1"],
+                  values: {
+                    "0": { "0" => "1", "1" => '0' },
+                    "1": { "0" => "0", "1" => '1' },
+                  },
                   :id => "19",
                 },
+                "8" => { "text" => ["val1", "val2"],
+                         "id" => "20" }
               },
             },
           },
@@ -231,6 +237,7 @@ describe IssuesController, type: :controller do
         * value2 : No \r
         \r\n*New select field displaying only selected values :* \r
         * value-1 : Yes \r
+        \r\n*Select Radio field :* val1\r
         \r\n-----\r
         \r\n*New one-line field :* second line\r
         \r\n*New date field :* 2020-12-31\r
@@ -241,6 +248,7 @@ describe IssuesController, type: :controller do
         * value2 : Yes \r
         \r\n*New select field displaying only selected values :* \r
         * value-2 : Yes \r
+        \r\n*Select Radio field :* val2\r
                                    DESCRIPTION
                                    )
     end

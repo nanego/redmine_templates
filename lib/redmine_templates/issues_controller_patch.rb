@@ -81,7 +81,7 @@ class IssuesController < ApplicationController
         repeatable_group = section.repeatable? if section.is_a_separator? # Init new repeatable group
         if repeatable_group && (section.last? || descriptions_attributes.last == description_attributes) # End current repeatable group
           repeatable_group_descriptions.each_with_index do |group_description, index|
-            issue_description += textile_separator if index != 0
+            issue_description += section.textile_separator if index != 0
             issue_description += group_description
           end
           repeatable_group = false

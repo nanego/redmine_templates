@@ -20,20 +20,21 @@
      when 'checkbox' %>
 
     <% possible_values.each_with_index do |select_value, index| %>
-      <%= check_box_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]",
-                        '1',
+      <% field_name = "issue[issue_template][descriptions_attributes][#{form.index}]#{repeatable_group ? '[values][firstgroup]' : ''}[#{index}]" %>
+      <%= hidden_field_tag field_name, '', id: nil %>
+      <%= check_box_tag field_name, '1',
                         values.present? ? values[index.to_s].present? : default_values.include?(select_value.to_s) %>
-      <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][#{index}]", select_value.to_s, class: "no-style" %>
+      <%= label_tag field_name, select_value.to_s, class: "no-style" %>
       <br>
     <% end %>
 
   <% when 'radio' %>
 
     <% possible_values.each do |select_value| %>
-      <%= radio_button_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]",
+      <%= radio_button_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]#{repeatable_group ? '[0]' : ''}",
                            select_value,
                            values.present? ? values["text"] == select_value : default_values.first == select_value %>
-      <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][text][#{select_value}]",
+      <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]#{repeatable_group ? '[0]' : ''}[#{select_value}]",
                     select_value,
                     value: select_value,
                     class: "no-style" %>

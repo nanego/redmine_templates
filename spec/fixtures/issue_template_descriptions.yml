@@ -169,3 +169,12 @@ select_with_display_mode:
   required: true
   select_type: "checkbox"
   display_mode: "selected_values_only"
+repeatable_select_with_radio:
+  id: 20
+  title: "Select Radio field"
+  type: "IssueTemplateDescriptionSelect"
+  text: "radioVal1;RadioVal2"
+  issue_template_id: 6
+  position: 9
+  required: true
+  select_type: "radio"
