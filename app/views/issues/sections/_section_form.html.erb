@@ -12,18 +12,19 @@
     <% end %>
   <% end %>
   <%= form.text_area :text,
-                     :cols => 60,
-                     :accesskey => accesskey(:edit),
-                     :class => 'wiki-edit',
-                     :rows => [[10, form.object.text.to_s.length / 50].max, 20].min,
-                     :data => {
-                         :auto_complete => true,
-                         :issues_url => auto_complete_issues_path(:project_id => @issue.project, :q => '')
+                     cols: 60,
+                     accesskey: accesskey(:edit),
+                     class: 'wiki-edit',
+                     rows: [[10, form.object.text.to_s.length / 50].max, 20].min,
+                     data: {
+                       :auto_complete => true,
+                       :issues_url => auto_complete_issues_path(:project_id => @issue.project, :q => '')
                      },
-                     :no_label => true,
-                     :required => description.required,
-                     :placeholder => description.placeholder,
-                     value: reload_current_value(@sections_attributes, description.position) || description.text
+                     no_label: true,
+                     required: description.required,
+                     placeholder: description.placeholder,
+                     value: reload_current_value(@sections_attributes, description.position) || description.text,
+                     multiple: repeatable_group.present?
   %>
   <%= wikitoolbar_for "issue_issue_template_descriptions_attributes_#{form.index}_text" if description.show_toolbar %>
   <%= form.hidden_field :empty_value, value: description.empty_value %>
