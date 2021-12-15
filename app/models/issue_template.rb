@@ -186,7 +186,7 @@ class IssueTemplate < ActiveRecord::Base
   def section_group_is_empty?(attributes)
     persisted = attributes["id"].present?
     has_no_title = attributes["title"].blank?
-    has_no_sections = attributes["sections_attributes"].blank?
+    has_no_sections = attributes["sections_attributes"].nil? || attributes["sections_attributes"].reject { |id, section| id == "$id_section$" }.blank?
     return (!persisted && has_no_title && has_no_sections)
   end
 

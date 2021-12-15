@@ -64,11 +64,15 @@ module IssueTemplatesHelper
     end
 
     if section_class.editable?
+      label_expand = section_class.name == "IssueTemplateSectionGroup" ? "Afficher les sections" : "Afficher les détails"
+      label_collapse = section_class.name == "IssueTemplateSectionGroup" ? "Masquer les sections" : "Masquer les détails"
       toggle_display_link = content_tag :span, style: "float: right;margin-right: 2em;" do
-        link_to (template ? "Masquer les détails" : "Afficher les détails"),
+        link_to (template ? label_collapse : label_expand),
                 '#',
                 class: 'icon icon-list expand_collapse action',
-                data: { action: "description-item-form#expand_collapse" }
+                data: { action: "description-item-form#expand_collapse",
+                        label_expand: label_expand,
+                        label_collapse: label_collapse }
       end
     else
       toggle_display_link = ""
@@ -77,7 +81,7 @@ module IssueTemplatesHelper
     reorder_handle = reorder_templates_handle(form.object, :url => "#")
     position_section_tooltip = content_tag('span', '0', :class => "position-section-tooltip")
     hidden_position_field = form.hidden_field(:position)
-    if section_class.name=="IssueTemplateSectionGroup"
+    if section_class.name == "IssueTemplateSectionGroup"
       hidden_type_field = ""
     else
       hidden_type_field = form.hidden_field(:type, :value => section_class.name)

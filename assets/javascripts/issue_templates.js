@@ -140,17 +140,8 @@ function makeListsSortable() {
                 "description_fields",
                 "section_groups_fields",
                 "template_sections",
-                "add_buttons",
                 "select_new_section_type",
-                "field_template",
-                "section_template",
-                "section_group_template",
-                "instruction_template",
-                "checkbox_template",
-                "date_template",
-                "separator_template",
-                "select_template",
-                "title_template"
+                "section_group_template"
             ];
         }
 
@@ -266,15 +257,15 @@ function makeListsSortable() {
         }
 
         launchWysiwygEditor() {
-            $(".jstEditor:last").each(initRedmineWysiwygEditor);
+            $(".jstEditor").each(initRedmineWysiwygEditor);
 
             $(document).ajaxSuccess(function () {
-                $(".jstEditor:last").each(initRedmineWysiwygEditor);
+                $(".jstEditor").each(initRedmineWysiwygEditor);
             });
 
             // Redmine 4.1+
             $(document).on("ajax:success", function () {
-                $(".jstEditor:last").each(initRedmineWysiwygEditor);
+                $(".jstEditor").each(initRedmineWysiwygEditor);
             });
         }
     });
@@ -301,9 +292,9 @@ function makeListsSortable() {
         expand_collapse(e) {
             e.preventDefault();
             if ($(e.currentTarget).closest('.split_description')[0].classList.toggle("collapsed")) {
-                e.currentTarget.text = 'Afficher les détails'
+                e.currentTarget.text = e.currentTarget.getAttribute("data-label-expand")
             } else {
-                e.currentTarget.text = 'Masquer les détails'
+                e.currentTarget.text = e.currentTarget.getAttribute("data-label-collapse")
                 applySelect2ToSelects()
                 makeListsSortable()
             }
