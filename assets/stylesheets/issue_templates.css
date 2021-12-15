@@ -290,12 +290,16 @@ a.list_templates_projects_names.current {
     font-size: 95%;
 }
 
-#split-description-container .split_description {
-    border-top: dotted 1px lightgray;
+.sections h2 {
+    margin-top: 1em;
+}
+
+#split-description-container .split_description,
+.sections .split_description {
     border-bottom: dotted 1px lightgray;
-    margin: 0.8em;
+    margin: 0 0.8em;
     padding: 0.5em;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
 }
 
 #template_sections .icon-add {
@@ -303,7 +307,8 @@ a.list_templates_projects_names.current {
     padding-left: 22px;
 }
 
-#split-description-container .position-section-tooltip {
+#split-description-container .position-section-tooltip,
+.sections .position-section-tooltip {
     position: absolute;
     padding: 7px 0 0 0;
     font-size: larger;
@@ -312,37 +317,48 @@ a.list_templates_projects_names.current {
     margin-left: 23px;
 }
 
-#split-description-container .split_description.hover .position-section-tooltip {
+#split-description-container .split_description.hover .position-section-tooltip,
+.sections .split_description.hover .position-section-tooltip {
     display: inline;
 }
 
-#split-description-container .sort-handle {
+#split-description-container .sort-handle,
+.sections .sort-handle {
     position: absolute;
     padding: 8px;
     margin-left: 2px;
 }
 
-#split-description-container a.icon-del, #split-description-container a.expand_collapse {
+#split-description-container a.icon-del,
+#split-description-container a.expand_collapse,
+.sections a.icon-del,
+.sections a.expand_collapse {
     margin-top: 6px;
     display: inline-flex;
     margin-right: 3px;
     vertical-align: middle;
 }
 
-#split-description-container .split_description.collapsed .collapsible {
+#split-description-container .split_description.collapsed .collapsible,
+.sections .split_description.collapsed .collapsible {
     display: none;
 }
 
-#split-description-container .split_description .possible-values {
+#split-description-container .split_description .possible-values,
+.sections .split_description .possible-values {
     margin: 0;
     padding: 3px 0 3px 180px;
     min-height: 2em;
     clear: left;
 }
-#split-description-container .split_description .possible-values ul {
+
+#split-description-container .split_description .possible-values ul,
+.sections .split_description .possible-values ul {
     margin-bottom: 4px;
 }
-#split-description-container .split_description possible-values label {
+
+#split-description-container .split_description possible-values label,
+.sections .split_description possible-values label {
     line-height: 2em;
     font-weight: bold;
     float: left;
@@ -351,7 +367,8 @@ a.list_templates_projects_names.current {
     width: 175px;
 }
 
-#split-description-container .split_description .possible-values li {
+#split-description-container .split_description .possible-values li,
+.sections .split_description .possible-values li {
     cursor: move;
     list-style: none;
     width: -moz-max-content;
@@ -360,6 +377,12 @@ a.list_templates_projects_names.current {
 
 #split-description-container .split_description.title, #split-description-container .split_description.separator {
     background-color: #e4e4e4;
+}
+
+.sections .split_description.section_group, .sections .split_description.separator {
+    background-color: #f0f0f0;
+    border: 1px solid #dddddd;
+    margin-bottom: 1em;
 }
 
 .split_description.separator .line {
@@ -403,7 +426,6 @@ a.list_templates_projects_names.current {
 #issue-form #attributes label .info {
     margin-top: -6px;
 }
-
 
 
 @media screen and (max-width: 899px) {

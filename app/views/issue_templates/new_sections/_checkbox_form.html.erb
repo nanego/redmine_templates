@@ -1,0 +1,16 @@
+<%= issue_template_section_form(form, IssueTemplateSectionCheckbox, template) do %>
+  <p>
+    <%= form.text_field :title, :placeholder => "Titre", :label => 'Checkbox', :size => 45, :required => true %>
+  </p>
+  <div class="collapsible">
+    <p>
+      <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
+    </p>
+    <p>
+      <%= form.check_box :required, label: "Case à cocher obligatoire" %>
+    </p>
+    <p>
+      <%= form.check_box :text, label: "Valeur par défaut" %>
+    </p>
+  </div>
+<% end %>

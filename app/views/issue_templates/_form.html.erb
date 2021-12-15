@@ -1,7 +1,7 @@
 <div data-controller="template-form split-description">
 
-  <%= labelled_form_for @issue_template, :html => {id: 'issue-template-form',
-                                                   name: 'issue-template-form_name'} do |f| %>
+  <%= labelled_form_for @issue_template, :html => { id: 'issue-template-form',
+                                                    name: 'issue-template-form_name' } do |f| %>
 
     <%= error_messages_for 'issue_template' %>
 
@@ -43,8 +43,8 @@
               <%= f.label :split_description, l(:field_split_description) %>
               <%= f.check_box :split_description, :no_label => true,
                               :data => {
-                                  "action" => "split-description#toggleDescriptionField",
-                                  "target" => "split-description.split_description_checkbox"
+                                "action" => "split-description#toggleDescriptionField",
+                                "target" => "split-description.split_description_checkbox"
                               }
               %>
             </p>
@@ -58,8 +58,8 @@
 
           <div class="splitcontentright">
             <div class="select_projects" id="select_projects">
-              <%= f.select :template_project_ids, project_tree_options(@issue_template.allowed_target_projects | @issue_template.template_projects, :selected => @issue_template.template_projects), {:required => true},
-                           {:multiple => true, :size => 10, style: "display:none;"} %>
+              <%= f.select :template_project_ids, project_tree_options(@issue_template.allowed_target_projects | @issue_template.template_projects, :selected => @issue_template.template_projects), { :required => true },
+                           { :multiple => true, :size => 10, style: "display:none;" } %>
               <%
                 nb_other_projects = 0
                 nb_visible_projects = 0
@@ -124,7 +124,7 @@
           <label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:issue_is_private) %></label>
         </p>
 
-        <p><%= f.select :tracker_id, Tracker.visible.collect { |t| [t.name, t.id] }, {:required => true},
+        <p><%= f.select :tracker_id, Tracker.visible.collect { |t| [t.name, t.id] }, { :required => true },
                         :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
 
         <%= render "limited_visibility_fields" if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
@@ -158,9 +158,9 @@
         <div id="attributes" class="attributes">
           <div class="splitcontent">
             <div class="splitcontentleft">
-              <p><%= f.select :status_id, (IssueStatus.all.collect { |p| [p.name, p.id] }), {:required => true},
+              <p><%= f.select :status_id, (IssueStatus.all.collect { |p| [p.name, p.id] }), { :required => true },
                               :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
-              <p><%= f.select :priority_id, (@priorities.collect { |p| [p.name, p.id] }), {:required => true}, :disabled => false %></p>
+              <p><%= f.select :priority_id, (@priorities.collect { |p| [p.name, p.id] }), { :required => true }, :disabled => false %></p>
               <p><%= f.select :assigned_to_id, principals_options_for_select(@issue_template.assignable_users, @issue_template.assigned_to), :include_blank => true, :required => false %></p>
               <p><%= f.select :category_id, (IssueCategory.all.collect { |c| [c.name, c.id] }), :include_blank => true, :required => false %>
                 <%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
@@ -201,17 +201,18 @@
             <% select_options = project_tree_options_for_select((@issue_template.allowed_target_projects | @issue_template.secondary_projects) - [@issue_template.project], :selected => [@issue_template.project] | @issue_template.secondary_projects) %>
             <%= f.select :secondary_project_ids,
                          select_options,
-                         {:required => true, :label => l("related_projects")},
-                         {:multiple => true} %>
+                         { :required => true, :label => l("related_projects") },
+                         { :multiple => true } %>
           </p>
           <script>
-            $('#issue_template_secondary_project_ids').select2();
+              $('#issue_template_secondary_project_ids').select2();
           </script>
         <% end %>
 
         <div id="template_sections" style="display: none;" data-target="split-description.template_sections">
+
           <span id="split-description-container" data-target="split-description.description_fields">
-            <%= render :partial => "issue_templates/description_form", :locals => {f: f} %>
+            <%= render :partial => "issue_templates/description_form", :locals => { f: f } %>
           </span>
           <p data-target="split-description.add_buttons">
             <%= select_tag 'new_section',
@@ -223,9 +224,20 @@
                                                ['Nouvelle checkbox', 4],
                                                ['Nouveau champ date', 5],
                                                ['Nouvelle liste de valeurs', 7]
-                                              ]), data: {target: "split-description.select_new_section_type"} %>
+                                              ]), data: { target: "split-description.select_new_section_type" } %>
             <button class="icon icon-add link-cursor" data-action="split-description#addSection">Ajouter</button>
           </p>
+
+          <div class="sections">
+            <h2 style="margin: -6px -6px 10px;">Sections</h2>
+            <div id="split-description-groups" data-target="split-description.section_groups_fields">
+              <%= render :partial => "issue_templates/section_groups_form", :locals => { f: f } %>
+            </div>
+            <p data-target="split-description.add_group_button">
+              <button class="icon icon-add link-cursor" data-action="split-description#addSectionsGroup">Ajouter un groupe de sections</button>
+            </p>
+          </div>
+
         </div>
 
       </div>

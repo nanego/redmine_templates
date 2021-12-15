@@ -19,6 +19,10 @@ class IssueTemplate < ActiveRecord::Base
   has_many :descriptions, -> { order(:position) }, :class_name => "IssueTemplateDescription", :dependent => :destroy
   accepts_nested_attributes_for :descriptions, :reject_if => :description_is_empty?, :allow_destroy => true
 
+  has_many :section_groups, -> { order(:position) }, :class_name => 'IssueTemplateSectionGroup', :dependent => :destroy
+  accepts_nested_attributes_for :section_groups, :reject_if => :section_group_is_empty?, :allow_destroy => true
+  has_many :sections, :through => :section_groups
+
   has_many :issue_template_projects, dependent: :destroy
   has_many :template_projects, through: :issue_template_projects, source: :project
 
@@ -68,6 +72,7 @@ class IssueTemplate < ActiveRecord::Base
                   :custom_form_path,
                   :tracker_read_only,
                   :descriptions_attributes,
+                  :section_groups_attributes,
                   :split_description,
                   :typology_id,
                   :autocomplete_subject
@@ -176,6 +181,13 @@ class IssueTemplate < ActiveRecord::Base
       empty = attributes["text"].blank?
     end
     return (!persisted && empty)
+  end
+
+  def section_group_is_empty?(attributes)
+    persisted = attributes["id"].present?
+    has_no_title = attributes["title"].blank?
+    has_no_sections = attributes["sections_attributes"].blank?
+    return (!persisted && has_no_title && has_no_sections)
   end
 
 end

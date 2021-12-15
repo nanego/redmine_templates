@@ -1,0 +1,46 @@
+<% values = (form.object && form.object.text.present?) ? form.object.text.split(';') : [] %>
+<% default_values = (form.object && form.object.placeholder.present?) ? form.object.placeholder.split(';') : [] %>
+
+<%= issue_template_section_form(form, IssueTemplateSectionSelect, template) do %>
+  <p>
+    <%= form.text_field :title,
+                        :placeholder => "Titre",
+                        :label => 'Liste de valeurs',
+                        :size => 45,
+                        :required => true
+    %>
+  </p>
+  <div class="collapsible">
+    <p>
+      <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
+    </p>
+
+    <div class="possible-values">
+      <label>Valeurs possibles<span class="required"> *</span></label>
+      <ul>
+        <% values.each do |value| %>
+          <%= render 'issue_templates/new_sections/select_possible_value', value: value, default_values: default_values %>
+        <% end %>
+      </ul>
+      <%= link_to 'Ajouter une valeur', '#', class: 'add_possible_value' %>
+    </div>
+
+    <%= form.hidden_field :text, class: 'text' %>
+    <%= form.hidden_field :placeholder, class: "placeholder" %>
+
+    <p>
+      <%= form.select :select_type,
+                      options_for_select(IssueTemplateSectionSelect.select_types_options,
+                                         selected: (form.object.present? ? form.object.select_type : '')),
+                      label: "Type" %>
+    </p>
+
+    <p>
+      <%= form.select :display_mode,
+                      options_for_select(IssueTemplateSection::DISPLAY_MODES.collect { |mode| [l(mode), mode] },
+                                         selected: (form.object.present? ? form.object.display_mode : '')),
+                      label: l('display_mode') %>
+      <span><i>Option active uniquement pour les champs de type "Checkbox"</i></span>
+    </p>
+  </div>
+<% end %>

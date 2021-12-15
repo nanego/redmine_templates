@@ -27,7 +27,7 @@ module IssueTemplatesHelper
       :reorder_param => options[:param] || object.class.name.underscore
     }
     content_tag('span', '',
-                :class => "icon-only icon-sort-handle sort-handle",
+                :class => "icon-only icon-sort-handle sort-handle sort-handle-#{object.class.try(:short_name)}",
                 :data => data)
   end
 
@@ -77,7 +77,11 @@ module IssueTemplatesHelper
     reorder_handle = reorder_templates_handle(form.object, :url => "#")
     position_section_tooltip = content_tag('span', '0', :class => "position-section-tooltip")
     hidden_position_field = form.hidden_field(:position)
-    hidden_type_field = form.hidden_field :type, :value => section_class.name
+    if section_class.name=="IssueTemplateSectionGroup"
+      hidden_type_field = ""
+    else
+      hidden_type_field = form.hidden_field(:type, :value => section_class.name)
+    end
 
     content_tag :div,
                 class: "split_description #{section_class.short_name} #{template_class}",

@@ -1,0 +1,24 @@
+<%= issue_template_section_form(form, IssueTemplateSectionInstruction, template) do %>
+  <p>
+    <%= form.select :instruction_type, IssueTemplateSectionInstruction::TYPES.collect { |type| [ t(type), type ] }, :label => 'Consigne' %>
+  </p>
+
+  <div class="collapsible">
+    <p class="with-textarea">
+      <%= form.text_area :text,
+                         :cols => 60,
+                         :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
+                         :accesskey => accesskey(:edit),
+                         :class => "wiki-edit",
+                         :no_label => true,
+                         :placeholder => "Obligatoire",
+                         :data => {
+                             "help-link" => "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax_textile.html",
+                             "preview-link" => preview_text_path
+                         }
+      %>
+      <%= wikitoolbar_for "issue_template_sections_attributes_#{form.index}_text" if !template %>
+
+    </p>
+  </div>
+<% end %>

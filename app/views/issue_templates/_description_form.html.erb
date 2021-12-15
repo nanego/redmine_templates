@@ -3,14 +3,6 @@
              locals: { form: description_form, template: false } %>
 <% end %>
 
-<%# Empty templates %>
-<% IssueTemplateDescription.subclasses.each do |klass| %>
-  <%= f.fields_for :descriptions_attributes, index: "$id_section$" do |description_form| %>
-    <%= render partial: "issue_templates/sections/#{klass.short_name}_form",
-               locals: { form: description_form, template: true } %>
-  <% end %>
-<% end %>
-
 <script>
     function resetHiddenFields(ul) {
         let sectionElement = ul.closest('.split_description.select')

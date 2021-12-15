@@ -67,6 +67,11 @@ describe "IssueTemplate" do
     end
   end
 
+  it "has many section groups" do
+    t = IssueTemplate.reflect_on_association(:section_groups)
+    expect(t.macro).to eq(:has_many)
+  end
+
   it "should have many descriptions" do
     t = IssueTemplate.reflect_on_association(:descriptions)
     expect(t.macro).to eq(:has_many)

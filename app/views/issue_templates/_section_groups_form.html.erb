@@ -1,0 +1,9 @@
+<%= f.fields_for :section_groups do |group_form| %>
+  <%= render partial: "issue_templates/new_sections/group_form",
+             locals: { form: group_form, template: false } %>
+<% end %>
+
+<%= f.fields_for :section_groups_attributes, index: "$id_group_section$" do |group_form| %>
+  <%= render partial: "issue_templates/new_sections/group_form",
+             locals: { form: group_form, template: true } %>
+<% end %>

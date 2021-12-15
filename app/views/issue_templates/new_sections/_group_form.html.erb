@@ -1,0 +1,45 @@
+<%= issue_template_section_form(form, IssueTemplateSectionGroup, template) do %>
+  <p>
+    <%= form.text_field :title, :placeholder => "Titre", :label => 'Groupe (titre facultatif)', :size => 45, :required => false %>
+  </p>
+  <div class="collapsible">
+    <p>
+      <%= form.check_box :repeatable, label: "Bloc répétable ?" %>
+    </p>
+
+    <div class="sections">
+
+      <% if !template %>
+        <%= form.fields_for :sections do |section_form| %>
+          <%= render partial: "issue_templates/new_sections/#{section_form.object.class.short_name}_form",
+                     locals: { form: section_form, template: false } %>
+        <% end %>
+      <% end %>
+
+    </div>
+
+    <p data-target="split-description.add_buttons">
+      <%= select_tag 'new_section',
+                     options_for_select([['Nouvelle consigne', 2],
+                                         ['Nouveau champ texte (long)', 1],
+                                         ['Nouveau champ texte (court)', 3],
+                                         ['Nouvelle checkbox', 4],
+                                         ['Nouveau champ date', 5],
+                                         ['Nouvelle liste de valeurs', 7]
+                                        ]),
+                     data: { target: "split-description.select_new_section_type" },
+                     class: "select_new_section_type"
+      %>
+      <button class="icon icon-add link-cursor" data-action="split-description#addSection">Ajouter une section</button>
+    </p>
+
+    <%# Empty templates %>
+    <% IssueTemplateSection.subclasses.each do |klass| %>
+      <%= form.fields_for :sections_attributes, index: "$id_section$" do |section_form| %>
+        <%= render partial: "issue_templates/new_sections/#{klass.short_name}_form",
+                   locals: { form: section_form, template: true } %>
+      <% end %>
+    <% end %>
+
+  </div>
+<% end %>

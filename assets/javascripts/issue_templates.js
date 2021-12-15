@@ -8,6 +8,28 @@ function updateIssueTemplateFrom(url) {
 }
 
 (function ($) {
+    $.fn.positionedFormGroups = function (sortableOptions, options) {
+        var sortable = this.sortable($.extend({
+            placeholder: "ui-state-highlight",
+            axis: 'y',
+            handle: ".sort-handle-section_group",
+            start: function(e,ui){
+                ui.placeholder.height(ui.helper.outerHeight());
+            }
+        }, sortableOptions)).disableSelection();
+
+        this.on("sortupdate", function (event, ui) {
+            var sortable = $(this);
+            var position = 1;
+
+            sortable.children(".split_description.section_group:not(.template)").each(function () {
+                $(this).find("input[name*=position]:first").attr("value", position);
+                position += 1;
+            });
+        });
+
+        return sortable;
+    }
     $.fn.positionedFormItems = function (sortableOptions, options) {
         var sortable = this.sortable($.extend({
             placeholder: "ui-state-highlight",
@@ -39,6 +61,8 @@ $(document).ready(function ($) {
     });
 
     $("#split-description-container").positionedFormItems();
+    $("#split-description-groups").positionedFormGroups()
+    $("#split-description-groups .sections").positionedFormItems()
 });
 
 function applySelect2ToSelects() {
@@ -114,11 +138,13 @@ function makeListsSortable() {
                 "split_description_checkbox",
                 "description_field",
                 "description_fields",
+                "section_groups_fields",
                 "template_sections",
                 "add_buttons",
                 "select_new_section_type",
                 "field_template",
                 "section_template",
+                "section_group_template",
                 "instruction_template",
                 "checkbox_template",
                 "date_template",
@@ -142,46 +168,62 @@ function makeListsSortable() {
             }
         }
 
-        addSection(e) {
-            e.preventDefault();
-            let index = this.description_fieldsTarget.querySelectorAll(".split_description:not(.template)").length
-            let template
-            switch (this.select_new_section_typeTarget.value) {
-                case('1'):
-                    template = this.section_templateTarget.outerHTML
-                    break
-                case('2'):
-                    template = this.instruction_templateTarget.outerHTML
-                    break
-                case('3'):
-                    template = this.field_templateTarget.outerHTML
-                    break
-                case('4'):
-                    template = this.checkbox_templateTarget.outerHTML
-                    break
-                case('5'):
-                    template = this.date_templateTarget.outerHTML
-                    break
-                case('6'):
-                    template = this.separator_templateTarget.outerHTML
-                    break
-                case('7'):
-                    template = this.select_templateTarget.outerHTML
-                    break
-                case('8'):
-                    template = this.title_templateTarget.outerHTML
-                    break
-            }
+        addSectionsGroup(e) {
+            e.preventDefault()
+            let index = this.section_groups_fieldsTarget.querySelectorAll(".split_description.section_group:not(.template)").length
+            let template = this.section_group_templateTarget.outerHTML
             if (template != undefined) {
-                this.appendItem(template.replace(/\$id_section\$/g, index))
+                this.appendGroupItem(template.replace(/\$id_group_section\$/g, index))
+                console.log('index : ' + index)
             }
         }
 
-        appendItem(item) {
-            this.description_fieldsTarget.insertAdjacentHTML("beforeend", item)
-            this.cleanTemplate(this.description_fieldsTarget.lastChild)
-            this.createWikiToolBar(this.description_fieldsTarget.lastChild)
-            $("#split-description-container").trigger("sortupdate")
+        addSection(e) {
+            e.preventDefault();
+            let sectionGroupElement = e.target.closest(".section_group")
+            let sectionsElement = sectionGroupElement.querySelector(".sections")
+            let select_new_section_typeElement = sectionGroupElement.querySelector(".select_new_section_type")
+            let index = sectionsElement.querySelectorAll(".split_description:not(.template)").length
+            let template
+            switch (select_new_section_typeElement.value) {
+                case('1'):
+                    template = sectionGroupElement.querySelector(".split_description.template.section").outerHTML
+                    break
+                case('2'):
+                    template = sectionGroupElement.querySelector(".split_description.template.instruction").outerHTML
+                    break
+                case('3'):
+                    template = sectionGroupElement.querySelector(".split_description.template.field").outerHTML
+                    break
+                case('4'):
+                    template = sectionGroupElement.querySelector(".split_description.template.checkbox").outerHTML
+                    break
+                case('5'):
+                    template = sectionGroupElement.querySelector(".split_description.template.date").outerHTML
+                    break
+                case('7'):
+                    template = sectionGroupElement.querySelector(".split_description.template.select").outerHTML
+                    break
+            }
+            if (template != undefined) {
+                this.appendItem(template.replace(/\$id_section\$/g, index), sectionsElement)
+            }
+        }
+
+        appendGroupItem(item) {
+            this.section_groups_fieldsTarget.insertAdjacentHTML("beforeend", item)
+            this.cleanTemplate(this.section_groups_fieldsTarget.lastChild)
+            this.createWikiToolBar(this.section_groups_fieldsTarget.lastChild)
+            $("#split-description-groups").trigger("sortupdate")
+            applySelect2ToSelects()
+            makeListsSortable()
+        }
+
+        appendItem(item, sectionsElement) {
+            sectionsElement.insertAdjacentHTML("beforeend", item)
+            this.cleanTemplate(sectionsElement.lastChild)
+            this.createWikiToolBar(sectionsElement.lastChild)
+            $(sectionsElement).trigger("sortupdate")
             applySelect2ToSelects()
             makeListsSortable()
         }
