@@ -1,26 +1,25 @@
-<% description = form.object %>
 <p>
   <%= label_tag do %>
-    <%= description.title %>
-    <% if description.required %>
+    <%= section.title %>
+    <% if section.required %>
       <span class="required"> *</span>
     <% end %>
-    <% if description.description.present? %>
+    <% if section.description.present? %>
       <em class="info" style="padding-top: 3px; line-height: 1.5em;">
-        <%= description.description %>
+        <%= section.description %>
       </em>
     <% end %>
   <% end %>
   <%= form.date_field :text,
-                      size: description.select_type == "datetime" ? 14 : 10,
+                      size: section.select_type == "datetime" ? 14 : 10,
                       no_label: true,
-                      required: description.required,
-                      value: reload_current_value(@sections_attributes, description.position) || description.text
+                      required: section.required,
+                      value: reload_current_value(@sections_attributes, section.position) || section.text
   %>
   <% if Redmine::Plugin.installed?(:redmine_datetime_custom_field) %>
-    <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text", description.select_type == "datetime") %>
+    <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text", section.select_type == "datetime") %>
   <% else %>
     <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text") %>
   <% end %>
-  <%= form.hidden_field :empty_value, value: description.empty_value %>
+  <%= form.hidden_field :empty_value, value: section.empty_value %>
 </p>

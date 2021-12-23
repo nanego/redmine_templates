@@ -1,29 +1,31 @@
 <% if @issue.safe_attribute?('description') && !@issue.persisted? && @issue.issue_template&.split_description %>
   <%= f.fields_for :issue_template, @issue.issue_template do |template_form| %>
 
-    <% first_description = @issue.issue_template.descriptions.first %>
-    <% if first_description.present? && !first_description.is_a_separator? %>
-      <%= render 'issues/sections/separator_form' %>
-    <% end %>
+    <% @issue.issue_template.section_groups.each do |section_group| %>
+      <%= template_form.fields_for "section_groups_attributes", section_group do |section_groups_form| %>
 
-    <% repeatable_group = false %>
-    <% repeatable_group_id = "" %>
-    <%= template_form.fields_for :descriptions, @issue.issue_template.descriptions do |description_form| %>
+        <%= section_groups_form.fields_for section_group.id.to_s do |section_group_fields| %>
 
-      <% if description_form.object.is_a_separator? %>
-        <% repeatable_group = description_form.object.repeatable? %>
-      <% end %>
+          <%= render partial: 'issues/section_group_form', locals: { group_index: "0",
+                                                                     section_groups_form: section_group_fields,
+                                                                     section_group: section_group } %>
 
-      <%= render partial: "issues/sections/#{description_form.object.class.short_name}_form",
-                 locals: { form: description_form, repeatable_group: repeatable_group } %>
+        <% end %>
 
-      <% if repeatable_group && description_form.object.is_a_separator? %>
-        <% repeatable_group_id = "repeatable_group_#{description_form.object.id}" %>
-        <div id="<%= repeatable_group_id %>" class="repeatable_group">
-      <% end %>
-      <% if repeatable_group && description_form.object.last? %>
-        </div>
-        <p style="margin-top: 0.5em"><%= link_to 'Ajouter un bloc', '#', class: 'append_sections_group icon icon-add', data: { group_id: "#{repeatable_group_id}" } %></p>
+        <% if section_group.repeatable %>
+          <%= render 'issues/sections/separator_form' %>
+          <p style="margin-top: 0.5em">
+            <%= link_to 'Répéter ce bloc', '#',
+                        class: 'add_sections_group icon icon-add',
+                        title: "Répéter ce groupe de sections",
+                        data: {
+                          sections_group_id: section_group.id,
+                          sections_group_type: section_group.class.name
+                        }
+            %>
+          </p>
+        <% end %>
+
       <% end %>
 
     <% end %>
@@ -31,58 +33,24 @@
     <%= render 'issues/sections/separator_form' %>
 
   <% end %>
+
 <% end %>
 
 <script>
 
-    var resetAllFields = function (element) {
-        $(element).find('input[type=text]').val('');
-        $(element).find('textarea').val('');
-        $(element).find('select').prop('selectedIndex', 0);
-        $(element).find('input').attr('checked', false);
-    }
-
-    $('form#issue-form').on('click', '.append_sections_group', function (event) {
+    $('form#issue-form').on('click', '.add_sections_group', function (event) {
         event.preventDefault()
-
-        let group_to_copy = $("#" + event.target.getAttribute("data-group-id"))
-        let new_group = group_to_copy.clone()
-
-        // Reset new group fields
-        resetAllFields(new_group)
-
-        let new_group_id = new_group.attr('id') + "-" + Date.now()
-        new_group.attr("id", "")
-
-        // Adapt new group radio fields
-        new_group.find('input[type="radio"]').each(function () {
-            label_el = new_group.find('label[for=' + this['id'] + ']')
-            this['name'] = this['name'].replace("[0]", '[' + new_group_id + ']')
-            this['id'] = this['id'].replace("text_0_", 'text_' + new_group_id + '_')
-            label_el.attr("for", this['id'])
+        $.ajax({
+            url: '<%= add_repeatable_group_path %>',
+            type: 'post',
+            data: event.target.dataset
         });
-
-        // Adapt new group checkboxes fields
-        new_group.find('input[type="checkbox"]').each(function () {
-            label_el = new_group.find('label[for=' + this['id'] + ']')
-            hidden_el = new_group.find('input[type="hidden"][name="' + this['name'] + '"]')
-            this['name'] = this['name'].replace("[firstgroup]", '[' + new_group_id + ']')
-            this['id'] = this['id'].replace("_firstgroup_", '_' + new_group_id + '_')
-            label_el.attr("for", this['id'])
-            hidden_el.attr("name", this['name'])
-        });
-
-        let add_link_container = $(event.target).parent()
-        new_group_container = $('<div id="' + new_group_id + '" style="margin-top: 1.4em"></div>')
-        new_group_container.append(new_group)
-        new_group_container.append($('<p><a href="#" class="destroy_sections_group icon icon-del" data-group-id="' + new_group_id + '" >Supprimer ce bloc</a></p>'))
-        new_group_container.insertBefore(add_link_container)
-
     })
 
     $('form#issue-form').on('click', '.destroy_sections_group', function (event) {
         event.preventDefault()
-        let group_to_destroy = $("#" + event.target.getAttribute("data-group-id"))
+        let group_to_destroy = $("#section_groups_" + event.target.getAttribute("data-group-id") + '_' + event.target.getAttribute("data-group-index"))
         group_to_destroy.remove()
     })
+
 </script>

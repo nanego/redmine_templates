@@ -2,8 +2,8 @@ one:
   id: 1
   title: "Section title"
   description: "Section description"
-  type: "IssueTemplateDescriptionSection"
-  issue_template_id: 3
+  type: "IssueTemplateSectionTextArea"
+  issue_template_section_group_id: 1
   position: 1
   text: "Type here first section content"
   show_toolbar: true
@@ -12,8 +12,8 @@ two:
   id: 2
   title: "Second section title"
   description: "Second section description"
-  type: "IssueTemplateDescriptionSection"
-  issue_template_id: 3
+  type: "IssueTemplateSectionTextArea"
+  issue_template_section_group_id: 1
   position: 2
   text: "Type here second section content"
   show_toolbar: false
@@ -22,8 +22,8 @@ three:
   id: 3
   title: "Section title"
   description: "Section description"
-  type: "IssueTemplateDescriptionSection"
-  issue_template_id: 4
+  type: "IssueTemplateSectionTextArea"
+  issue_template_section_group_id: 3
   position: 1
   text: ""
   empty_value: "No data"
@@ -33,8 +33,8 @@ four:
   id: 4
   title: "Second section title without Toolbar"
   description: "Second section description"
-  type: "IssueTemplateDescriptionSection"
-  issue_template_id: 4
+  type: "IssueTemplateSectionTextArea"
+  issue_template_section_group_id: 3
   position: 2
   text: ""
   empty_value: "Nothing to say"
@@ -44,8 +44,8 @@ five:
   id: 5
   title: "Section title"
   description: "Section description"
-  type: "IssueTemplateDescriptionSection"
-  issue_template_id: 5
+  type: "IssueTemplateSectionTextArea"
+  issue_template_section_group_id: 4
   position: 2
   text: ""
   empty_value: "No data"
@@ -53,17 +53,17 @@ five:
 six:
   id: 6
   text: "Text of an instruction field"
-  type: "IssueTemplateDescriptionInstruction"
+  type: "IssueTemplateSectionInstruction"
   instruction_type: "note"
-  issue_template_id: 5
+  issue_template_section_group_id: 4
   position: 1
   required: true
 field:
   id: 7
   title: "New one-line field"
   description: "Short description of the field"
-  type: "IssueTemplateDescriptionField"
-  issue_template_id: 3
+  type: "IssueTemplateSectionTextField"
+  issue_template_section_group_id: 1
   position: 3
   text: "Default content for one-line field"
   empty_value: "Field empty"
@@ -71,47 +71,33 @@ field:
 date:
   id: 8
   title: "New date field"
-  type: "IssueTemplateDescriptionDate"
-  issue_template_id: 3
+  type: "IssueTemplateSectionDate"
+  issue_template_section_group_id: 1
   position: 4
   required: true
 checkbox:
   id: 9
   title: "New checkbox field"
-  type: "IssueTemplateDescriptionCheckbox"
-  issue_template_id: 3
+  type: "IssueTemplateSectionCheckbox"
+  issue_template_section_group_id: 1
   position: 6
   text: "1"
   required: true
-separator:
-  id: 10
-  title: "New fields separator"
-  type: "IssueTemplateDescriptionSeparator"
-  issue_template_id: 3
-  position: 5
-  required: true
 select:
-  id: 11
+  id: 10
   title: "New select field"
-  type: "IssueTemplateDescriptionSelect"
+  type: "IssueTemplateSectionSelect"
   text: "value1;value2"
-  issue_template_id: 3
+  issue_template_section_group_id: 2
   position: 7
   required: false
   display_mode: "all_values"
-twelve:
-  id: 12
-  title: "Title repeatable group"
-  type: "IssueTemplateDescriptionTitle"
-  issue_template_id: 6
-  position: 1
-  repeatable: true
 thirteen:
   id: 13
   title: "New one-line field"
   description: "Short description of the field"
-  type: "IssueTemplateDescriptionField"
-  issue_template_id: 6
+  type: "IssueTemplateSectionTextField"
+  issue_template_section_group_id: 5
   position: 2
   text: "Default content for one-line field"
   empty_value: "Field empty"
@@ -120,24 +106,24 @@ fourteen:
   id: 14
   title: "Just a comment"
   description: ""
-  type: "IssueTemplateDescriptionInstruction"
-  issue_template_id: 6
+  type: "IssueTemplateSectionInstruction"
+  issue_template_section_group_id: 5
   position: 3
   text: "Somes instructions"
   instruction_type: "note"
 fifteen:
   id: 15
   title: "New date field"
-  type: "IssueTemplateDescriptionDate"
-  issue_template_id: 6
+  type: "IssueTemplateSectionDate"
+  issue_template_section_group_id: 5
   position: 4
   required: true
 sixteen:
   id: 16
   title: "New long text area"
   description: "Description of the field"
-  type: "IssueTemplateDescriptionSection"
-  issue_template_id: 6
+  type: "IssueTemplateSectionTextArea"
+  issue_template_section_group_id: 5
   position: 5
   text: "Default content"
   empty_value: "Field empty"
@@ -145,26 +131,26 @@ sixteen:
 checkbox_seventeen:
   id: 17
   title: "Checkbox field"
-  type: "IssueTemplateDescriptionCheckbox"
-  issue_template_id: 6
+  type: "IssueTemplateSectionCheckbox"
+  issue_template_section_group_id: 5
   position: 6
   text: "1"
   required: true
 repeatable_select:
   id: 18
   title: "Select field"
-  type: "IssueTemplateDescriptionSelect"
+  type: "IssueTemplateSectionSelect"
   text: "value1;value2"
-  issue_template_id: 6
+  issue_template_section_group_id: 5
   position: 7
   required: false
   select_type: "checkbox"
 select_with_display_mode:
   id: 19
   title: "New select field displaying only selected values"
-  type: "IssueTemplateDescriptionSelect"
+  type: "IssueTemplateSectionSelect"
   text: "value-1;value-2"
-  issue_template_id: 6
+  issue_template_section_group_id: 5
   position: 8
   required: true
   select_type: "checkbox"
@@ -172,9 +158,9 @@ select_with_display_mode:
 repeatable_select_with_radio:
   id: 20
   title: "Select Radio field"
-  type: "IssueTemplateDescriptionSelect"
+  type: "IssueTemplateSectionSelect"
   text: "radioVal1;RadioVal2"
-  issue_template_id: 6
+  issue_template_section_group_id: 5
   position: 9
   required: true
   select_type: "radio"

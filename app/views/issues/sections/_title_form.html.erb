@@ -1,4 +1,6 @@
 <%= render 'issues/sections/separator_form' %>
-<div class="subtitle">
-  <%= form.object.title %>
-</div>
+<% if section.title.present? %>
+  <div class="subtitle">
+    <%= section.title %>
+  </div>
+<% end %>

@@ -26,7 +26,7 @@ describe "IssueTemplate" do
                                  :template_title => 'New title template',
                                  :template_enabled => true,
                                  :template_project_ids => [1]
-                                )
+    )
     template.author_id = 2
     assert template.save
     template.reload
@@ -73,46 +73,51 @@ describe "IssueTemplate" do
   end
 
   it "should have many descriptions" do
-    t = IssueTemplate.reflect_on_association(:descriptions)
+    t = IssueTemplate.reflect_on_association(:sections)
     expect(t.macro).to eq(:has_many)
   end
 
   it "should save section if it has a title and a description" do
     template = IssueTemplate.create(:project_id => 1,
-                                 :tracker_id => 1,
-                                 :status_id => 1,
-                                 :author_id => 2,
-                                 :subject => 'test_create',
-                                 :template_title => 'New title template',
-                                 :template_enabled => true,
-                                 :template_project_ids => [1],
-                                 :descriptions_attributes => [{
-                                    :title => "Section title",
-                                    :description => "Section description",
-                                    :type => "IssueTemplateDescriptionSection",
-                                    :position => 1
-                                 }]
-                                )
+                                    :tracker_id => 1,
+                                    :status_id => 1,
+                                    :author_id => 2,
+                                    :subject => 'test_create',
+                                    :template_title => 'New title template',
+                                    :template_enabled => true,
+                                    :template_project_ids => [1],
+                                    :section_groups_attributes => [{
+                                                                     :title => "Section group title",
+                                                                     :position => 1,
+                                                                     sections_attributes: [
+                                                                       {
+                                                                         :title => "Section title",
+                                                                         :description => "Section description",
+                                                                         :type => "IssueTemplateSectionTextArea",
+                                                                         :position => 1 }
+                                                                     ]
+                                                                   }]
+    )
     expect(template.valid?).to eq true
-    expect(template.descriptions.size).to eq 1
-    expect(template.descriptions.first).to be_persisted
+    expect(template.sections.size).to eq 1
+    expect(template.sections.first).to be_persisted
   end
 
   it "shouldn't save section with no title" do
     template = IssueTemplate.create(:project_id => 1,
-                                 :tracker_id => 1,
-                                 :status_id => 1,
-                                 :author_id => 2,
-                                 :subject => 'test_create',
-                                 :template_title => 'New title template',
-                                 :template_enabled => true,
-                                 :template_project_ids => [1],
-                                 :descriptions_attributes => [{
-                                    :description => "Section description",
-                                    :type => "IssueTemplateDescriptionSection",
-                                    :position => 1
-                                 }]
-                                )
+                                    :tracker_id => 1,
+                                    :status_id => 1,
+                                    :author_id => 2,
+                                    :subject => 'test_create',
+                                    :template_title => 'New title template',
+                                    :template_enabled => true,
+                                    :template_project_ids => [1],
+                                    :descriptions_attributes => [{
+                                                                   :description => "Section description",
+                                                                   :type => "IssueTemplateDescriptionSection",
+                                                                   :position => 1
+                                                                 }]
+    )
     expect(template.valid?).to eq false
     expect(template.descriptions.size).to eq 1
     expect(template.descriptions.first).to_not be_persisted
@@ -120,19 +125,19 @@ describe "IssueTemplate" do
 
   it "should save instruction if it has a text" do
     template = IssueTemplate.create(:project_id => 1,
-                                 :tracker_id => 1,
-                                 :status_id => 1,
-                                 :author_id => 2,
-                                 :subject => 'test_create',
-                                 :template_title => 'New title template',
-                                 :template_enabled => true,
-                                 :template_project_ids => [1],
-                                 :descriptions_attributes => [{
-                                    :text => "Consigne pour remplir le formulaire de création d'une demande",
-                                    :type => "IssueTemplateDescriptionInstruction",
-                                    :position => 1
-                                 }]
-                                )
+                                    :tracker_id => 1,
+                                    :status_id => 1,
+                                    :author_id => 2,
+                                    :subject => 'test_create',
+                                    :template_title => 'New title template',
+                                    :template_enabled => true,
+                                    :template_project_ids => [1],
+                                    :descriptions_attributes => [{
+                                                                   :text => "Consigne pour remplir le formulaire de création d'une demande",
+                                                                   :type => "IssueTemplateDescriptionInstruction",
+                                                                   :position => 1
+                                                                 }]
+    )
     expect(template.valid?).to eq true
     expect(template.descriptions.size).to eq 1
     expect(template.descriptions.first).to be_persisted
@@ -148,10 +153,10 @@ describe "IssueTemplate" do
                                  :template_enabled => true,
                                  :template_project_ids => [1],
                                  :descriptions_attributes => [{
-                                    :type => "IssueTemplateDescriptionInstruction",
-                                    :position => 1
-                                 }]
-                                )
+                                                                :type => "IssueTemplateDescriptionInstruction",
+                                                                :position => 1
+                                                              }]
+    )
     expect(template.descriptions.size).to eq 0
   end
 
@@ -167,12 +172,12 @@ describe "IssueTemplate" do
                                    :template_project_ids => [1],
                                    :split_description => "1",
                                    :descriptions_attributes => [{
-                                      :title => "Section title",
-                                      :description => "Section description",
-                                      :type => "IssueTemplateDescriptionSection",
-                                      :position => 1
-                                   }]
-                                  )
+                                                                  :title => "Section title",
+                                                                  :description => "Section description",
+                                                                  :type => "IssueTemplateDescriptionSection",
+                                                                  :position => 1
+                                                                }]
+      )
       template.save
       template.reload
       expect(template.split_description).to be_truthy
@@ -188,7 +193,7 @@ describe "IssueTemplate" do
                                    :template_title => 'New title template',
                                    :template_enabled => true,
                                    :template_project_ids => [1]
-                                   )
+      )
       template.save
       template.reload
       expect(template.split_description).to be_falsey
@@ -206,12 +211,12 @@ describe "IssueTemplate" do
                                    :template_project_ids => [1],
                                    :split_description => "0",
                                    :descriptions_attributes => [{
-                                      :title => "Section title",
-                                      :description => "Section description",
-                                      :type => "IssueTemplateDescriptionSection",
-                                      :position => 1
-                                   }]
-                                  )
+                                                                  :title => "Section title",
+                                                                  :description => "Section description",
+                                                                  :type => "IssueTemplateDescriptionSection",
+                                                                  :position => 1
+                                                                }]
+      )
 
       expect(template.save).to be_truthy
       template.reload

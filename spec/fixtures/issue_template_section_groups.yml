@@ -1,0 +1,30 @@
+one:
+  id: 1
+  title: ""
+  issue_template_id: 3
+  position: 1
+  repeatable: false
+two:
+  id: 2
+  title: "New fields separator"
+  issue_template_id: 3
+  position: 2
+  repeatable: false
+three:
+  id: 3
+  title: ""
+  issue_template_id: 4
+  position: 1
+  repeatable: false
+four:
+  id: 4
+  title: ""
+  issue_template_id: 5
+  position: 1
+  repeatable: false
+five:
+  id: 5
+  title: "Title repeatable group"
+  issue_template_id: 6
+  position: 1
+  repeatable: true

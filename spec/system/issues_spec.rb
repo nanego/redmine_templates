@@ -24,7 +24,7 @@ RSpec.describe "creating issues with templates", type: :system do
            :trackers, :projects_trackers, :enabled_modules, :issue_statuses, :issues,
            :enumerations, :custom_fields, :custom_values, :custom_fields_trackers,
            :watchers, :journals, :journal_details, :versions,
-           :workflows, :issue_templates, :issue_template_projects, :issue_template_descriptions
+           :workflows, :issue_templates, :issue_template_projects, :issue_template_section_groups, :issue_template_sections
 
   let(:template_with_sections) { IssueTemplate.find(3) }
   let(:template_4) { IssueTemplate.find(4) }
@@ -40,12 +40,12 @@ RSpec.describe "creating issues with templates", type: :system do
 
       expect(page).to have_field('Subject', with: 'Issue created with template 3')
       expect(page).to_not have_selector("description")
-      expect(page).to have_selector('#issue_issue_template_descriptions_attributes_0_text', text: "Type here first section content")
-      expect(page).to have_selector('#issue_issue_template_descriptions_attributes_2_text') #, text: "Default content"
+      expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_1_text', text: "Type here first section content")
+      expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_2_text'), text: "Type here second section content"
       expect(page).to have_selector('#attachments_form')
 
-      fill_in 'issue_issue_template_descriptions_attributes_2_text', with: 'One-line edited content'
-      fill_in 'issue_issue_template_descriptions_attributes_3_text', with: '01/01/2020'
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', with: 'One-line edited content'
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: '01/01/2020'
       click_on 'Create'
 
       expect(page).to have_selector('.description', text: "Type here first section content")

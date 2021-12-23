@@ -18,7 +18,7 @@ class CreateIssueTemplateSectionGroups < ActiveRecord::Migration[5.2]
         IssueTemplateSectionGroup.create!(title: separator.title,
                                           issue_template_id: separator.issue_template_id,
                                           position: separator.position,
-                                          repeatable: separator.position)
+                                          repeatable: separator.repeatable)
       end
     end
   end

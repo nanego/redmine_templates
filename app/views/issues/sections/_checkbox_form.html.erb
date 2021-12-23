@@ -1,20 +1,19 @@
-<% description = form.object %>
-<% value = reload_current_value(@sections_attributes, description.position) || description.text %>
+<% value = reload_current_value(@sections_attributes, section.position) || section.text %>
 <p>
   <%= label_tag do %>
-    <%= description.title %>
-    <% if description.required %>
+    <%= section.title %>
+    <% if section.required %>
       <span class="required"> *</span>
     <% end %>
-    <% if description.description.present? %>
+    <% if section.description.present? %>
       <em class="info" style="padding-top: 3px; line-height: 1.5em;">
-        <%= description.description %>
+        <%= section.description %>
       </em>
     <% end %>
   <% end %>
   <%= form.check_box :text,
                      no_label: true,
-                     required: description.required,
+                     required: section.required,
                      checked: (value == '1')
   %>
 </p>

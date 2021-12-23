@@ -16,7 +16,7 @@ class IssueTemplateSectionGroup < ActiveRecord::Base
     "section_group"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
+  def rendered_value(textile: true)
     if textile
       if title.present?
         textile_separator_with_title(title)
@@ -26,10 +26,18 @@ class IssueTemplateSectionGroup < ActiveRecord::Base
     end
   end
 
+  def textile_separator_with_title(title)
+    "#{textile_separator}\r\nh2. #{title}\r\n\r\n"
+  end
+
+  def textile_separator
+    "\r\n-----\r\n"
+  end
+
   def section_is_empty?(attributes)
     persisted = attributes["id"].present?
     case attributes["type"]
-    when IssueTemplateSectionInstruction.name
+    when "IssueTemplateSectionInstruction"
       empty = attributes["text"].blank?
     end
     return (!persisted && empty)

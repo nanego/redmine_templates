@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe "Issue" do
 
-  fixtures :issues, :issue_templates, :issue_template_descriptions
+  fixtures :issues, :issue_templates, :issue_template_section_groups, :issue_template_sections
 
   let!(:issue) { Issue.find(1) }
   let!(:issue_template) { IssueTemplate.find(3) }
@@ -59,9 +59,12 @@ describe "Issue" do
     describe :sections_attributes do
 
       let!(:sections_params) {
-        [{ :text => "" },
-         { :text => "" },
-         { :text => "Value field section", :empty_value => "No hurry!" }] }
+        { "1" => { "0" =>
+                     { 'sections_attributes' =>
+                         {
+                           "1" => { text: "Test text", empty_value: "No data" },
+                           "2" => { text: "Value field section", empty_value: "No hurry!" } } } } }
+      }
 
       before do
         issue.issue_template = issue_template

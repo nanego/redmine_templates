@@ -10,8 +10,41 @@ class IssueTemplateSection < ActiveRecord::Base
     true
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
+  def rendered_value(section_attributes, textile: true, value_only: false)
     # Defined in subclasses
+  end
+
+  def value_from_boolean_attribute(attribute)
+    attribute == '1' ? l(:general_text_Yes) : l(:general_text_No)
+  end
+
+  def value_from_text_attribute(attributes)
+    attributes[:text].present? ? attributes[:text] : attributes[:empty_value]
+  end
+
+  def section_title(title, value = nil, textile: true)
+    if textile
+      "\r\n*#{title} :* #{value}\r\n"
+    else
+      "#{title} : #{value}"
+    end
+  end
+
+  def section_item(label, inline_value = nil, textile: true)
+    inline_value = " : #{inline_value} " if inline_value.present?
+    if textile
+      "* #{label}#{inline_value}\r\n"
+    else
+      "#{label}#{inline_value}"
+    end
+  end
+
+  def section_basic_entry(value, textile: true)
+    if textile
+      "#{value}\r\n"
+    else
+      "#{value}"
+    end
   end
 
 end
@@ -23,8 +56,8 @@ class IssueTemplateSectionTextField < IssueTemplateSection
     "field"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
-    value = value_from_text_attribute(section_attributes, repeatable_group_index)
+  def rendered_value(section_attributes, textile: true, value_only: false)
+    value = value_from_text_attribute(section_attributes)
     if value_only
       section_basic_entry(value, textile: textile)
     else
@@ -41,8 +74,8 @@ class IssueTemplateSectionCheckbox < IssueTemplateSection
     "checkbox"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
-    value = value_from_boolean_attribute(section_attributes[:text], repeatable_group_index)
+  def rendered_value(section_attributes, textile: true, value_only: false)
+    value = value_from_boolean_attribute(section_attributes[:text])
     if value_only
       section_basic_entry(value, textile: textile)
     else
@@ -58,8 +91,8 @@ class IssueTemplateSectionTextArea < IssueTemplateSection
     "section"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
-    value = value_from_text_attribute(section_attributes, repeatable_group_index)
+  def rendered_value(section_attributes, textile: true, value_only: false)
+    value = value_from_text_attribute(section_attributes)
     if value_only
       section_basic_entry(value, textile: textile)
     else
@@ -90,8 +123,8 @@ class IssueTemplateSectionDate < IssueTemplateSection
     "date"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
-    value = value_from_text_attribute(section_attributes, repeatable_group_index)
+  def rendered_value(section_attributes, textile: true, value_only: false)
+    value = value_from_text_attribute(section_attributes)
     if value_only
       section_basic_entry(value, textile: textile)
     else
@@ -120,10 +153,10 @@ class IssueTemplateSectionSelect < IssueTemplateSection
     "select"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = nil, textile: true, value_only: false)
+  def rendered_value(section_attributes, textile: true, value_only: false)
     case self.select_type
     when "monovalue_select", "radio"
-      value = value_from_text_attribute(section_attributes, repeatable_group_index)
+      value = value_from_text_attribute(section_attributes)
       if value_only
         section_basic_entry(value, textile: textile)
       else
@@ -141,19 +174,19 @@ class IssueTemplateSectionSelect < IssueTemplateSection
         else
           # MultiCheckboxes
           possible_values = self.text.split(';')
-          description_text += rendered_multicheckbox_values(possible_values, section_attributes, repeatable_group_index, textile: textile)
+          description_text += rendered_multicheckbox_values(possible_values, section_attributes, textile: textile)
         end
       end
       description_text
     end
   end
 
-  def rendered_multicheckbox_values(possible_values, section_attributes, repeatable_group_index, textile: true)
+  def rendered_multicheckbox_values(possible_values, section_attributes, textile: true)
     description_text = ""
-    attributes = repeatable_group_index.present? ? section_attributes['values'].values[repeatable_group_index].values : section_attributes.values
+    attributes = section_attributes.values
 
     possible_values.each_with_index do |value, index|
-      boolean_value = value_from_boolean_attribute(attributes[index], repeatable_group_index)
+      boolean_value = value_from_boolean_attribute(attributes[index])
       unless value_hidden_by_display_mode(boolean_value)
         description_text += section_item(value, boolean_value, textile: textile)
       end
@@ -182,7 +215,7 @@ class IssueTemplateSectionInstruction < IssueTemplateSection
     "instruction"
   end
 
-  def rendered_value(section_attributes, repeatable_group_index = 0, textile: true, value_only: false)
+  def rendered_value(section_attributes, textile: true, value_only: false)
     '' # Nothing to render
   end
 end

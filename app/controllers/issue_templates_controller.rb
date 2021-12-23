@@ -146,6 +146,11 @@ class IssueTemplatesController < ApplicationController
     end
   end
 
+  def add_repeatable_group
+    @sections_group = IssueTemplateSectionGroup.find(params[:sectionsGroupId])
+    render partial: "issues/sections/add_repeatable_group"
+  end
+
   private
 
   def find_project

@@ -2,8 +2,8 @@ require_dependency 'issue'
 
 class Issue < ActiveRecord::Base
 
-  # Subtitute variables with values
-  def substituted(text, sections_params = [])
+  # Substitute variables with values
+  def substituted(text, sections_params = {})
     text.gsub(/{[[:word:]]*}/) do |attribute|
       attribute = attribute.delete_prefix("{").delete_suffix("}")
       case attribute
@@ -30,10 +30,14 @@ class Issue < ActiveRecord::Base
   end
 
   def section_value_by_id(section_id, sections_params)
-    section_index = section_id.to_i
-    if sections_params.present? && sections_params[section_index].present?
-      section = issue_template.descriptions[section_index]
-      section.rendered_value(sections_params[section_index], textile: false, value_only: true) if section.present?
+    section = IssueTemplateSection.where(id: section_id).first
+    if section.present? && sections_params.present?
+      begin
+        value = sections_params[section.issue_template_section_group_id.to_s]['0']['sections_attributes'][section.id.to_s]
+        section.rendered_value(value, textile: false, value_only: true)
+      rescue NoMethodError
+        ""
+      end
     else
       ""
     end

@@ -33,7 +33,7 @@ describe IssuesController, type: :controller do
            :repositories,
            :changesets,
            :watchers,
-           :issue_templates, :issue_template_descriptions, :issue_template_projects
+           :issue_templates, :issue_template_section_groups, :issue_template_sections, :issue_template_projects
 
   include Redmine::I18n
 
@@ -60,19 +60,26 @@ describe IssuesController, type: :controller do
             :priority_id => 5,
             :issue_template_id => template.id,
             :issue_template => {
-              :descriptions_attributes => {
-                "0" => {
-                  :text => "Test text"
+              :section_groups_attributes => {
+                "3" => {
+                  "0" => {
+                    :sections_attributes => {
+                      "3" => {
+                        text: "Test text",
+                        empty_value: ""
+                      }
+                    }
+                  }
                 }
-              },
-            },
-          },
+              }
+            }
+          }
         }
       end
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("\r\n*Section title :* \r\nTest text\r\n")
+      expect(issue.description).to eq("\r\n-----\r\n\r\n*Section title :* \r\nTest text\r\n")
     end
 
     it "joins multiple sections into one description" do
@@ -87,22 +94,30 @@ describe IssuesController, type: :controller do
             :priority_id => 5,
             :issue_template_id => template.id,
             :issue_template => {
-              :descriptions_attributes => {
-                "0" => {
-                  :text => "Test text"
-                },
-                "1" => {
-                  :text => "Second test text"
+              :section_groups_attributes => {
+                "3" => {
+                  "0" => {
+                    :sections_attributes => {
+                      "3" => {
+                        text: "Test text",
+                        empty_value: "No data"
+                      },
+                      "4" => {
+                        text: "Second test text",
+                        empty_value: "Nothing to say"
+                      }
+                    }
+                  }
                 }
-              },
-            },
-          },
+              }
+            }
+          }
         }
       end
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
+      expect(issue.description).to eq("\r\n-----\r\n\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
     end
 
     it "joins multiple sections into one description and substitute variables with values" do
@@ -117,27 +132,35 @@ describe IssuesController, type: :controller do
             :priority_id => 5,
             :issue_template_id => template.id,
             :issue_template => {
-              :descriptions_attributes => {
-                "0" => {
-                  :text => "Test text {tracker}"
-                },
-                "1" => {
-                  :text => "Second test text"
+              :section_groups_attributes => {
+                "3" => {
+                  "0" => {
+                    :sections_attributes => {
+                      "3" => {
+                        text: "Test text {tracker}",
+                        empty_value: "No data"
+                      },
+                      "4" => {
+                        text: "Second test text",
+                        empty_value: "Nothing to say"
+                      }
+                    }
+                  }
                 }
-              },
-            },
-          },
+              }
+            }
+          }
         }
       end
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("\r\n*Section title :* \r\nTest text Support request\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
+      expect(issue.description).to eq("\r\n-----\r\n\r\n*Section title :* \r\nTest text Support request\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
     end
 
     it "joins multiple sections and use them to generate the subject" do
       template.autocomplete_subject = true
-      template.subject = "{section_0} -> {section_1}"
+      template.subject = "{section_3} -> {section_4}"
       template.save
 
       assert_difference('Issue.count', 1) do
@@ -150,23 +173,31 @@ describe IssuesController, type: :controller do
             :priority_id => 5,
             :issue_template_id => template.id,
             :issue_template => {
-              :descriptions_attributes => {
-                "0" => {
-                  :text => "Test text"
-                },
-                "1" => {
-                  :text => "Second test text"
+              :section_groups_attributes => {
+                "3" => {
+                  "0" => {
+                    :sections_attributes => {
+                      "3" => {
+                        text: "Test text",
+                        empty_value: "No data"
+                      },
+                      "4" => {
+                        text: "Second test text",
+                        empty_value: "Nothing to say"
+                      }
+                    }
+                  }
                 }
-              },
-            },
-          },
+              }
+            }
+          }
         }
       end
 
       issue = Issue.last
       expect(issue).not_to be_nil
       expect(issue.subject).to eq("Test text -> Second test text")
-      expect(issue.description).to eq("\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
+      expect(issue.description).to eq("\r\n-----\r\n\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
     end
 
     it "allows repeatable sections and joins them into one description" do
@@ -181,45 +212,68 @@ describe IssuesController, type: :controller do
             :priority_id => 5,
             :issue_template_id => template_with_repeatable_sections.id,
             :issue_template => {
-              :descriptions_attributes => {
-                "0" => { "id" => "12" },
-                "1" => {
-                  :text => ["First line", "second line"],
-                  :id => "13",
-                  :empty_value => ""
-                },
-                "2" => { "id" => "14" },
-                "3" => {
-                  :text => ["2021-01-01", "2020-12-31"],
-                  :id => "15"
-                },
-                "4" => {
-                  :text => ["Long first text...", "Second content"],
-                  :id => "16",
-                },
+              :section_groups_attributes => {
                 "5" => {
-                  :text => ["1", "0"],
-                  :id => "17",
-                },
-                "6" => {
-                  values: {
-                    "0": { "0" => "1", "1" => '0' },
-                    "1": { "0" => "0", "1" => '1' },
+                  "0" => {
+                    :sections_attributes => {
+                      "13" => {
+                        text: "First line"
+                      },
+                      "15" => {
+                        text: "2021-01-01"
+                      },
+                      "16" => {
+                        text: "Long first text..."
+                      },
+                      "17" => {
+                        text: "1"
+                      },
+                      "18" => {
+                        "0": "1",
+                        "1": "0"
+
+                      },
+                      "19" => {
+                        "0": '1',
+                        "1": '0'
+
+                      },
+                      "20" => {
+                        text: "val1"
+                      }
+                    }
                   },
-                  :id => "18",
-                },
-                "7" => {
-                  values: {
-                    "0": { "0" => "1", "1" => '0' },
-                    "1": { "0" => "0", "1" => '1' },
-                  },
-                  :id => "19",
-                },
-                "8" => { "text" => ["val1", "val2"],
-                         "id" => "20" }
-              },
-            },
-          },
+                  "123456" => {
+                    :sections_attributes => {
+                      "13" => {
+                        text: "second line"
+                      },
+                      "15" => {
+                        text: "2020-12-31"
+                      },
+                      "16" => {
+                        text: "Second content"
+                      },
+                      "17" => {
+                        text: "0"
+                      },
+                      "18" => {
+                        "0": '0',
+                        "1": '1'
+                      },
+                      "19" => {
+                        "0": '0',
+                        "1": '1'
+                      },
+                      "20" => {
+                        text: "val2"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       end
 
@@ -239,6 +293,7 @@ describe IssuesController, type: :controller do
         * value-1 : Yes \r
         \r\n*Select Radio field :* val1\r
         \r\n-----\r
+        \r\nh2. Title repeatable group\r\n\r
         \r\n*New one-line field :* second line\r
         \r\n*New date field :* 2020-12-31\r
         \r\n*New long text area :* \r\nSecond content\r
@@ -265,24 +320,30 @@ describe IssuesController, type: :controller do
             :priority_id => 5,
             :issue_template_id => template.id,
             :issue_template => {
-              :descriptions_attributes => {
-                "0" => {
-                  :text => "Test text",
-                  :empty_value => "No data"
-                },
-                "1" => {
-                  :text => "",
-                  :empty_value => "Nothing to say"
+              :section_groups_attributes => {
+                "3" => {
+                  "0" => {
+                    :sections_attributes => {
+                      "3" => {
+                        text: "Test text",
+                        empty_value: "No data"
+                      },
+                      "4" => {
+                        text: "",
+                        empty_value: "Nothing to say"
+                      }
+                    }
+                  }
                 }
-              },
-            },
-          },
+              }
+            }
+          }
         }
       end
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nNothing to say\r\n")
+      expect(issue.description).to eq("\r\n-----\r\n\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nNothing to say\r\n")
     end
 
     it "does not join instructions into description" do
@@ -297,19 +358,25 @@ describe IssuesController, type: :controller do
             :priority_id => 5,
             :issue_template_id => template_with_instruction.id,
             :issue_template => {
-              :descriptions_attributes => {
-                "0" => {
-                  :text => "Text in a section field"
+              :section_groups_attributes => {
+                "4" => {
+                  "0" => {
+                    :sections_attributes => {
+                      "6" => {
+                        text: "Text in a section field"
+                      }
+                    }
+                  }
                 }
-              },
-            },
-          },
+              }
+            }
+          }
         }
       end
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("")
+      expect(issue.description).to eq("\r\n-----\r\n")
     end
 
     it "sends a notification by mail with multiple sections concatenated into one description" do
@@ -323,23 +390,31 @@ describe IssuesController, type: :controller do
           :priority_id => 5,
           :issue_template_id => template.id,
           :issue_template => {
-            :descriptions_attributes => {
-              "0" => {
-                :text => "Test text"
-              },
-              "1" => {
-                :text => "Second test text"
+            :section_groups_attributes => {
+              "3" => {
+                "0" => {
+                  :sections_attributes => {
+                    "3" => {
+                      text: "Test text",
+                      empty_value: "No data"
+                    },
+                    "4" => {
+                      text: "Second test text",
+                      empty_value: "Nothing to say"
+                    }
+                  }
+                }
               }
-            },
-          },
-        },
+            }
+          }
+        }
       }
       expect(ActionMailer::Base.deliveries).to_not be_empty
 
       issue = Issue.last
       expect(issue).not_to be_nil
       expect(issue.description).to_not eq 'This is the description'
-      expect(issue.description).to eq("\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
+      expect(issue.description).to eq("\r\n-----\r\n\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nSecond test text\r\n")
 
       mail = ActionMailer::Base.deliveries.last
       mail.parts.each do |part|

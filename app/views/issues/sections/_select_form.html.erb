@@ -1,29 +1,29 @@
-<% description = form.object %>
-<% values = reload_current_value(@sections_attributes, description.position, get_all_attributes: true) || {} %>
-<% default_values = description.placeholder.present? ? description.placeholder.split(';') : [] %>
-<% possible_values = description.text.present? ? description.text.split(';') : [] %>
+<% values = reload_current_value(@sections_attributes, section.position, get_all_attributes: true) || {} %>
+<% default_values = section.placeholder.present? ? section.placeholder.split(';') : [] %>
+<% possible_values = section.text.present? ? section.text.split(';') : [] %>
+<% section_group = section.issue_template_section_group %>
 
 <p>
   <%= label_tag do %>
-    <%= description.title %>
-    <% if description.required %>
+    <%= section.title %>
+    <% if section.required %>
       <span class="required"> *</span>
     <% end %>
-    <% if description.description.present? %>
+    <% if section.description.present? %>
       <em class="info" style="padding-top: 3px; line-height: 1.5em;">
-        <%= description.description %>
+        <%= section.description %>
       </em>
     <% end %>
   <% end %>
 
-  <% case description.select_type
+  <% case section.select_type
      when 'checkbox' %>
 
-    <% possible_values.each_with_index do |select_value, index| %>
-      <% field_name = "issue[issue_template][descriptions_attributes][#{form.index}]#{repeatable_group ? '[values][firstgroup]' : ''}[#{index}]" %>
+    <% possible_values.each_with_index do |select_value, value_index| %>
+      <% field_name = "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][#{value_index}]" %>
       <%= hidden_field_tag field_name, '', id: nil %>
       <%= check_box_tag field_name, '1',
-                        values.present? ? values[index.to_s].present? : default_values.include?(select_value.to_s) %>
+                        values.present? ? values[value_index.to_s].present? : default_values.include?(select_value.to_s) %>
       <%= label_tag field_name, select_value.to_s, class: "no-style" %>
       <br>
     <% end %>
@@ -31,10 +31,10 @@
   <% when 'radio' %>
 
     <% possible_values.each do |select_value| %>
-      <%= radio_button_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]#{repeatable_group ? '[0]' : ''}",
+      <%= radio_button_tag "issue[issue_template][sections_attributes][#{form.index}][text]",
                            select_value,
                            values.present? ? values["text"] == select_value : default_values.first == select_value %>
-      <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]#{repeatable_group ? '[0]' : ''}[#{select_value}]",
+      <%= label_tag "issue[issue_template][descriptions_attributes][#{form.index}][text][#{select_value}]",
                     select_value,
                     value: select_value,
                     class: "no-style" %>
@@ -43,10 +43,10 @@
 
   <% when 'monovalue_select', 'multivalue_select' %>
 
-    <%= select_tag "issue[issue_template][descriptions_attributes][#{form.index}][text]",
+    <%= select_tag "issue[issue_template][sections_attributes][#{form.index}][text]",
                    options_for_select(possible_values, values.present? ? values['text'] : default_values),
                    style: "max-width: 40em;width:269px;",
-                   multiple: description.select_type == 'multivalue_select' %>
+                   multiple: section.select_type == 'multivalue_select' %>
 
   <% else %>
     PROBLEM

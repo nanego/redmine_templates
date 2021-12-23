@@ -1,0 +1,19 @@
+<%= fields :issue do |f| %>
+
+  <%= f.fields_for :issue_template, @sections_group.issue_template do |template_form| %>
+
+    <%= template_form.fields_for "section_groups_attributes", @sections_group do |section_groups_form| %>
+
+      <%= section_groups_form.fields_for @sections_group.id.to_s do |section_group_fields| %>
+
+        <%= render partial: 'issues/section_group_form', locals: { group_index: Time.now.to_i.to_s,
+                                                                   section_groups_form: section_group_fields,
+                                                                   section_group: @sections_group } %>
+
+      <% end %>
+
+    <% end %>
+
+  <% end %>
+
+<% end %>

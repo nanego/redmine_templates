@@ -7,7 +7,7 @@ describe IssueTemplatesController, type: :controller do
   render_views
 
   fixtures :issue_templates, :projects, :users, :issue_statuses, :trackers, :enumerations,
-           :roles, :members, :member_roles, :issue_template_descriptions, :issue_template_projects
+           :roles, :members, :member_roles, :issue_template_section_groups, :issue_template_sections, :issue_template_projects
 
   let!(:template) { IssueTemplate.find(1) }
   let!(:role) { Role.find(1) }
@@ -48,7 +48,7 @@ describe IssueTemplatesController, type: :controller do
       get :new
       expect(response).to be_successful
       assert_template "new"
-      expect(assigns(:issue_template).descriptions).to_not be_nil
+      expect(assigns(:issue_template).section_groups).to_not be_nil
     end
   end
 
@@ -63,7 +63,7 @@ describe IssueTemplatesController, type: :controller do
       get :edit, params: { id: IssueTemplate.first.id }
       expect(response).to be_successful
       assert_template 'edit'
-      expect(assigns(:issue_template).descriptions).to_not be_nil
+      expect(assigns(:issue_template).section_groups).to_not be_nil
     end
   end
 
@@ -90,36 +90,50 @@ describe IssueTemplatesController, type: :controller do
       expect(template.subject).to eq "Modified subject"
     end
 
-    it "should successfully update descriptions positions" do
-      instruction = IssueTemplateDescriptionInstruction.new(:text => "Text of an instruction field",
-                                                            :type => "IssueTemplateDescriptionInstruction",
-                                                            :instruction_type => "note",
-                                                            :position => 1)
-      template_with_instruction.descriptions = [instruction]
-      template_with_instruction.save
+    it "should successfully update sections positions" do
+      expect(template_with_instruction.sections.size).to eq 2
+      expect(template_with_instruction.sections.first.text).to eq "Text of an instruction field"
+      expect(template_with_instruction.sections.first.position).to eq 1
+      expect(template_with_instruction.sections.second.text).to eq ""
+      expect(template_with_instruction.sections.second.position).to eq 2
 
-      expect(template_with_instruction.descriptions.size).to eq 1
-      expect(template_with_instruction.descriptions.first.text).to eq "Text of an instruction field"
-      expect(template_with_instruction.descriptions.first.position).to eq 1
+      first_section_group = template_with_instruction.section_groups.first
 
-      assert_difference('IssueTemplateDescription.count', 1) do
-        put :update, params: {
+      assert_difference('IssueTemplateSection.count', 1) do
+
+        patch :update, params: {
           id: template_with_instruction.id,
-          issue_template: {
-            descriptions_attributes: {
-              "0" => {
-                :id => template_with_instruction.descriptions.first.id,
-                :text => template_with_instruction.descriptions.first.text,
-                :type => template_with_instruction.descriptions.first.type,
-                :position => 1
-              },
-              "1" => {
-                :text => "Text of an other instruction field 2",
-                :type => "IssueTemplateDescriptionInstruction",
-                :instruction_type => 'warning',
-                :position => 2
+          "issue_template" => {
+            "template_title" => "New template with instructions",
+            "id" => "5",
+            section_groups_attributes: [
+              { "position" => "1",
+                "title" => "",
+                "repeatable" => "0",
+                id: first_section_group.id,
+                sections_attributes: [
+                  { "position" => "1",
+                    "type" => "IssueTemplateSectionInstruction",
+                    "instruction_type" => "note",
+                    "text" => "Text of an instruction field",
+                    "id" => "6" },
+                  { "position" => "2",
+                    "type" => "IssueTemplateSectionTextArea",
+                    "title" => "Section title",
+                    "description" => "Section description",
+                    "text" => "",
+                    "placeholder" => "",
+                    "empty_value" => "No data",
+                    "required" => "1",
+                    "show_toolbar" => "0",
+                    "id" => "5" },
+                  { "position" => "3",
+                    "type" => "IssueTemplateSectionInstruction",
+                    "instruction_type" => "warning",
+                    "text" => "New warning!" }
+                ]
               }
-            }
+            ]
           }
         }
       end
@@ -127,11 +141,11 @@ describe IssueTemplatesController, type: :controller do
       expect(response).to redirect_to edit_issue_template_path(template_with_instruction)
       template_with_instruction.reload
       assert_match /updated/, flash[:notice]
-      expect(template_with_instruction.descriptions.size).to eq 2
-      expect(template_with_instruction.descriptions.first.text).to eq "Text of an instruction field"
-      expect(template_with_instruction.descriptions.first.position).to eq 1
-      expect(template_with_instruction.descriptions.second.text).to eq "Text of an other instruction field 2"
-      expect(template_with_instruction.descriptions.second.position).to eq 2
+      expect(template_with_instruction.sections.size).to eq 3
+      expect(template_with_instruction.sections.first.text).to eq "Text of an instruction field"
+      expect(template_with_instruction.sections.first.position).to eq 1
+      expect(template_with_instruction.sections.third.text).to eq "New warning!"
+      expect(template_with_instruction.sections.third.position).to eq 3
     end
   end
 

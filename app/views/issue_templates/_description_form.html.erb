@@ -47,11 +47,13 @@
         $(event.target).parent().remove()
         resetHiddenFields(ul)
     })
-    $('#split-description-container').on('mouseenter', '.split_description', function () {
-        $(this).find('.position-section-tooltip').html($(this).prevAll('.split_description').length)
-        $(this).addClass("hover")
-    })
-    $('#split-description-container').on('mouseleave', '.split_description', function () {
-        $(this).removeClass("hover")
-    })
+    /*
+        $('form#issue-template-form').on('mouseenter', '.split_description', function () {
+            $(this).find('.position-section-tooltip').html($(this).prevAll('.split_description').length)
+            $(this).addClass("hover")
+        })
+        $('form#issue-template-form').on('mouseleave', '.split_description', function () {
+            $(this).removeClass("hover")
+        })
+     */
 </script>

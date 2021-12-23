@@ -165,7 +165,6 @@ function makeListsSortable() {
             let template = this.section_group_templateTarget.outerHTML
             if (template != undefined) {
                 this.appendGroupItem(template.replace(/\$id_group_section\$/g, index))
-                console.log('index : ' + index)
             }
         }
 

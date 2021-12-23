@@ -47,47 +47,30 @@ class IssuesController < ApplicationController
   end
 
   def keep_sections_values
-    if params[:issue].present? && params[:issue][:issue_template].present? && params[:issue][:issue_template][:descriptions_attributes].present?
-      @sections_attributes = params[:issue][:issue_template][:descriptions_attributes].values
+    if params[:issue].present? && params[:issue][:issue_template].present? && params[:issue][:issue_template][:section_groups_attributes].present?
+      @sections_attributes = params[:issue][:issue_template][:section_groups_attributes]
     end
   end
 
   def update_description_with_sections
     if @issue.issue_template&.split_description && params[:issue][:issue_template].present?
-
       issue_description = ""
-      repeatable_group = false
-      repeatable_group_size = 0
-      repeatable_group_descriptions = []
+      section_groups_attributes = params[:issue][:issue_template][:section_groups_attributes]
 
-      descriptions_attributes = params[:issue][:issue_template][:descriptions_attributes].values
+      section_groups_attributes.each do |section_group_id, section_groups_attributes|
+        group = @issue.issue_template.section_groups.find(section_group_id)
+        section_groups_attributes.each do |group_index, group_attributes|
 
-      descriptions_attributes.each_with_index do |description_attributes, section_index|
+          issue_description += group.rendered_value
 
-        section = @issue.issue_template.descriptions[section_index]
-
-        if repeatable_group
-          if description_attributes[:text].is_a?(Array)
-            repeatable_group_size = description_attributes[:text].size - 1
+          group_attributes["sections_attributes"].each do |section_id, section_attributes|
+            section = @issue.issue_template.sections.find(section_id)
+            if section.present?
+              issue_description += section.rendered_value(section_attributes)
+            end
           end
-          (0..repeatable_group_size).each do |repeatable_group_index|
-            repeatable_group_descriptions[repeatable_group_index] ||= ""
-            repeatable_group_descriptions[repeatable_group_index] += section.rendered_value(description_attributes, repeatable_group_index)
-          end
-        else
-          issue_description += section.rendered_value(description_attributes)
-        end
-
-        repeatable_group = section.repeatable? if section.is_a_separator? # Init new repeatable group
-        if repeatable_group && (section.last? || descriptions_attributes.last == description_attributes) # End current repeatable group
-          repeatable_group_descriptions.each_with_index do |group_description, index|
-            issue_description += section.textile_separator if index != 0
-            issue_description += group_description
-          end
-          repeatable_group = false
         end
       end
-
       @issue.description = @issue.substituted(issue_description, @sections_attributes)
     end
   end
