@@ -11,6 +11,7 @@
     %>
   </p>
   <div class="collapsible">
+    <%= render partial: "issue_templates/new_sections/section_id", locals: {section: form.object} %>
     <p>
       <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
     </p>

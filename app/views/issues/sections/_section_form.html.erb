@@ -24,6 +24,8 @@
                      placeholder: section.placeholder,
                      value: reload_current_value(@sections_attributes, section.position) || section.text
   %>
-  <%= wikitoolbar_for "issue_issue_template_descriptions_attributes_#{form.index}_text" if section.show_toolbar %>
+  <% section_group = section.issue_template_section_group %>
+  <% field_id = "issue_issue_template_section_groups_attributes_#{section_group.id}_#{group_index}_sections_attributes_#{section.id}_text" %>
+  <%= wikitoolbar_for field_id if section.show_toolbar %>
   <%= form.hidden_field :empty_value, value: section.empty_value %>
 </p>

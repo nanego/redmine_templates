@@ -1,3 +1,5 @@
+<% section_group = section.issue_template_section_group %>
+
 <p>
   <%= label_tag do %>
     <%= section.title %>
@@ -16,10 +18,11 @@
                       required: section.required,
                       value: reload_current_value(@sections_attributes, section.position) || section.text
   %>
+  <% field_id = "issue_issue_template_section_groups_attributes_#{section_group.id}_#{group_index}_sections_attributes_#{section.id}_text" %>
   <% if Redmine::Plugin.installed?(:redmine_datetime_custom_field) %>
-    <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text", section.select_type == "datetime") %>
+    <%= calendar_for(field_id, section.select_type == "datetime") %>
   <% else %>
-    <%= calendar_for("issue_issue_template_descriptions_attributes_#{form.index}_text") %>
+    <%= calendar_for(field_id) %>
   <% end %>
   <%= form.hidden_field :empty_value, value: section.empty_value %>
 </p>

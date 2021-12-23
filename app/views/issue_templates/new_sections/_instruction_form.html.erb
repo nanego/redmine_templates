@@ -4,6 +4,7 @@
   </p>
 
   <div class="collapsible">
+    <%= render partial: "issue_templates/new_sections/section_id", locals: {section: form.object} %>
     <p class="with-textarea">
       <% textarea_id = "issue_template_sections_attributes_text_#{form.index}_#{form.object.object_id}" %>
       <%= form.text_area :text,

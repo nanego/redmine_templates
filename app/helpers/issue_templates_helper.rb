@@ -51,7 +51,7 @@ module IssueTemplatesHelper
       template_target_name = "split-description.#{section_class.short_name}_template"
       template_style = "display:none;"
     else
-      template_class = "collapsed"
+      template_class = ""
       template_target_name = nil
       template_style = nil
     end
@@ -66,8 +66,9 @@ module IssueTemplatesHelper
     if section_class.editable?
       label_expand = section_class.name == "IssueTemplateSectionGroup" ? "Afficher les sections" : "Afficher les détails"
       label_collapse = section_class.name == "IssueTemplateSectionGroup" ? "Masquer les sections" : "Masquer les détails"
+      initial_state = section_class.name == "IssueTemplateSectionGroup" ? "" : "collapsed"
       toggle_display_link = content_tag :span, style: "float: right;margin-right: 2em;" do
-        link_to (template ? label_collapse : label_expand),
+        link_to (template || initial_state != "collapsed" ? label_collapse : label_expand),
                 '#',
                 class: 'icon icon-list expand_collapse action',
                 data: { action: "description-item-form#expand_collapse",
@@ -88,7 +89,7 @@ module IssueTemplatesHelper
     end
 
     content_tag :div,
-                class: "split_description #{section_class.short_name} #{template_class}",
+                class: "split_description #{section_class.short_name} #{template_class} #{initial_state}",
                 data: { controller: "description-item-form",
                         target: template_target_name },
                 style: template_style do
