@@ -66,9 +66,9 @@ module IssueTemplatesHelper
     if section_class.editable?
       label_expand = section_class.name == "IssueTemplateSectionGroup" ? "Afficher les sections" : "Afficher les détails"
       label_collapse = section_class.name == "IssueTemplateSectionGroup" ? "Masquer les sections" : "Masquer les détails"
-      initial_state = section_class.name == "IssueTemplateSectionGroup" ? "" : "collapsed"
+      initial_state = (section_class.name != "IssueTemplateSectionGroup" || template ? "collapsed" : "")
       toggle_display_link = content_tag :span, style: "float: right;margin-right: 2em;" do
-        link_to (template || initial_state != "collapsed" ? label_collapse : label_expand),
+        link_to (initial_state != "collapsed" ? label_collapse : label_expand),
                 '#',
                 class: 'icon icon-list expand_collapse action',
                 data: { action: "description-item-form#expand_collapse",
