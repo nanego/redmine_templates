@@ -22,7 +22,7 @@
                      no_label: true,
                      required: section.required,
                      placeholder: section.placeholder,
-                     value: reload_current_value(@sections_attributes, section.position) || section.text
+                     value: reload_current_value(@sections_attributes, section, group_index) || section.text
   %>
   <% section_group = section.issue_template_section_group %>
   <% field_id = "issue_issue_template_section_groups_attributes_#{section_group.id}_#{group_index}_sections_attributes_#{section.id}_text" %>

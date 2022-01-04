@@ -16,7 +16,7 @@
                       no_label: true,
                       required: section.required,
                       placeholder: section.placeholder,
-                      value: reload_current_value(@sections_attributes, section.position) || section.text
+                      value: reload_current_value(@sections_attributes, section, group_index) || section.text
   %>
   <%= form.hidden_field :empty_value, value: section.empty_value %>
 </p>

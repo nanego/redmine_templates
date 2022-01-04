@@ -1,4 +1,4 @@
-<% value = reload_current_value(@sections_attributes, section.position) || section.text %>
+<% value = reload_current_value(@sections_attributes, section, group_index) || section.text %>
 <p>
   <%= label_tag do %>
     <%= section.title %>

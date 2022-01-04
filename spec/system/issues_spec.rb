@@ -41,7 +41,7 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to have_field('Subject', with: 'Issue created with template 3')
       expect(page).to_not have_selector("description")
       expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_1_text', text: "Type here first section content")
-      expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_2_text'), text: "Type here second section content"
+      expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_2_text', text: "Type here second section content")
       expect(page).to have_selector('#attachments_form')
 
       fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', with: 'One-line edited content'
@@ -51,6 +51,31 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to have_selector('.description', text: "Type here first section content")
       expect(page).to have_selector('.description', text: "Type here second section content")
       expect(page).to have_selector('.description', text: 'One-line edited content')
+    end
+
+    it "keeps sections values when form is reloaded" do
+      visit new_issue_path(project_id: project.identifier, template_id: template_with_sections.id)
+
+      expect(page).to have_field('Subject', with: 'Issue created with template 3')
+      expect(page).to_not have_selector("description")
+      expect(page).to_not have_selector("status")
+      expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_1_text', text: "Type here first section content")
+      expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_2_text', text: "Type here second section content")
+
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_1_text', with: 'Edited text area'
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', with: 'One-line edited content'
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: '01/01/2020'
+
+      select "Feature request", :from => "issue_tracker_id"
+
+      # Auto-reload happens here
+
+      expect(page).to have_selector("#issue_status_id")
+
+      expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_2_text', text: "Type here second section content")
+      expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_1_text', text: 'Edited text area')
+      # expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', text: 'One-line edited content')
+
     end
   end
 

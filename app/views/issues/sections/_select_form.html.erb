@@ -1,4 +1,4 @@
-<% values = reload_current_value(@sections_attributes, section.position, get_all_attributes: true) || {} %>
+<% values = reload_current_value(@sections_attributes, section, group_index, get_all_attributes: true) || {} %>
 <% default_values = section.placeholder.present? ? section.placeholder.split(';') : [] %>
 <% possible_values = section.text.present? ? section.text.split(';') : [] %>
 <% section_group = section.issue_template_section_group %>

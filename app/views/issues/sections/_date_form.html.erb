@@ -16,7 +16,7 @@
                       size: section.select_type == "datetime" ? 14 : 10,
                       no_label: true,
                       required: section.required,
-                      value: reload_current_value(@sections_attributes, section.position) || section.text
+                      value: reload_current_value(@sections_attributes, section, group_index) || section.text
   %>
   <% field_id = "issue_issue_template_section_groups_attributes_#{section_group.id}_#{group_index}_sections_attributes_#{section.id}_text" %>
   <% if Redmine::Plugin.installed?(:redmine_datetime_custom_field) %>

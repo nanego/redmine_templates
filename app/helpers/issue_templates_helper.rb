@@ -31,14 +31,22 @@ module IssueTemplatesHelper
                 :data => data)
   end
 
-  def reload_current_value(sections_attributes, current_position, get_all_attributes: false)
+  def reload_current_value(sections_attributes, section, repeatable_group_index = 0, get_all_attributes: false)
     if sections_attributes.present?
-      index = current_position - 1
-      if @sections_attributes[index].present?
-        if get_all_attributes
-          return @sections_attributes[index]
-        else
-          return @sections_attributes[index]['text']
+
+      section_group_id = section.issue_template_section_group.id.to_s
+      repeatable_group_index = repeatable_group_index.to_s
+      section_id = section.id.to_s
+
+      if @sections_attributes[section_group_id].present?
+        if @sections_attributes[section_group_id][repeatable_group_index].present?
+          if @sections_attributes[section_group_id][repeatable_group_index]["sections_attributes"].present?
+            if get_all_attributes
+              return @sections_attributes[section_group_id][repeatable_group_index]["sections_attributes"][section_id]
+            else
+              return @sections_attributes[section_group_id][repeatable_group_index]["sections_attributes"][section_id]['text']
+            end
+          end
         end
       end
     end
