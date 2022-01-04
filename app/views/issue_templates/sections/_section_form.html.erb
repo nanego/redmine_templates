@@ -1,13 +1,16 @@
-<%= issue_template_section_form(form, IssueTemplateDescriptionSection, template) do %>
+<%= issue_template_section_form(form, IssueTemplateSectionTextArea, template) do %>
   <p>
     <%= form.text_field :title, :placeholder => "Titre", :label => 'Section', :size => 45, :required => true %>
   </p>
   <div class="collapsible">
+    <%= render partial: "issue_templates/sections/section_id", locals: {section: form.object} %>
     <p>
       <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
     </p>
     <p class="with-textarea">
+      <% textarea_id = "issue_template_sections_attributes_text_#{form.index}_#{form.object.object_id}" %>
       <%= form.text_area :text,
+                         :id => textarea_id,
                          :cols => 60,
                          :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
                          :accesskey => accesskey(:edit),
@@ -18,7 +21,7 @@
                              "preview-link" => preview_text_path
                          }
       %>
-      <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" if !template %>
+      <%= wikitoolbar_for textarea_id unless template %>
     </p>
     <p>
       <%= form.text_field :placeholder, :size => 80, label: "Valeur du placeholder" %>

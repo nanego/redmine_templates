@@ -80,7 +80,7 @@ module IssueTemplatesHelper
     end
 
     reorder_handle = reorder_templates_handle(form.object, :url => "#")
-    position_section_tooltip = content_tag('span', '0', :class => "position-section-tooltip")
+    # position_section_tooltip = content_tag('span', '0', :class => "position-section-tooltip")
     hidden_position_field = form.hidden_field(:position)
     if section_class.name == "IssueTemplateSectionGroup"
       hidden_type_field = ""
@@ -95,7 +95,7 @@ module IssueTemplatesHelper
                 style: template_style do
       delete_link +
         toggle_display_link +
-        position_section_tooltip +
+        # position_section_tooltip +
         reorder_handle +
         hidden_position_field +
         hidden_type_field +

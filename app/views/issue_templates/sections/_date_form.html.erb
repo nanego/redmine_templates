@@ -1,8 +1,9 @@
-<%= issue_template_section_form(form, IssueTemplateDescriptionDate, template) do %>
+<%= issue_template_section_form(form, IssueTemplateSectionDate, template) do %>
   <p>
     <%= form.text_field :title, :placeholder => "Titre", :label => 'Date', :size => 45, :required => true %>
   </p>
   <div class="collapsible">
+    <%= render partial: "issue_templates/sections/section_id", locals: {section: form.object} %>
     <p>
       <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
     </p>
@@ -11,7 +12,7 @@
     </p>
     <p>
       <%= form.select :select_type,
-                      options_for_select(IssueTemplateDescriptionDate.select_types_options,
+                      options_for_select(IssueTemplateSectionDate.select_types_options,
                                          selected: (form.object.present? ? form.object.select_type : '')),
                       label: "Format" %>
     </p>

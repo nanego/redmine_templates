@@ -1,7 +1,7 @@
 <% values = (form.object && form.object.text.present?) ? form.object.text.split(';') : [] %>
 <% default_values = (form.object && form.object.placeholder.present?) ? form.object.placeholder.split(';') : [] %>
 
-<%= issue_template_section_form(form, IssueTemplateDescriptionSelect, template) do %>
+<%= issue_template_section_form(form, IssueTemplateSectionSelect, template) do %>
   <p>
     <%= form.text_field :title,
                         :placeholder => "Titre",
@@ -11,6 +11,7 @@
     %>
   </p>
   <div class="collapsible">
+    <%= render partial: "issue_templates/sections/section_id", locals: {section: form.object} %>
     <p>
       <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
     </p>
@@ -30,14 +31,14 @@
 
     <p>
       <%= form.select :select_type,
-                      options_for_select(IssueTemplateDescriptionSelect.select_types_options,
+                      options_for_select(IssueTemplateSectionSelect.select_types_options,
                                          selected: (form.object.present? ? form.object.select_type : '')),
                       label: "Type" %>
     </p>
 
     <p>
       <%= form.select :display_mode,
-                      options_for_select(IssueTemplateDescription::DISPLAY_MODES.collect { |mode| [l(mode), mode] },
+                      options_for_select(IssueTemplateSection::DISPLAY_MODES.collect { |mode| [l(mode), mode] },
                                          selected: (form.object.present? ? form.object.display_mode : '')),
                       label: l('display_mode') %>
       <span><i>Option active uniquement pour les champs de type "Checkbox"</i></span>

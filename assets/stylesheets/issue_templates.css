@@ -294,7 +294,6 @@ a.list_templates_projects_names.current {
     margin-top: 1em;
 }
 
-#split-description-container .split_description,
 .sections .split_description {
     border-bottom: dotted 1px lightgray;
     margin: 0 0.8em;
@@ -307,7 +306,6 @@ a.list_templates_projects_names.current {
     padding-left: 22px;
 }
 
-#split-description-container .position-section-tooltip,
 .sections .position-section-tooltip {
     position: absolute;
     padding: 7px 0 0 0;
@@ -317,20 +315,16 @@ a.list_templates_projects_names.current {
     margin-left: 23px;
 }
 
-#split-description-container .split_description.hover .position-section-tooltip,
 .sections .split_description.hover .position-section-tooltip {
     display: inline;
 }
 
-#split-description-container .sort-handle,
 .sections .sort-handle {
     position: absolute;
     padding: 8px;
     margin-left: 2px;
 }
 
-#split-description-container a.icon-del,
-#split-description-container a.expand_collapse,
 .sections a.icon-del,
 .sections a.expand_collapse {
     margin-top: 6px;
@@ -339,12 +333,10 @@ a.list_templates_projects_names.current {
     vertical-align: middle;
 }
 
-#split-description-container .split_description.collapsed .collapsible,
 .sections .split_description.collapsed .collapsible {
     display: none;
 }
 
-#split-description-container .split_description .possible-values,
 .sections .split_description .possible-values {
     margin: 0;
     padding: 3px 0 3px 180px;
@@ -352,12 +344,10 @@ a.list_templates_projects_names.current {
     clear: left;
 }
 
-#split-description-container .split_description .possible-values ul,
 .sections .split_description .possible-values ul {
     margin-bottom: 4px;
 }
 
-#split-description-container .split_description possible-values label,
 .sections .split_description possible-values label {
     line-height: 2em;
     font-weight: bold;
@@ -367,16 +357,11 @@ a.list_templates_projects_names.current {
     width: 175px;
 }
 
-#split-description-container .split_description .possible-values li,
 .sections .split_description .possible-values li {
     cursor: move;
     list-style: none;
     width: -moz-max-content;
     width: max-content;
-}
-
-#split-description-container .split_description.title, #split-description-container .split_description.separator {
-    background-color: #e4e4e4;
 }
 
 .sections .split_description.section_group, .sections .split_description.separator {

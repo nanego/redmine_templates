@@ -1,11 +1,14 @@
-<%= issue_template_section_form(form, IssueTemplateDescriptionInstruction, template) do %>
+<%= issue_template_section_form(form, IssueTemplateSectionInstruction, template) do %>
   <p>
-    <%= form.select :instruction_type, IssueTemplateDescriptionInstruction::TYPES.collect { |type| [ t(type), type ] }, :label => 'Consigne' %>
+    <%= form.select :instruction_type, IssueTemplateSectionInstruction::TYPES.collect { |type| [ t(type), type ] }, :label => 'Consigne' %>
   </p>
 
   <div class="collapsible">
+    <%= render partial: "issue_templates/sections/section_id", locals: {section: form.object} %>
     <p class="with-textarea">
+      <% textarea_id = "issue_template_sections_attributes_text_#{form.index}_#{form.object.object_id}" %>
       <%= form.text_area :text,
+                         :id => textarea_id,
                          :cols => 60,
                          :rows => (form.object&.text.blank? ? 10 : [[10, form.object.text.length / 50].max, 100].min),
                          :accesskey => accesskey(:edit),
@@ -17,7 +20,8 @@
                              "preview-link" => preview_text_path
                          }
       %>
-      <%= wikitoolbar_for "issue_template_descriptions_attributes_#{form.index}_text" if !template %>
+      <%= wikitoolbar_for textarea_id unless template %>
+
     </p>
   </div>
 <% end %>

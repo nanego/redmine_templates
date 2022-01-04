@@ -60,7 +60,6 @@ $(document).ready(function ($) {
         $('.' + className).toggleClass("hover");
     });
 
-    $("#split-description-container").positionedFormItems();
     $("#split-description-groups").positionedFormGroups()
     $("#split-description-groups .sections").positionedFormItems()
 });
@@ -137,7 +136,6 @@ function makeListsSortable() {
             return [
                 "split_description_checkbox",
                 "description_field",
-                "description_fields",
                 "section_groups_fields",
                 "template_sections",
                 "select_new_section_type",
