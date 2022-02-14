@@ -198,7 +198,7 @@
 
         <% if Redmine::Plugin.installed?(:redmine_multiprojects_issue) %>
           <p id="projects_form">
-            <% select_options = project_tree_options_for_select((@issue_template.allowed_target_projects | @issue_template.secondary_projects) - [@issue_template.project], :selected => [@issue_template.project] | @issue_template.secondary_projects) %>
+            <% select_options = project_tree_options_for_select((@issue_template.allowed_target_projects | @issue_template.secondary_projects), :selected => @issue_template.secondary_projects) %>
             <%= f.select :secondary_project_ids,
                          select_options,
                          { :required => true, :label => l("related_projects") },
