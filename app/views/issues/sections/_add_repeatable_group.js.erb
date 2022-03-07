@@ -1,1 +1,2 @@
+<% @sections_group.title = "" # Do not repeat group title %>
 $(".section_groups_<%= @sections_group.id %>:last").after("<%= escape_javascript(render :partial => "issues/sections/repeatable_group_form") %>")
