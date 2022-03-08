@@ -1,38 +1,43 @@
 <%= section_groups_form.fields_for group_index do |section_group_form| %>
 
-  <div id="section_groups_<%= section_group.id %>_<%= group_index %>" class="section_groups_<%= section_group.id %>">
+  <div id="section_groups_<%= section_group.id %>_<%= group_index %>"
+       class="section_groups_<%= section_group.id %>">
 
-    <%= render partial: 'issues/sections/title_form', locals: { section: section_group } %>
+    <%= render partial: 'issues/sections/title_form', locals: { section: section_group, group_index: group_index } %>
 
-    <% section_group.sections.each do |section| %>
+    <div class="section_group_content">
 
-      <%= section_group_form.fields_for 'sections_attributes', section do |section_form| %>
+      <% section_group.sections.each do |section| %>
 
-        <%= section_form.fields_for section.id.to_s do |section_fields| %>
+        <%= section_group_form.fields_for 'sections_attributes', section do |section_form| %>
 
-          <%= render partial: "issues/sections/#{section.class.short_name}_form",
-                     locals: { section: section, form: section_fields, group_index: group_index } %>
+          <%= section_form.fields_for section.id.to_s do |section_fields| %>
+
+            <%= render partial: "issues/sections/#{section.class.short_name}_form",
+                       locals: { section: section, form: section_fields, group_index: group_index } %>
+
+          <% end %>
 
         <% end %>
 
       <% end %>
 
-    <% end %>
+      <% if group_index.to_i > 0 %>
 
-    <% if group_index.to_i > 0 %>
+        <p style="margin-top: 0.5em">
+          <%= link_to 'Supprimer ce bloc', '#',
+                      class: 'destroy_sections_group icon icon-del',
+                      title: "Répéter ce groupe de sections",
+                      data: {
+                        group_id: section_group.id,
+                        group_index: group_index
+                      }
+          %>
+        </p>
 
-      <p style="margin-top: 0.5em">
-        <%= link_to 'Supprimer ce bloc', '#',
-                    class: 'destroy_sections_group icon icon-del',
-                    title: "Répéter ce groupe de sections",
-                    data: {
-                      group_id: section_group.id,
-                      group_index: group_index
-                    }
-        %>
-      </p>
+      <% end %>
 
-    <% end %>
+    </div>
 
   </div>
 

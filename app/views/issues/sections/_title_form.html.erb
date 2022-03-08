@@ -1,6 +1,15 @@
 <%= render 'issues/sections/separator_form' %>
-<% if section.title.present? %>
-  <div class="subtitle">
-    <%= section.title %>
-  </div>
-<% end %>
+<div class="subtitle_container">
+
+  <% if section.title.present? %>
+    <div class="subtitle">
+      <%= section.title %>
+    </div>
+  <% end %>
+
+  <% if section.retracted && group_index == '0' %>
+    <%= link_to 'Afficher', '#', class: "expand_button expander", data: {group_id: section.id} %>
+    <%= link_to 'Masquer', '#', class: "expand_button retracter", data: {group_id: section.id} %>
+  <% end %>
+
+</div>

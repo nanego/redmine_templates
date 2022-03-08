@@ -389,14 +389,49 @@ a.list_templates_projects_names.current {
     display: inline-flex;
 }
 
-#issue-form #attributes .subtitle {
+#issue-form #attributes .subtitle_container {
+    display: flex;
+    flex-direction: row;
     margin: -24px 0 8px -6px;
+}
+
+#issue-form #attributes .subtitle {
     font-size: 13px;
     background-color: #e4e4e4;
-    display: block;
     padding: 0.5em 1em;
     width: -moz-max-content;
     width: max-content;
+    flex: 0 1 auto;
+}
+
+#issue-form #attributes .expand_button {
+    font-size: 13px;
+    padding: 0.5em 1em;
+    background-repeat: no-repeat;
+    background-color: white;
+    background-size: 18px;
+    background-position: 10px center;
+    padding-left: 38px;
+    line-height: 18px;
+    height: 18px;
+    width: fit-content;
+    flex: 0 1 auto;
+}
+#issue-form #attributes .expander {
+    background-image: url(../images/icon-expand-1.png);
+    display: none;
+}
+#issue-form #attributes .retracter {
+    background-image: url(../images/icon-shrink-vertical-1.png);
+}
+
+#issue-form #attributes .retracted .section_group_repeater,
+#issue-form #attributes .retracted .section_group_content,
+#issue-form #attributes .retracted .retracter {
+    display: none;
+}
+#issue-form #attributes .retracted .expander {
+    display: block;
 }
 
 #issue-form #attributes label.no-style {

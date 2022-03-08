@@ -2,31 +2,36 @@
   <%= f.fields_for :issue_template, @issue.issue_template do |template_form| %>
 
     <% @issue.issue_template.section_groups.each do |section_group| %>
-      <%= template_form.fields_for "section_groups_attributes", section_group do |section_groups_form| %>
 
-        <%= section_groups_form.fields_for section_group.id.to_s do |section_group_fields| %>
+      <div class="section_group_container <%= 'retracted' if section_group.retracted? %>" id="section_group_container_<%= section_group.id %>">
+        <%= template_form.fields_for "section_groups_attributes", section_group do |section_groups_form| %>
 
-          <%= render partial: 'issues/section_group_form', locals: { group_index: "0",
-                                                                     section_groups_form: section_group_fields,
-                                                                     section_group: section_group } %>
+          <%= section_groups_form.fields_for section_group.id.to_s do |section_group_fields| %>
+
+            <%= render partial: 'issues/section_group_form', locals: { group_index: "0",
+                                                                       section_groups_form: section_group_fields,
+                                                                       section_group: section_group } %>
+
+          <% end %>
+
+          <% if section_group.repeatable %>
+            <div class="section_group_repeater">
+              <%= render 'issues/sections/separator_form' %>
+              <p style="margin-top: -1.5em">
+                <%= link_to 'Répéter ce bloc', '#',
+                            class: 'add_sections_group icon icon-add',
+                            title: "Répéter ce groupe de sections",
+                            data: {
+                              sections_group_id: section_group.id,
+                              sections_group_type: section_group.class.name
+                            }
+                %>
+              </p>
+            </div>
+          <% end %>
 
         <% end %>
-
-        <% if section_group.repeatable %>
-          <%= render 'issues/sections/separator_form' %>
-          <p style="margin-top: -1.5em">
-            <%= link_to 'Répéter ce bloc', '#',
-                        class: 'add_sections_group icon icon-add',
-                        title: "Répéter ce groupe de sections",
-                        data: {
-                          sections_group_id: section_group.id,
-                          sections_group_type: section_group.class.name
-                        }
-            %>
-          </p>
-        <% end %>
-
-      <% end %>
+      </div>
 
     <% end %>
 
@@ -46,11 +51,21 @@
             data: event.target.dataset
         });
     })
-
     $('form#issue-form').on('click', '.destroy_sections_group', function (event) {
         event.preventDefault()
         let group_to_destroy = $("#section_groups_" + event.target.getAttribute("data-group-id") + '_' + event.target.getAttribute("data-group-index"))
         group_to_destroy.remove()
+    })
+
+    $('form#issue-form').on('click', '.subtitle_container .expander', function (event) {
+        event.preventDefault()
+        let group_to_display = $("#section_group_container_" + event.target.getAttribute("data-group-id"))
+        group_to_display.removeClass('retracted')
+    })
+    $('form#issue-form').on('click', '.subtitle_container .retracter', function (event) {
+        event.preventDefault()
+        let group_to_hide = $("#section_group_container_" + event.target.getAttribute("data-group-id"))
+        group_to_hide.addClass('retracted')
     })
 
 </script>
