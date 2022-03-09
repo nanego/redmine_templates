@@ -409,21 +409,14 @@ a.list_templates_projects_names.current {
     font-size: 13px;
     padding: 0.5em 1em;
     background-repeat: no-repeat;
-    background-color: white;
-    background-size: 18px;
     background-position: 10px center;
-    padding-left: 38px;
     line-height: 18px;
     height: 18px;
-    width: fit-content;
+    width: 18px;
     flex: 0 1 auto;
 }
 #issue-form #attributes .expander {
-    background-image: url(../images/icon-expand-vertical-left-right.png);
     display: none;
-}
-#issue-form #attributes .retracter {
-    background-image: url(../images/icon-shrink-vertical.png);
 }
 
 #issue-form #attributes .retracted .section_group_repeater,

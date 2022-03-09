@@ -8,8 +8,8 @@
   <% end %>
 
   <% if section.retracted && group_index == '0' %>
-    <%= link_to 'Afficher', '#', class: "expand_button expander", data: {group_id: section.id} %>
-    <%= link_to 'Masquer', '#', class: "expand_button retracter", data: {group_id: section.id} %>
+    <%= link_to '', '#', class: "expand_button expander icon icon-add", data: {group_id: section.id} %>
+    <%= link_to '', '#', class: "expand_button retracter icon icon-add", data: {group_id: section.id} %>
   <% end %>
 
 </div>
