@@ -419,11 +419,11 @@ a.list_templates_projects_names.current {
     flex: 0 1 auto;
 }
 #issue-form #attributes .expander {
-    background-image: url(../images/icon-expand-1.png);
+    background-image: url(../images/icon-expand-vertical-left-right.png);
     display: none;
 }
 #issue-form #attributes .retracter {
-    background-image: url(../images/icon-shrink-vertical-1.png);
+    background-image: url(../images/icon-shrink-vertical.png);
 }
 
 #issue-form #attributes .retracted .section_group_repeater,
