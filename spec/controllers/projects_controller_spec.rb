@@ -29,6 +29,46 @@ describe ProjectsController, type: :controller do
       assert_equal source_project.issue_templates, new_project.issue_templates, "All issue_templates were not copied"
       expect(new_project.issue_templates.size).to eq 6
     end
+
+    if Redmine::Plugin.installed?(:redmine_limited_visibility)
+      it "should copy available issue templates with Visibility" do
+        source_project = Project.find(2)
+        ProjectFunction.create(
+          project_id: source_project.id,
+          function_id: 1,
+          authorized_viewers: '|1|3|'
+        )
+        ProjectFunction.create(
+          project_id: source_project.id,
+          function_id: 3,
+          authorized_viewers: '|1|3|'
+        )
+        itp1 = IssueTemplateProject.where(issue_template_id: 1, project_id: source_project.id).first
+        itp1.visibility = '1|3'
+        itp1.save
+        itp4 = IssueTemplateProject.where(issue_template_id: 4, project_id: source_project.id).first
+        itp4.visibility = '1'
+        itp4.save
+
+        assert_difference 'Project.count' do
+          post :copy, :params => {
+            :id => source_project.id,
+            :project => {
+              :name => 'Copy with templates',
+              :identifier => 'copy-with-templates'
+            },
+            :only => %w(issues versions issue_templates)
+          }
+        end
+        new_project = Project.find('copy-with-templates')
+        assert_equal source_project.issue_templates, new_project.issue_templates, "All issue_templates were not copied"
+
+        expect(IssueTemplateProject.where(issue_template_id: 1, project_id: new_project.id).first.visibility).to eq('1|3')
+        expect(IssueTemplateProject.where(issue_template_id: 4, project_id: new_project.id).first.visibility).to eq('1')
+
+        expect(new_project.issue_templates.size).to eq 6
+      end
+    end
   end
 
   context "PUT project settings" do
