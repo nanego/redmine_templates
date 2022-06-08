@@ -2,6 +2,8 @@ class IssueTemplatesController < ApplicationController
 
   helper :custom_fields
   include CustomFieldsHelper
+  helper :trackers
+  include TrackersHelper
 
   before_action :authorize_global, except: [:add_repeatable_group]
   before_action :find_project, only: [:init]
@@ -82,6 +84,7 @@ class IssueTemplatesController < ApplicationController
 
   def index
     @templates = IssueTemplate.order("custom_form desc, tracker_id desc, usage desc").includes(:issues)
+    @trackers = Tracker.sorted
   end
 
   # Updates the template form when changing the project, status or tracker on template creation/update

@@ -3,7 +3,7 @@
 <div class="contextual">
   <% if @project %>
     <%= link_to(l(:label_new_templates),
-                {:controller => 'issue_templates', :action => 'init', :project_id => @project},
+                { :controller => 'issue_templates', :action => 'init', :project_id => @project },
                 :class => 'icon icon-add', :method => :post) %>
   <% else %>
     <%= link_to(l(:label_new_templates), new_issue_template_path, class: 'icon icon-add') %>
@@ -15,6 +15,27 @@
 <% if @notice -%>
   <div class="flash notice"><%= @notice -%></div>
 <% end -%>
+
+<% unless @trackers.empty? %>
+  <fieldset class="box tabular" id="trackers">
+    <legend><%= toggle_checkboxes_link('#trackers input[type=checkbox]') %><%= l(:label_tracker_plural) %></legend>
+    <% @trackers.each do |tracker| %>
+      <label class="floating">
+        <%= check_box_tag 'tracker_ids[]', tracker.id, 1, :id => nil %>
+        <%= tracker_name_tag tracker %>
+      </label>
+    <% end %>
+  </fieldset>
+  <%= javascript_tag do %>
+    $(document).on("input change", "#trackers input", function(e) {
+    var values = $('#trackers input[type=checkbox]:checked');
+    $('#templates_list .issue_template').hide();
+    for(const v of values){
+    $('#templates_list .issue_template[data-tracker-id='+v.value+']').show();
+    }
+    })
+  <% end %>
+<% end %>
 
 <% if @templates.empty? %>
   <div class="template_box">
@@ -42,15 +63,15 @@
       </thead>
       <tbody>
       <% @templates.each do |issue_template| %>
-        <tr class="issue_template issue">
+        <tr class="issue_template issue" data-tracker-id="<%= issue_template.tracker_id %>">
           <% link_to_edition = Proc.new do |label, title|
             size_max = 40
             label = "#{label.first(size_max)}..." if label.size > size_max
-            link_to label.html_safe, {:controller => 'issue_templates',
-                                      :action => 'edit',
-                                      :id => issue_template.id
-                                      # ,:project_id => project.id
-            }, {:title => title }
+            link_to label.html_safe, { :controller => 'issue_templates',
+                                       :action => 'edit',
+                                       :id => issue_template.id
+                                       # ,:project_id => project.id
+            }, { :title => title }
           end %>
           <td>
             <%= image_tag 'icons8-form-50.png', plugin: 'redmine_templates' if issue_template.custom_form? %>
@@ -100,7 +121,8 @@
             </td>
           <% end %>
           <td class="buttons">
-            <% if true #User.current.allowed_to?(:manage_templates, project) %>
+            <% if true
+                 #User.current.allowed_to?(:manage_templates, project) %>
               <%= link_to l(:button_edit), edit_issue_template_path(id: issue_template.id
               #, project_id: project.id
               ), :class => 'icon icon-edit' %>
