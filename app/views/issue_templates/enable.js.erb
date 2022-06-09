@@ -1,1 +1,2 @@
-$('.image_enabled_<%= @issue_template.id %>').html('<%= escape_javascript(render "issue_templates/enable_form", issue_template: @issue_template) %>');
+$('#templates_list .issue_template[data-template-id=<%= @issue_template.id %>]').replaceWith('<%= escape_javascript(render "issue_templates/list_template", issue_template: @issue_template) %>')
+filter_templates();

@@ -1,0 +1,72 @@
+<tr class="issue_template issue"
+    data-tracker-id="<%= issue_template.tracker_id %>"
+    data-template-id="<%= issue_template.id %>"
+    data-template-enabled="<%= issue_template.template_enabled? ? '1' : '0' %>">
+  <% link_to_edition = Proc.new do |label, title|
+    size_max = 40
+    label = "#{label.first(size_max)}..." if label.size > size_max
+    link_to label.html_safe, { :controller => 'issue_templates',
+                               :action => 'edit',
+                               :id => issue_template.id
+                               # ,:project_id => project.id
+    }, { :title => title }
+  end %>
+  <td>
+    <%= image_tag 'icons8-form-50.png', plugin: 'redmine_templates' if issue_template.custom_form? %>
+    <%= image_tag 'icons8-form-64.png', plugin: 'redmine_templates', style: 'width: 40px;padding: 5px;' if issue_template.split_description? %>
+  </td>
+  <td><%= link_to_edition.call h(issue_template.template_title), issue_template.template_title %></td>
+  <td><%= (link_to_edition.call h(issue_template.tracker.name), issue_template.tracker.name) if issue_template.tracker.present? %></td>
+  <td><%= link_to_edition.call h(issue_template.subject), issue_template.subject %></td>
+  <td class="template_projects">
+    <div>
+      <%
+        nb_other_projects = 0
+        nb_visible_projects = 0
+        template_projects = issue_template.template_projects.all
+        allowed_projects = issue_template.allowed_target_projects
+      %>
+      <% template_projects.each do |project| %>
+        <% if allowed_projects.include?(project) %>
+          <%= link_to project.name.gsub(/ /, "&nbsp;").html_safe,
+                      "#",
+                      class: "project_id_#{project.id} list_templates_projects_names #{@project && @project == project ? "current" : ""}",
+                      :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project.id}\").toggleClass('current')"
+          %>
+          <% nb_visible_projects += 1 %>
+        <% else %>
+          <% nb_other_projects += 1 %>
+        <% end %>
+      <% end %>
+      <% if nb_other_projects > 0 %>
+                <span class="list_templates_other_projects">
+                  <% if nb_visible_projects > 0 %>
+                    <%= l("support.array.sentence_connector") %>
+                    <%= pluralize(nb_other_projects, l("other")) %>
+                    <%= nb_other_projects > 1 ? l("project").pluralize : l("project") %>
+                  <% else %>
+                    <%= pluralize(nb_other_projects, l("project")) %>
+                  <% end %>
+                </span>
+      <% end %>
+    </div>
+  </td>
+  <td><%= issue_template.usage %></td>
+  <td><%= issue_template.issues.size %></td>
+  <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
+    <td class="center image_enabled_<%= issue_template.id %>">
+      <%= render "issue_templates/enable_form", issue_template: issue_template %>
+    </td>
+  <% end %>
+  <td class="buttons">
+    <% if true
+         #User.current.allowed_to?(:manage_templates, project) %>
+      <%= link_to l(:button_edit), edit_issue_template_path(id: issue_template.id
+      #, project_id: project.id
+      ), :class => 'icon icon-edit' %>
+      <% if User.current.admin || (issue_template.template_projects - User.current.projects).empty? %>
+        <%= delete_link issue_template_path(issue_template) %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

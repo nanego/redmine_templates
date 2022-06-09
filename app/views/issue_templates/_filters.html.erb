@@ -1,0 +1,65 @@
+<% @trackers = Tracker.sorted %>
+<% unless @trackers.blank? %>
+  <fieldset class="box tabular" id="filters_trackers">
+    <legend><%= toggle_checkboxes_link('#filters_trackers input[type=checkbox]') %><%= l(:label_tracker_plural) %></legend>
+    <% @trackers.each do |tracker| %>
+      <label class="floating">
+        <%= check_box_tag 'tracker_ids[]', tracker.id, 1, :id => nil %>
+        <%= tracker_name_tag tracker %>
+      </label>
+    <% end %>
+  </fieldset>
+<% end %>
+
+<fieldset class="box tabular" id="filters_template_enabled">
+  <legend><%= toggle_checkboxes_link('#filters_template_enabled input[type=checkbox]') %><%= l(:field_template_enabled) %></legend>
+  <label class="floating">
+    <%= check_box_tag 'template_enabled[]', 1, 1, :id => nil %>
+    <%= l('general_text_Yes') %>
+  </label>
+  <label class="floating">
+    <%= check_box_tag 'template_enabled[]', 0, 1, :id => nil %>
+    <%= l('general_text_No') %>
+  </label>
+</fieldset>
+
+<%= javascript_tag do %>
+  function filter_templates() {
+
+    // Init
+    var templates_to_show_by_trackers = [];
+    var templates_to_show_by_enabled = [];
+    $('#templates_list .issue_template').hide();
+
+    // Filter by Trackers
+    var trackers_values = $('#filters_trackers input[type=checkbox]:checked');
+    for(const v of trackers_values){
+      $('#templates_list .issue_template[data-tracker-id='+v.value+']').each(function(){
+        templates_to_show_by_trackers.push(this.getAttribute('data-template-id'));
+      });
+    }
+
+    // Filter by template enabled
+    var enabled_values = $('#filters_template_enabled input[type=checkbox]:checked');
+    for(const v of enabled_values){
+      $('#templates_list .issue_template[data-template-enabled='+v.value+']').each(function(){
+          templates_to_show_by_enabled.push(this.getAttribute('data-template-id'));
+      })
+    }
+
+    const templates_to_show = templates_to_show_by_trackers.filter(value => templates_to_show_by_enabled.includes(value));
+    for(const template_id of templates_to_show){
+      $('#templates_list .issue_template[data-template-id='+template_id+']').show();
+    }
+
+  }
+
+  $(document).on("input change", "#filters_trackers input, #filters_template_enabled input", function(event) {
+  filter_templates();
+  })
+  document.addEventListener('DOMContentLoaded', function(event) {
+  filter_templates();
+  })
+  filter_templates();
+
+<% end %>
