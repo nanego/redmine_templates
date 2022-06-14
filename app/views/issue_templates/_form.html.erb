@@ -158,26 +158,51 @@
         <div id="attributes" class="attributes">
           <div class="splitcontent">
             <div class="splitcontentleft">
-              <p><%= f.select :status_id, (IssueStatus.all.collect { |p| [p.name, p.id] }), { :required => true },
-                              :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
-              <p><%= f.select :priority_id, (@priorities.collect { |p| [p.name, p.id] }), { :required => true }, :disabled => false %></p>
-              <p><%= f.select :assigned_to_id, principals_options_for_select(@issue_template.assignable_users, @issue_template.assigned_to), :include_blank => true, :required => false %></p>
-              <p><%= f.select :category_id, (IssueCategory.all.collect { |c| [c.name, c.id] }), :include_blank => true, :required => false %>
-                <%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
-                            new_project_issue_category_path(@issue_template.project),
-                            :remote => true,
-                            :method => 'get',
-                            :title => l(:label_issue_category_new),
-                            :tabindex => 200) if User.current.allowed_to?(:manage_categories, @issue_template.project) %></p>
+
+              <% if @issue_template.safe_attribute?('status_id') %>
+                <p><%= f.select :status_id, (IssueStatus.all.collect { |p| [p.name, p.id] }), { :required => true },
+                                :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
+              <% end %>
+
+              <% if @issue_template.safe_attribute? 'priority_id' %>
+                <p><%= f.select :priority_id, (@priorities.collect { |p| [p.name, p.id] }), { :required => true }, :disabled => false %></p>
+              <% end %>
+
+              <% if @issue_template.safe_attribute? 'assigned_to_id' %>
+                <p><%= f.select :assigned_to_id, principals_options_for_select(@issue_template.assignable_users, @issue_template.assigned_to), :include_blank => true, :required => false %></p>
+              <% end %>
+
+              <% if @issue_template.safe_attribute?('category_id') %>
+                <p><%= f.select :category_id, (IssueCategory.all.collect { |c| [c.name, c.id] }), :include_blank => true, :required => false %>
+                  <%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
+                              new_project_issue_category_path(@issue_template.project),
+                              :remote => true,
+                              :method => 'get',
+                              :title => l(:label_issue_category_new),
+                              :tabindex => 200) if User.current.allowed_to?(:manage_categories, @issue_template.project) %></p>
+              <% end %>
 
             </div>
             <div class="splitcontentright">
-              <p><%= f.text_field :start_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_start_date') %></p>
-              <p><%= f.text_field :due_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_due_date') %></p>
-              <p><%= f.text_field :estimated_hours, :size => 3, :disabled => false, :required => false %> <%= l(:field_hours) %></p>
-              <p><%= f.select :done_ratio, ((0..10).to_a.collect { |r| ["#{r * 10} %", r * 10] }), :required => false %></p>
+
+              <% if @issue_template.safe_attribute? 'start_date' %>
+                <p><%= f.text_field :start_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_start_date') %></p>
+              <% end %>
+
+              <% if @issue_template.safe_attribute? 'due_date' %>
+                <p><%= f.text_field :due_date, :size => 10, :disabled => false, :required => false %><%= calendar_for('issue_template_due_date') %></p>
+              <% end %>
+
+              <% if @issue_template.safe_attribute? 'estimated_hours' %>
+                <p><%= f.text_field :estimated_hours, :size => 3, :disabled => false, :required => false %> <%= l(:field_hours) %></p>
+              <% end %>
+
+              <% if @issue_template.safe_attribute?('done_ratio') && Issue.use_field_for_done_ratio? %>
+                <p><%= f.select :done_ratio, ((0..10).to_a.collect { |r| ["#{r * 10} %", r * 10] }), :required => false %></p>
+              <% end %>
             </div>
           </div>
+
           <div class="splitcontent">
             <div class="splitcontentleft">
               <% i = 0 %>
@@ -217,7 +242,9 @@
               <%= render :partial => "issue_templates/section_groups_form", :locals => { f: f } %>
             </div>
             <p data-target="split-description.add_group_button">
-              <button class="icon icon-add link-cursor" data-action="split-description#addSectionsGroup">Ajouter un groupe de sections</button>
+              <button class="icon icon-add link-cursor" data-action="split-description#addSectionsGroup">Ajouter un
+                groupe de sections
+              </button>
             </p>
           </div>
 

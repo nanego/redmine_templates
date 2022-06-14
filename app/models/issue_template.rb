@@ -190,4 +190,14 @@ class IssueTemplate < ActiveRecord::Base
     return (!persisted && has_no_title && has_no_sections)
   end
 
+  def safe_attribute_names(user=nil)
+    names = super
+    names -= disabled_core_fields
+    names
+  end
+
+  def disabled_core_fields
+    tracker ? tracker.disabled_core_fields : []
+  end
+
 end
