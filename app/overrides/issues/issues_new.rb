@@ -18,10 +18,6 @@ Deface::Override.new :virtual_path  => 'issues/new',
                                         <%= f.hidden_field :issue_template_id %>
                                         <script type="text/javascript">
                                           <%= render(:partial => "issue_templates/load_select_js_functions", :handlers => [:erb], :formats => [:js]) %>
-                                          <% if @issue_template && !@issue_template.custom_form %>
-                                            <%= render(:partial => "issue_templates/load_update_functions", :handlers => [:erb], :formats => [:js]) %>
-                                            startUpdate();
-                                          <% end %>
                                         </script>'
 
 # Custom form

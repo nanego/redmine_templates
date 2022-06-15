@@ -124,7 +124,7 @@
           <label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:issue_is_private) %></label>
         </p>
 
-        <p><%= f.select :tracker_id, Tracker.visible.collect { |t| [t.name, t.id] }, { :required => true },
+        <p><%= f.select :tracker_id, Tracker.visible.sorted.collect { |t| [t.name, t.id] }, { :required => true },
                         :onchange => "updateIssueTemplateFrom('#{escape_javascript issue_template_form_path(:id => @issue_template.id, :format => 'js')}')" %></p>
 
         <%= render "limited_visibility_fields" if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
