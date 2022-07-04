@@ -36,8 +36,9 @@
         <th class="template_id"><%= l(:field_tracker) %></th>
         <th class="template_subject"><%= l(:field_subject) %></th>
         <th class="template_projects"><%= l(:field_project).pluralize %></th>
-        <th class="template_usage"><%= l(:usage) %></th>
-        <th class="template_issues_count"><%= l(:issues_count) %></th>
+        <th class="template_column_count"><%= l(:projects_count) %></th>
+        <th class="template_column_count"><%= l(:usage) %></th>
+        <th class="template_column_count"><%= l(:issues_count) %></th>
         <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
           <th class="center template_enable"><%= l(:label_enabled) %></th>
         <% end %>

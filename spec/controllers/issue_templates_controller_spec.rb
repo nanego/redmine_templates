@@ -204,4 +204,11 @@ describe IssueTemplatesController, type: :controller do
     end
   end
 
+  it "should show Number of projects in templates/index" do
+    get :index
+    template = IssueTemplate.find(2)
+    expect(response.body).to have_css(".template_projects")
+    expect(response.body).to have_css("tr[data-template-id=#{template.id}] td[class='template_column_count']")
+    expect(response.body).to have_css("tr[data-template-id=#{template.id}] td:nth-child(6)", text: "#{template.issue_template_projects.size}", exact_text: true)
+  end
 end

@@ -51,8 +51,9 @@
       <% end %>
     </div>
   </td>
-  <td><%= issue_template.usage %></td>
-  <td><%= issue_template.issues.size %></td>
+  <td class="template_column_count"><%= issue_template.issue_template_projects.size %></td>
+  <td class="template_column_count"><%= issue_template.usage %></td>
+  <td class="template_column_count"><%= issue_template.issues.size %></td>
   <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
     <td class="center image_enabled_<%= issue_template.id %>">
       <%= render "issue_templates/enable_form", issue_template: issue_template %>
