@@ -94,7 +94,7 @@ table .template_icon {
     white-space: normal;
 }
 
-table#templates_list td.template_usage, table#templates_list th.template_usage {
+table#templates_list td.template_column_count, table#templates_list th.template_column_count {
     text-align: center;
 }
 
