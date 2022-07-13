@@ -1,81 +1,148 @@
-<% template_projects = @issue_template.template_projects
-   allowed_projects = @issue_template.allowed_target_projects.includes(:custom_values)
-   custom_fields = CustomField.select("id, name").where("type = ? AND name IN (?)", "ProjectCustomField", Setting["plugin_redmine_templates"]['custom_fields'])
-   concerned_projects_ids = (allowed_projects | template_projects).map(&:id)
+<%
+  template_projects = @issue_template.template_projects
+  allowed_projects = @issue_template.allowed_target_projects.includes(:custom_values)
+  custom_fields = ProjectCustomField.includes(:custom_values).where("name IN (?)", Setting["plugin_redmine_templates"]['custom_fields'])
 
-   options_for_selects = {}
-   custom_fields.each do |field|
-     options_for_selects.merge!(field.name.parameterize => [])
-   end
+  # list custom_values_by_projects
+  values_by_projects = {}
+  enumeration_values = CustomFieldEnumeration.all
+  allowed_projects.each do |project|
+    values_by_projects.merge!(project.id => {})
+    custom_fields.each do |custom_field|
+      values = custom_field.custom_values.select { |cv| cv.customized_id == project.id }
+      values.each do |custom_value|
 
-   custom_values = {}
-   CustomValue.where(customized_type: 'Project', customized_id: concerned_projects_ids, custom_field_id: custom_fields.map(&:id)).each do |v|
-     custom_values[v.customized_id] ||= {}
-     custom_values[v.customized_id][v.custom_field_id] = v.value
+        # puts "custom_field.inspect : #{custom_field.inspect}"
 
-     cf = v.custom_field
-     value = v.value
+        if custom_field.field_format == 'enumeration'
+          value = enumeration_values.find{|enum_value| enum_value.id == custom_value.value.to_i}.to_s
+        else
+          value = custom_value.value
+        end
+        values_by_projects[project.id].merge!(custom_field.id => value) if value.present?
+      end
+    end
+  end
 
-     if value.present?
-       if cf.field_format == "enumeration"
-         enum_item = CustomFieldEnumeration.where(id: value).first
-         options_for_selects[cf.name.parameterize] << [enum_item.name, value]
-       else
-         if value.is_a?(Array)
-           value.each do |val|
-             options_for_selects[cf.name.parameterize] << val
-           end
-         else
-           options_for_selects[cf.name.parameterize] << value
-         end
-       end
-     end
-     options_for_selects[cf.name.parameterize].uniq!
+  custom_values = values_by_projects
+  options_for_selects = {}
+  custom_fields.each do |field|
+    options_for_selects.merge!(field.id => [])
+  end
 
-   end
-
-   nested_projects_list = render_project_nested_lists(allowed_projects | template_projects) do |project|
-     custom_fields_data = {}
-     if allowed_projects.include?(project)
-       custom_fields.each do |f|
-         custom_fields_data.merge!(f.name.parameterize => custom_values[project.id][f.id])
-       end
-     end
-     content_tag('label',
-                 check_box_tag(
-                   'template_project_ids[]',
-                   project.id,
-                   @issue_template != nil && template_projects.include?(project),
-                   disabled: allowed_projects.include?(project) ? false : true,
-                   :class => ("inactive" unless allowed_projects.include?(project)),
-                   data: custom_fields_data
-                 ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
-     )
-   end
+  nested_projects_list = render_project_nested_lists(allowed_projects | template_projects) do |project|
+    custom_fields_data = {}
+    if allowed_projects.include?(project)
+      custom_fields.each do |cf|
+        values = custom_values[project.id][cf.id]
+        if values.present?
+          values = [values] if values.kind_of?(String)
+          custom_fields_data.merge!(cf.id => values.join('|'))
+          values.each do |value|
+            options_for_selects[cf.id] << value unless options_for_selects[cf.id].include?(value) || value.blank?
+          end
+        end
+      end
+    end
+    custom_fields_data.merge!('name' => project.name)
+    content_tag('label',
+                check_box_tag(
+                  'template_project_ids[]',
+                  project.id,
+                  @issue_template != nil && template_projects.include?(project),
+                  disabled: allowed_projects.include?(project) ? false : true,
+                  :class => "nested_project_#{project.id} #{"inactive" unless allowed_projects.include?(project)}",
+                  data: custom_fields_data
+                ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
+    )
+  end
 %>
 
 <h3 class="title"><%= l(:field_project).pluralize %> TEMPLATE</h3>
 
-<div class="actions_links">
-  <%= l("Selection") %> :
-  <%= link_to l("select_all"), '#', id: "link_select_all", :onclick => "select_all()" %>
-  |
-  <%= link_to l("select_none"), '#', id: "link_select_all", :onclick => "select_none()" %>
-  <% custom_fields.each do |field| %>
-    |
-    <%= select_tag field.name.parameterize, options_for_select(options_for_selects[field.name.parameterize]), :prompt => field.name, :id => "select_#{field.name.parameterize}", :class => "select_box_custom_field_value", :onchange => "select_from_custom_field('#{field.name.parameterize}')" %>
-  <% end %>
-</div>
+<div data-controller="template-projects-selection">
 
-<div class="projects_container">
-  <div class="columns" id="project_nested_list">
-    <%= nested_projects_list %>
+  <div>
+
+    <div class="actions_links">
+      <%= l("button_filter") %> :
+      <input data-action="input->template-projects-selection#hide_by_name"/>
+    </div>
+
+    <div class="actions_links">
+      <%= l("Selection") %> :
+      <%= link_to l("select_all"), '#', id: "link_select_all", :data => { :action => 'click->template-projects-selection#select_all' } %>
+      |
+      <%= link_to l("select_none"), '#', id: "link_select_all", :data => { :action => 'click->template-projects-selection#select_none' } %>
+      |
+      <%= link_to l("advanced_selection"), '#', id: "link_advanced_selection", :data => { :action => 'click->template-projects-selection#toggle_advanced_selection' } %>
+
+      <div class="advanced_selection hidden" data-target="template-projects-selection.filters">
+        <div data-target="template-projects-selection.filter" class="first">
+          <%= select_tag 'filter_name',
+                         options_for_select(custom_fields.map { |cf| [cf.name, cf.id] }),
+                         :prompt => l("select_filter"),
+                         :id => "select_filter",
+                         :class => "select_box_custom_field_value",
+                         :data => {
+                           action: 'change->template-projects-selection#select_filter'
+                         } %>
+          <%= select_tag 'filter_value',
+                         '',
+                         :id => "select_values",
+                         :multiple => true,
+                         :data => {
+                           action: 'change->template-projects-selection#select_filter_values'
+                         } %>
+          <%= link_to "(#{l('button_delete')})", '#', class: 'hidden-if-first', data: { action: 'click->template-projects-selection#remove_filter' } %>
+        </div>
+        <%= link_to "+ #{l('add_a_filter')}", '#', data: { action: 'click->template-projects-selection#add_filter' } %>
+      </div>
+      <div style="display: none;">
+        <% custom_fields.each do |field| %>
+          <%= select_tag field.id,
+                         options_for_select(options_for_selects[field.id]),
+                         :id => "select_#{field.id}",
+                         :data => {
+                           target: "template-projects-selection.select_for_#{field.id}"
+                         }
+          %>
+        <% end %>
+      </div>
+    </div>
+
   </div>
-</div>
 
-<p class="buttons">
-  <%= submit_tag l(:button_apply), :name => nil, :onclick => "updateSelectedProjects();hideModal(this);", :type => 'button', :id => 'button_apply_projects' %>
-</p>
+  <div class="projects_container">
+    <div class="columns" id="project_nested_list">
+      <%= nested_projects_list %>
+    </div>
+  </div>
+
+
+  <p>
+    <%= l("selected_projects") %>:
+    <span id="selection_counter" data-target="template-projects-selection.counter"></span>
+    <span style="margin-left: 5px;">
+      (<%= link_to l("hide_non_selected_projects"),
+                   '#',
+                   data: { action: 'click->template-projects-selection#hide_non_selected_projects',
+                           target: 'template-projects-selection.hide_projects_button' },
+                   style: 'display: inline-block'
+    %><%= link_to l("show_all_projects"),
+                  '#',
+                  data: { action: 'click->template-projects-selection#show_all_projects',
+                          target: 'template-projects-selection.show_projects_button' },
+                  style: 'display: none'
+    %>)
+    </span>
+  </p>
+
+  <p class="buttons">
+    <%= submit_tag l(:button_apply), :name => nil, :onclick => "updateSelectedProjects();hideModal(this);", :type => 'button', :id => 'button_apply_projects' %>
+  </p>
+
+</div>
 
 <script type="text/javascript">
 
