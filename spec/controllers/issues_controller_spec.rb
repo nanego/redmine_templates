@@ -424,4 +424,46 @@ describe IssuesController, type: :controller do
     end
 
   end
+
+  context "Add a filter on the issues page: template used" do
+
+    it "should query use issue_template when index with column issue_template_id" do
+      columns = ['subject', 'issue_template_id']
+      get :index, params: { :set_filter => 1, :c => columns }
+      expect(response).to be_successful
+      # query should use specified columns
+      query = assigns(:query)
+      assert_kind_of IssueQuery, query
+      expect(query.column_names.map(&:to_s)).to eq columns
+    end
+
+    it "should ensure that the changes are compatible with the CSV" do
+      issuetemplate = IssueTemplate.find(1)
+      issue = Issue.create(:project_id => 1, :tracker_id => 1, :author_id => 1,
+        :status_id => 1, :priority => IssuePriority.first,
+        :subject => "Issue test",
+        :issue_template_id => issuetemplate.id)
+
+      columns = [ "subject", "issue_template"]
+
+      get :index, params: { :set_filter => 1,
+                            :f => ["issue_template_id"],
+                            :op => { "issue_template_id" => "=" },
+                            :v => { "issue_template_id"=>["1"] },
+                            :c => columns,
+                            :format => 'csv' }
+
+      expect(response).to be_successful
+      expect(response.content_type).to eq 'text/csv; header=present'
+
+      lines = response.body.chomp.split("\n")
+
+      expect(lines[0].split(',')[0]).to eq "#"
+      expect(lines[0].split(',')[1]).to eq "Subject"
+      expect(lines[0].split(',')[2]).to eq "Template used"
+      expect(lines[1].split(',')[0]).to eq issue.id.to_s
+      expect(lines[1].split(',')[1]).to eq issue.subject
+      expect(lines[1].split(',')[2]).to eq issuetemplate.template_title
+    end
+  end
 end
