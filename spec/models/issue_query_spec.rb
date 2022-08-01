@@ -47,5 +47,17 @@ describe "IssueQuery" do
       expect(result).to include Issue.last(3)[2]
       expect(result.count).to eq(Issue.count - 1 )
     end
+
+    it "operator all *" do
+      query = IssueQuery.new(:name => '_', :filters => { 'issue_template_id' => { :operator => '*', :values => [''] } })
+      result = find_issues_with_query(query)
+      expect(result.count).to eq(3)
+    end
+
+    it "operator any !*" do
+      query = IssueQuery.new(:name => '_', :filters => { 'issue_template_id' => { :operator => '!*', :values => [''] } })
+      result = find_issues_with_query(query)
+      expect(result.count).to eq(Issue.count - 3)
+    end
   end
 end
