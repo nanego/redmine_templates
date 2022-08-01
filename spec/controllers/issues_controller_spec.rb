@@ -1,5 +1,6 @@
 require "spec_helper"
 require "active_support/testing/assertions"
+require File.dirname(__FILE__) + "/../support/issue_template_spec_helpers"
 
 describe IssuesController, type: :controller do
   include ActiveSupport::Testing::Assertions
@@ -464,6 +465,46 @@ describe IssuesController, type: :controller do
       expect(lines[1].split(',')[0]).to eq issue.id.to_s
       expect(lines[1].split(',')[1]).to eq issue.subject
       expect(lines[1].split(',')[2]).to eq issuetemplate.template_title
+    end
+  end
+
+  context "should sort by issue_template title" do
+    before do
+      create_issues_from_templates
+    end
+
+    it "sort asc" do
+      columns = ['subject', 'issue_template_id']
+      get(
+        :index,
+        :params => {
+          :set_filter => 1,
+          :c => columns ,
+          :group_by => 'issue_template',
+          :sort => 'issue_template,id:desc'
+        }
+      )
+
+      expect(response).to be_successful
+      templetes = issues_in_list.map(&:issue_template)
+      expect(templetes.first.template_title).to eq(IssueTemplate.find(1).template_title)
+    end
+
+    it "sort desc" do
+      columns = ['subject', 'issue_template_id']
+      get(
+        :index,
+        :params => {
+          :set_filter => 1,
+          :c => columns ,
+          :group_by => 'issue_template',
+          :sort => 'issue_template:desc,id:desc'
+        }
+      )
+
+      expect(response).to be_successful
+      templetes = issues_in_list.map(&:issue_template)
+      expect(templetes.last.template_title).to eq(IssueTemplate.find(1).template_title)
     end
   end
 end

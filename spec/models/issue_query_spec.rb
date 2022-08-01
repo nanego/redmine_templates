@@ -1,22 +1,8 @@
 require 'spec_helper'
+require File.dirname(__FILE__) + "/../support/issue_template_spec_helpers"
 
 describe "IssueQuery" do
   fixtures :issue_templates, :issues
-
-  def find_issues_with_query(query)
-    Issue.where(
-      query.statement
-    ).all
-  end
-
-  def create_issues_from_templates
-    3.times do |i|
-      Issue.create(:project_id => 1, :tracker_id => 1, :author_id => 1,
-        :status_id => 1, :priority => IssuePriority.first,
-        :subject => "Issue test#{i}",
-        :issue_template_id => i + 1)
-    end
-  end
 
   it "should IssueQuery have available_filters issue_templates" do
     query = IssueQuery.new
