@@ -43,5 +43,6 @@ Redmine::MenuManager.map :project_menu do |menu|
                 p.issue_templates.present? &&
                 (Issue.allowed_target_trackers(p) & p.issue_templates.map(&:tracker)).any?},
             :permission => :add_issues,
-            :parent => :new_issue
+            :parent => :new_issue,
+            :last => true
 end
