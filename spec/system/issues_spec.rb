@@ -19,6 +19,7 @@ end
 
 RSpec.describe "creating issues with templates", type: :system do
   include ActiveSupport::Testing::Assertions
+  include IssuesHelper
 
   fixtures :projects, :users, :email_addresses, :roles, :members, :member_roles,
            :trackers, :projects_trackers, :enabled_modules, :issue_statuses, :issues,
@@ -87,4 +88,31 @@ RSpec.describe "creating issues with templates", type: :system do
     end
   end
 
+  describe "New demande via a template" do
+    let(:issue_test) { Issue.new }
+
+    before do
+      IssueTemplateProject.create(project_id: 1, issue_template_id: template_4.id)
+      issue_test.project_id = 1
+      # project(id=1) # project(id=3) # project(id=5)
+      expect(issue_test.allowed_target_projects(User.current, 'tree').count).to eq(3)
+    end
+
+    it "Should not display the field project" do
+      visit new_issue_path(project_id: 1, template_id: template_4.id)
+      expect(page).to_not have_selector("#issue_project_id")      
+    end
+
+    it "Should display list of projects (in the project field) only those where the template is active" do
+      #activate the template 4 on the project id=3
+      IssueTemplateProject.create(project_id: 3, issue_template_id: template_4.id)
+      visit new_issue_path(project_id: 1, template_id: template_4.id)
+      
+      expect(page).to have_selector("#issue_project_id")
+
+      expect(find("#issue_project_id").all('option').count).to eq(2)
+      expect(find("#issue_project_id").all('option').first.value).to eq("1")
+      expect(find("#issue_project_id").all('option').last.value).to eq("3")
+    end
+  end
 end
