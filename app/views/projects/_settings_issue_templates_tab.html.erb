@@ -73,15 +73,15 @@
                 <%
                   nb_other_projects = 0
                   nb_visible_projects = 0
-                  template_projects = issue_template.template_projects.all
-                  allowed_projects = issue_template.allowed_target_projects
+                  template_projects_names = issue_template.template_projects.pluck(:name)
+                  allowed_projects_names = issue_template.allowed_target_projects.pluck(:name)
                 %>
-                <% template_projects.each do |project| %>
-                  <% if allowed_projects.include?(project) %>
-                    <%= link_to project.name.gsub(/ /, "&nbsp;").html_safe,
+                <% template_projects_names.each do |project_name| %>
+                  <% if allowed_projects_names.include?(project_name) %>
+                    <%= link_to project_name.gsub(/ /, "&nbsp;").html_safe,
                                 "#",
-                                class: "project_id_#{project.id} list_templates_projects_names #{@project && @project == project ? "current" : ""}",
-                                :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project.id}\").toggleClass('current')"
+                                class: "project_id_#{project_name.parameterize} list_templates_projects_names #{@project && @project.name == project_name ? "current" : ""}",
+                                :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project_name.parameterize}\").toggleClass('current')"
                     %>
                     <% nb_visible_projects += 1 %>
                   <% else %>
