@@ -114,5 +114,26 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(find("#issue_project_id").all('option').first.value).to eq("1")
       expect(find("#issue_project_id").all('option').last.value).to eq("3")
     end
+
+    
+    if Redmine::Plugin.installed?(:redmine_customize_core_fields)
+      #(when both the option override_issue_form, project.module_enabled /customize_core_fields/ are activated)
+      it "Should display list of projects only those where the template is active" do
+
+        Setting["plugin_redmine_customize_core_fields"] = { "override_issue_form" => "true" }
+        EnabledModule.create!(:project_id => 1, :name => "customize_core_fields")
+
+        core_field = CoreField.create!(:identifier => "project_id", :position => 1, :visible=> true)
+        core_field.role_ids = [1,2]
+        core_field.save
+     
+        visit new_issue_path(project_id: 1, template_id: template_4.id)
+         
+        expect(page).to have_selector("#issue_project_id")
+        
+        expect(find("#issue_project_id").all('option').count).to eq(2)
+        
+      end
+    end
   end
 end
