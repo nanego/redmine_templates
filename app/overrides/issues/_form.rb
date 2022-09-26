@@ -1,4 +1,3 @@
-
 Deface::Override.new :virtual_path => 'issues/_form',
                      :name         => 'insert_tracker_field_with_read_only_mode',
                      :replace      => 'p:contains("f.select :tracker_id")',
@@ -41,15 +40,13 @@ Deface::Override.new :virtual_path      => "issues/_form_with_positions",
                      :insert_bottom     => "#attributes",
                      :original          => "0dbbe91b2f6ecf9a66aa7e994df6381f90f19219",
                      :partial           => "issues/sections_fields"
+
 Deface::Override.new :virtual_path      => "issues/_form",
                      :name              => "display_projects_only_those_where_the_template_is_active",
-                     :replace           => "erb[silent]:contains(\"projects = projects_for_select(@issue) \")",
+                     :replace           => "erb[silent]:contains(\"projects = projects_for_select(@issue)\")",
                      :original          => "0dbbe91b2f6ecf9a66aa7e994df6381f90f19219",
                      :text              => "<% projects = projects_for_select_for_issue_via_template(@issue, @issue_template) %>"
-if Redmine::Plugin.installed?(:redmine_customize_core_fields)
-    Deface::Override.new :virtual_path      => "issues/_form_with_positions",
-                         :name              => "display_target_projects_only_those_where_the_template_is_active",
-                         :replace           => "erb[silent]:contains(\"projects = @issue.allowed_target_projects(User.current, @project) \")",
-                         :text              => "<% projects = allowed_target_projects_for_issue_via_template(@issue,User.current, @project, @issue_template) %>"
-
-end
+Deface::Override.new :virtual_path      => "issues/_form_with_positions",
+                     :name              => "display_target_projects_only_those_where_the_template_is_active",
+                     :replace           => "erb[silent]:contains(\"projects = projects_for_select(@issue)\")",
+                     :text              => "<% projects = projects_for_select_for_issue_via_template(@issue, @issue_template) %>"

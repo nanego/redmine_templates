@@ -88,26 +88,26 @@ RSpec.describe "creating issues with templates", type: :system do
     end
   end
 
-  describe "New demande via a template" do
+  describe "New issue using a template" do
     let(:issue_test) { Issue.new }
 
     before do
       IssueTemplateProject.create(project_id: 1, issue_template_id: template_4.id)
       issue_test.project_id = 1
       # project(id=1) # project(id=3) # project(id=5)
-      expect(issue_test.allowed_target_projects(User.current, 'tree').count).to eq(3)
+      expect(projects_for_select(issue_test).count).to eq(0)
     end
 
-    it "Should not display the field project" do
+    it "does not display the field project when only one is available" do
       visit new_issue_path(project_id: 1, template_id: template_4.id)
-      expect(page).to_not have_selector("#issue_project_id")      
+      expect(page).to_not have_selector("#issue_project_id")
     end
 
-    it "Should display list of projects (in the project field) only those where the template is active" do
+    it "displays a list of project field with only projects activated for the current template" do
       #activate the template 4 on the project id=3
       IssueTemplateProject.create(project_id: 3, issue_template_id: template_4.id)
       visit new_issue_path(project_id: 1, template_id: template_4.id)
-      
+
       expect(page).to have_selector("#issue_project_id")
 
       expect(find("#issue_project_id").all('option').count).to eq(2)
@@ -115,24 +115,26 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(find("#issue_project_id").all('option').last.value).to eq("3")
     end
 
-    
     if Redmine::Plugin.installed?(:redmine_customize_core_fields)
       #(when both the option override_issue_form, project.module_enabled /customize_core_fields/ are activated)
-      it "Should display list of projects only those where the template is active" do
+      it "displays a projects field filled with projects filtered for the current template" do
 
         Setting["plugin_redmine_customize_core_fields"] = { "override_issue_form" => "true" }
         EnabledModule.create!(:project_id => 1, :name => "customize_core_fields")
 
-        core_field = CoreField.create!(:identifier => "project_id", :position => 1, :visible=> true)
-        core_field.role_ids = [1,2]
+        core_field = CoreField.create!(:identifier => "project_id", :position => 1, :visible => true)
+        core_field.role_ids = [1, 2]
         core_field.save
-     
+
+        #activate the template 4 on the project id=3
+        IssueTemplateProject.create(project_id: 3, issue_template_id: template_4.id)
+
         visit new_issue_path(project_id: 1, template_id: template_4.id)
-         
+
         expect(page).to have_selector("#issue_project_id")
-        
+
         expect(find("#issue_project_id").all('option').count).to eq(2)
-        
+
       end
     end
   end
