@@ -89,13 +89,9 @@ RSpec.describe "creating issues with templates", type: :system do
   end
 
   describe "New issue using a template" do
-    let(:issue_test) { Issue.new }
 
     before do
       IssueTemplateProject.create(project_id: 1, issue_template_id: template_4.id)
-      issue_test.project_id = 1
-      # project(id=1) # project(id=3) # project(id=5)
-      expect(projects_for_select(issue_test).count).to eq(0)
     end
 
     it "does not display the field project when only one is available" do
