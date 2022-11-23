@@ -12,6 +12,12 @@ ActiveSupport::Reloader.to_prepare do
   require_dependency 'redmine_templates/queries_helper_patch'
   require_dependency 'redmine_templates/issue_query_patch'
   require_dependency 'redmine_templates/helpers/issues_helper_patch'
+  require_dependency 'redmine_templates/tracker_patch'
+  require_dependency 'redmine_templates/issue_status_patch'
+  require_dependency 'redmine_templates/issue_category_patch'
+  require_dependency 'redmine_templates/user_patch'
+  require_dependency 'redmine_templates/issue_priority_patch'
+  require_dependency 'redmine_templates/typology_patch' if Redmine::Plugin.installed?(:redmine_typologies)
 end
 
 Redmine::Plugin.register :redmine_templates do

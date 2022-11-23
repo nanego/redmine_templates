@@ -2,6 +2,13 @@
 <% unless @trackers.blank? %>
   <fieldset class="box tabular" id="filters_trackers">
     <legend><%= toggle_checkboxes_link('#filters_trackers input[type=checkbox]') %><%= l(:label_tracker_plural) %></legend>
+    <label class="floating">
+      <%= check_box_tag 'tracker_ids[]', 0, 1, :id => nil %>
+      <%= l(:label_tracker_all) %>
+      <div style="display: inline-block;color: grey;font-size: smaller;" class="counters">
+        <span class="count-enabled">0</span>/<span class="count-total">0</span>
+      </div>
+    </label>
     <% @trackers.each do |tracker| %>
       <label class="floating">
         <%= check_box_tag 'tracker_ids[]', tracker.id, 1, :id => nil %>
@@ -46,6 +53,13 @@
 
     // Filter by Trackers
     var trackers_values = $('#filters_trackers input[type=checkbox]:checked');
+    var trackers_values_all = $('#filters_trackers input[type=checkbox]');
+    var trackers_ids = trackers_values.map(function() { return this.value; }).get().join();
+    // if option (all trackers) is selected
+    if ($.inArray( "0", trackers_ids) != -1){
+      trackers_values = trackers_values_all;     
+    }
+
     for(const v of trackers_values){
       $('#templates_list .issue_template[data-tracker-id='+v.value+']').each(function(){
         templates_to_show_by_trackers.push(this.getAttribute('data-template-id'));
