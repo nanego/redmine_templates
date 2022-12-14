@@ -118,7 +118,14 @@ class IssueTemplate < ActiveRecord::Base
 
   # Overrides Redmine::Acts::Customizable::InstanceMethods#available_custom_fields
   def available_custom_fields
-    (project && tracker) ? (project.all_issue_custom_fields & tracker.custom_fields.all) : []
+    available_custom_fields = []     
+    #(project && tracker) ? (project.all_issue_custom_fields & tracker.custom_fields.all) : []
+    template_projects.each do |project| 
+      available_custom_fields |= project.all_issue_custom_fields.to_a
+    end
+    tracker ? available_custom_fields |= tracker.custom_fields.all.to_a : available_custom_fields
+      
+    available_custom_fields
   end
 
   # Returns the custom_field_values that can be edited by the given user

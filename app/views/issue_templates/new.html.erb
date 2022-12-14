@@ -5,3 +5,9 @@
 <div id="all_attributes">
   <%= render :partial => 'issue_templates/form' %>
 </div>
+<script type="text/javascript">        
+  $(function(){
+    // Call this method because of there is a selected tracker by default
+    updateIssueTemplateFrom("<%= issue_template_form_path(:id => @issue_template.id, :format => 'js')%>");
+  });
+</script>
