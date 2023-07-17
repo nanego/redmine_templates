@@ -13,6 +13,7 @@
         let sectionElement = ul.closest('.split_description.select')
         resetHiddenTextField(sectionElement)
         resetHiddenPlaceholderField(sectionElement)
+        resetEmptyValueField(sectionElement)
     }
 
     function resetHiddenTextField(sectionElement) {
@@ -27,16 +28,29 @@
     function resetHiddenPlaceholderField(sectionElement) {
         let placeholder = $(sectionElement).find('input.placeholder')
         let list_of_value = $(sectionElement).find('ul')
-        let joined_values = list_of_value.find('li input[type=checkbox]:checked').map(function () {
+        let joined_values = list_of_value.find('li input[type=checkbox][name=checked]:checked').map(function () {
             return $(this).parent().find('.value').val()
         }).get().filter(item => item).join(';')
         placeholder.val(joined_values)
     }
 
-    $('form#issue-template-form').on('change', '.possible-values input[type=checkbox]', function (event) {
+    function resetEmptyValueField(sectionElement) {
+        let empty_value = $(sectionElement).find('input.empty_value')
+        let list_of_value = $(sectionElement).find('ul')
+        let joined_values = list_of_value.find('li input[type=checkbox][name=read_only]:checked').map(function () {
+            return $(this).parent().find('.value').val()
+        }).get().filter(item => item).join(';')
+        empty_value.val(joined_values)
+    }
+
+    $('form#issue-template-form').on('change', '.possible-values input[type=checkbox][name=checked]', function (event) {
         let section = event.target.closest('.split_description.select')
         resetHiddenPlaceholderField(section)
     })
+    $('form#issue-template-form').on('change', '.possible-values input[type=checkbox][name=read_only]', function (event) {
+        let section = event.target.closest('.split_description.select')
+        resetEmptyValueField(section)
+    }) 
     $('form#issue-template-form').on('click', '.add_possible_value', function (event) {
         event.preventDefault()
         let ul = $(event.target).parent().find('ul')
