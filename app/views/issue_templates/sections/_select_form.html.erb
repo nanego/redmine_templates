@@ -1,6 +1,7 @@
 <% values = (form.object && form.object.text.present?) ? form.object.text.split(';') : [] %>
 <% default_values = (form.object && form.object.placeholder.present?) ? form.object.placeholder.split(';') : [] %>
 
+<% empty_value = (form.object && form.object.empty_value.present?) ? form.object.empty_value.split(';') : [] %>
 <%= issue_template_section_form(form, IssueTemplateSectionSelect, template) do %>
   <p>
     <%= form.text_field :title,
@@ -20,15 +21,17 @@
       <label>Valeurs possibles<span class="required"> *</span></label>
       <ul>
         <% values.each do |value| %>
-          <%= render 'issue_templates/sections/select_possible_value', value: value, default_values: default_values %>
+          <%= render 'issue_templates/sections/select_possible_value', value: value, default_values: default_values, empty_value: empty_value %>
         <% end %>
       </ul>
       <%= link_to 'Ajouter une valeur', '#', class: 'add_possible_value' %>
     </div>
 
     <%= form.hidden_field :text, class: 'text' %>
+    <!-- save selected values in the column placeholder -->
     <%= form.hidden_field :placeholder, class: "placeholder" %>
-
+    <!-- save read only values in the column empty_value -->
+    <%= form.hidden_field :empty_value, class: "empty_value", label: "", :size => 80 %>
     <p>
       <%= form.select :select_type,
                       options_for_select(IssueTemplateSectionSelect.select_types_options,
