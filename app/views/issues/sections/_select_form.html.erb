@@ -1,5 +1,6 @@
 <% values = reload_current_value(@sections_attributes, section, group_index, get_all_attributes: true) || {} %>
 <% default_values = section.placeholder.present? ? section.placeholder.split(';') : [] %>
+<% read_only_values = section.empty_value.present? ? section.empty_value.split(';') : [] %>
 <% possible_values = section.text.present? ? section.text.split(';') : [] %>
 <% section_group = section.issue_template_section_group %>
 
@@ -23,7 +24,7 @@
       <% field_name = "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][#{value_index}]" %>
       <%= hidden_field_tag field_name, '', id: nil %>
       <%= check_box_tag field_name, '1',
-                        values.present? ? values[value_index.to_s].present? : default_values.include?(select_value.to_s) %>
+                        values.present? ? values[value_index.to_s].present? : default_values.include?(select_value.to_s), disabled: read_only_values.include?(select_value.to_s) %>
       <%= label_tag field_name, select_value.to_s, class: "no-style" %>
       <br>
     <% end %>

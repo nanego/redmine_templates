@@ -78,6 +78,21 @@ RSpec.describe "creating issues with templates", type: :system do
       # expect(page).to have_selector('#issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', text: 'One-line edited content')
 
     end
+
+    it "shows disabled values when these values are read-only" do
+      section_test = IssueTemplate.find(3).section_groups[1].sections[0]
+      section_test.empty_value = "value1;value3"
+      section_test.text = "value1;value2;value3"
+      section_test.placeholder = "value2;value3"
+      section_test.save
+      
+      visit new_issue_path(project_id: project.identifier, template_id: 3)
+ 
+      expect(page).to have_css("input[type='checkbox'][id='issue_issue_template_section_groups_attributes_2_0_sections_attributes_10_0']:disabled")
+      expect(page).to_not have_css("input[type='checkbox'][id='issue_issue_template_section_groups_attributes_2_0_sections_attributes_10_1']:disabled")
+      expect(page).to have_css("input[type='checkbox'][id='issue_issue_template_section_groups_attributes_2_0_sections_attributes_10_2']:disabled")
+
+    end
   end
 
   describe "hidden fields" do
