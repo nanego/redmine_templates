@@ -1,7 +1,7 @@
-<% template_projects = @issue_template.template_projects
-   allowed_projects = @issue_template.allowed_target_projects.includes(:custom_values)
+<% 
    custom_fields = CustomField.select("id, name").where("type = ? AND name IN (?)", "ProjectCustomField", Setting["plugin_redmine_templates"]['custom_fields'])
-   concerned_projects_ids = (allowed_projects | template_projects).map(&:id)
+     
+   concerned_projects_ids = (@allowed_target_projects_attributes_array | @issue_projects_attributes_array).map{ |el| el[0] }
 
    options_for_selects = {}
    custom_fields.each do |field|
@@ -34,22 +34,25 @@
 
    end
 
-   nested_projects_list = render_project_nested_lists(allowed_projects | template_projects) do |project|
+   nested_projects_list = render_project_nested_lists_by_attributes(@allowed_target_projects_attributes_array | @issue_projects_attributes_array) do |project|
+      # Project is these informations [:id, :name, :status, :lft, :rgt] 
+      project_id = project[0]
+      project_name = project[1]
      custom_fields_data = {}
-     if allowed_projects.include?(project)
+     if @allowed_target_projects_attributes_array.include?(project)
        custom_fields.each do |f|
-         custom_fields_data.merge!(f.name.parameterize => custom_values[project.id][f.id])
+         custom_fields_data.merge!(f.name.parameterize => custom_values[project_id][f.id])
        end
      end
      content_tag('label',
                  check_box_tag(
                    'template_project_ids[]',
-                   project.id,
-                   @issue_template != nil && template_projects.include?(project),
-                   disabled: allowed_projects.include?(project) ? false : true,
-                   :class => ("inactive" unless allowed_projects.include?(project)),
+                   project_id,
+                   @issue_template != nil && @issue_projects_attributes_array.include?(project),
+                   disabled: @allowed_target_projects_attributes_array.include?(project) ? false : true,
+                   :class => ("inactive" unless @allowed_target_projects_attributes_array.include?(project)),
                    data: custom_fields_data
-                 ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
+                 ) + ' ' + h(project_name), :class => ("inactive" unless @allowed_target_projects_attributes_array.include?(project))
      )
    end
 %>

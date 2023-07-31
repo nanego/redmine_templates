@@ -58,47 +58,40 @@
 
           <div class="splitcontentright">
             <div class="select_projects" id="select_projects">
-              <%= f.select :template_project_ids, project_tree_options(@issue_template.allowed_target_projects | @issue_template.template_projects, :selected => @issue_template.template_projects), { :required => true },
-                           { :multiple => true, :size => 10, style: "display:none;" } %>
-              <%
-                nb_other_projects = 0
-                nb_visible_projects = 0
+              <%                
                 template_projects = @issue_template.template_projects
                 allowed_projects = @issue_template.allowed_target_projects
+ 
+                visible_projects = (allowed_projects.select('id','name') & template_projects.select('id','name')).to_a
+                other_projects =  (template_projects.select('id','name') - allowed_projects.select('id','name')).to_a
+
               %>
+              <%= f.select :template_project_ids, project_tree_options(allowed_projects | template_projects, :selected => template_projects), { :required => true },
+                           { :multiple => true, :size => 10, style: "" } %>
               <span id="my_projects">
-                <% template_projects.each do |project| %>
-                  <% if allowed_projects.include?(project) %>
+                <% visible_projects.each do |project| %>
+                  
                     <%= content_tag("span", project.name.gsub(/ /, "&nbsp;").html_safe, class: "list_templates_projects_names") %>
-                    <% nb_visible_projects += 1 %>
-                  <% else %>
-                    <% nb_other_projects += 1 %>
-                  <% end %>
+                    
                 <% end %>
               </span>
-              <% if nb_other_projects > 0 %>
+              <% if other_projects.count > 0 %>
                 <span class="list_templates_other_projects">
-                  <% if nb_visible_projects > 0 %>
+                  <% if visible_projects.count > 0 %>
                     <span class="and_x_other_projects"><%= l("support.array.sentence_connector") %></span>
-                    <%= nb_other_projects %>
-                    <span class="and_x_other_projects"><%= nb_other_projects > 1 ? l("other").pluralize : l("other") %></span>
+                    <%= other_projects.count %>
+                    <span class="and_x_other_projects"><%= other_projects.count > 1 ? l("other").pluralize : l("other") %></span>
                   <% else %>
                     <span class="and_x_other_projects" style="display: none;"><%= l("support.array.sentence_connector") %></span>
-                    <%= nb_other_projects %>
-                    <span class="and_x_other_projects" style="display: none;"><%= nb_other_projects > 1 ? l("other").pluralize : l("other") %></span>
+                    <%= other_projects.count %>
+                    <span class="and_x_other_projects" style="display: none;"><%= other_projects.count > 1 ? l("other").pluralize : l("other") %></span>
                   <% end %>
-                  <%= nb_other_projects > 1 ? l("project").pluralize : l("project") %>
+                  <%= other_projects.count > 1 ? l("project").pluralize : l("project") %>
                 </span>
               <% end %>
             </div>
 
-            <%= link_to l("modify_projects"), '#', id: "link_update_project_list", :onclick => 'showModal("ajax-modal", "1000px");$("#button_apply_projects").focus();' %>
-
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#ajax-modal').html('<%= escape_javascript(render :partial => 'issue_templates/modal_select_projects') %>');
-                });
-            </script>
+            <%= link_to l("modify_projects"), '#', id: "link_update_project_list" %>
 
           </div>
 
@@ -223,7 +216,7 @@
 
         <% if Redmine::Plugin.installed?(:redmine_multiprojects_issue) %>
           <p id="projects_form">
-            <% select_options = project_tree_options_for_select((@issue_template.allowed_target_projects | @issue_template.secondary_projects), :selected => @issue_template.secondary_projects) %>
+            <% select_options = project_tree_options_for_select((allowed_projects | @issue_template.secondary_projects), :selected => @issue_template.secondary_projects) %>
             <%= f.select :secondary_project_ids,
                          select_options,
                          { :required => true, :label => l("related_projects") },
@@ -263,6 +256,29 @@
         $('#issue-template-form').bind('submit', function () {
             $(this).find(':input').removeAttr('disabled');
         });
+
+        function buildSelectprojectsModal(id){
+          var start_time = Date.now();
+          var allowed_projects = <%= allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
+          var template_projects = <%= template_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
+
+          $.ajax({
+            url: "<%= render_select_projects_modal_by_ajax_path(template_id: @issue_template.id) %>",
+            type: 'POST',
+            data : { allowed_projects : allowed_projects, template_projects : template_projects },
+            success: function(response) {
+              $('#ajax-indicator').removeClass('bottom');
+              if(response){
+                $('#ajax-modal').html(response.html);               
+                showModal("ajax-modal", "1000px");
+                $("#button_apply_projects").focus();
+              }
+            },error: function(response) {
+              $('#ajax-indicator').removeClass('bottom');
+              console.error(response);
+            },
+          });
+        }
     </script>
 
     <%= render 'valid_similar_existing_templates' if @issue_template.new_record? %>
@@ -274,3 +290,12 @@
   </div>
 
 </div>
+<script>  
+  $(document).ready(function() {
+    $("#link_update_project_list").click(function (e) {
+      e.preventDefault();
+      buildSelectprojectsModal();
+      $('#ajax-indicator').show();
+    });
+  });
+</script>

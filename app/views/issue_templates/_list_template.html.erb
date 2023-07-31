@@ -21,14 +21,14 @@
   <td class="template_projects">
     <div>
       <%
-        nb_other_projects = 0
-        nb_visible_projects = 0
-
         template_projects = issue_template.template_projects.all.select('id','name')
         allowed_projects = issue_template.allowed_target_projects.select('id','name')
 
         visible_projects = (allowed_projects & template_projects).to_a
         other_projects =  (template_projects - allowed_projects).to_a
+
+        nb_other_projects = other_projects.count
+        nb_visible_projects = visible_projects.count
       %> 
      
       <% visible_projects.each do |project| %>
@@ -38,14 +38,14 @@
                       :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project.id}\").toggleClass('current')"
           %>         
       <% end %>
-      <% if other_projects.count > 0 %>
+      <% if nb_other_projects > 0 %>
           <span class="list_templates_other_projects">
-            <% if visible_projects.count > 0 %>
+            <% if nb_visible_projects > 0 %>
               <%= l("support.array.sentence_connector") %>
-              <%= pluralize(other_projects.count, l("other")) %>
-              <%= other_projects.count > 1 ? l("project").pluralize : l("project") %>
+              <%= pluralize(nb_other_projects, l("other")) %>
+              <%= nb_other_projects > 1 ? l("project").pluralize : l("project") %>
             <% else %>
-              <%= pluralize(other_projects.count, l("project")) %>
+              <%= pluralize(nb_other_projects, l("project")) %>
             <% end %>
           </span>
       <% end %>
