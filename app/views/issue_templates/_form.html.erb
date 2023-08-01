@@ -58,21 +58,21 @@
 
           <div class="splitcontentright">
             <div class="select_projects" id="select_projects">
-              <%                
+              <%
                 template_projects = @issue_template.template_projects
                 allowed_projects = @issue_template.allowed_target_projects
- 
+
                 visible_projects = (allowed_projects.select('id','name') & template_projects.select('id','name')).to_a
                 other_projects =  (template_projects.select('id','name') - allowed_projects.select('id','name')).to_a
 
               %>
               <%= f.select :template_project_ids, project_tree_options(allowed_projects | template_projects, :selected => template_projects), { :required => true },
-                           { :multiple => true, :size => 10, style: "" } %>
+                           { :multiple => true, :size => 10, style: "display: none;" } %>
               <span id="my_projects">
                 <% visible_projects.each do |project| %>
-                  
+
                     <%= content_tag("span", project.name.gsub(/ /, "&nbsp;").html_safe, class: "list_templates_projects_names") %>
-                    
+
                 <% end %>
               </span>
               <% if other_projects.count > 0 %>
@@ -258,7 +258,6 @@
         });
 
         function buildSelectprojectsModal(id){
-          var start_time = Date.now();
           var allowed_projects = <%= allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
           var template_projects = <%= template_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
 
@@ -269,7 +268,7 @@
             success: function(response) {
               $('#ajax-indicator').removeClass('bottom');
               if(response){
-                $('#ajax-modal').html(response.html);               
+                $('#ajax-modal').html(response.html);
                 showModal("ajax-modal", "1000px");
                 $("#button_apply_projects").focus();
               }
@@ -290,7 +289,7 @@
   </div>
 
 </div>
-<script>  
+<script>
   $(document).ready(function() {
     $("#link_update_project_list").click(function (e) {
       e.preventDefault();

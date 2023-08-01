@@ -29,14 +29,14 @@
 
         nb_other_projects = other_projects.count
         nb_visible_projects = visible_projects.count
-      %> 
-     
+      %>
+
       <% visible_projects.each do |project| %>
           <%= link_to project.name.gsub(/ /, "&nbsp;").html_safe,
                       "#",
                       class: "project_id_#{project.id} list_templates_projects_names #{@project && @project.id == project.id ? "current" : ""}",
                       :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project.id}\").toggleClass('current')"
-          %>         
+          %>
       <% end %>
       <% if nb_other_projects > 0 %>
           <span class="list_templates_other_projects">
