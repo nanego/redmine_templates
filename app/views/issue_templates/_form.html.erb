@@ -259,12 +259,16 @@
 
         function buildSelectprojectsModal(id){
           var allowed_projects = <%= allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
-          var template_projects = <%= template_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
+
+          var project_ids = $('#issue_template_template_project_ids').val();
+          if (project_ids.length == 0) {
+            project_ids = ''
+          }
 
           $.ajax({
             url: "<%= render_select_projects_modal_by_ajax_path(template_id: @issue_template.id) %>",
             type: 'POST',
-            data : { allowed_projects : allowed_projects, template_projects : template_projects },
+            data : { allowed_projects : allowed_projects, project_ids : project_ids },
             success: function(response) {
               $('#ajax-indicator').removeClass('bottom');
               if(response){
