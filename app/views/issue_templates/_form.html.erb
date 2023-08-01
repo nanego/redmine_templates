@@ -62,8 +62,10 @@
                 template_projects = @issue_template.template_projects
                 allowed_projects = @issue_template.allowed_target_projects
 
-                visible_projects = (allowed_projects.select('id','name') & template_projects.select('id','name')).to_a
-                other_projects =  (template_projects.select('id','name') - allowed_projects.select('id','name')).to_a
+                # Here, We use map instead of select('id','name') because of in the failure validation case for a non persisted template
+                # :Associations::CollectionProxy select('id','name') will return []
+                visible_projects = (allowed_projects.map(&:name) & template_projects.map(&:name))
+                other_projects = (template_projects.map(&:name) - allowed_projects.map(&:name))
 
               %>
               <%= f.select :template_project_ids, project_tree_options(allowed_projects | template_projects, :selected => template_projects), { :required => true },
@@ -71,7 +73,7 @@
               <span id="my_projects">
                 <% visible_projects.each do |project| %>
 
-                    <%= content_tag("span", project.name.gsub(/ /, "&nbsp;").html_safe, class: "list_templates_projects_names") %>
+                    <%= content_tag("span", project.gsub(/ /, "&nbsp;").html_safe, class: "list_templates_projects_names") %>
 
                 <% end %>
               </span>
