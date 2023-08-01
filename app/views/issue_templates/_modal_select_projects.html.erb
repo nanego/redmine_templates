@@ -1,7 +1,7 @@
 <% 
    custom_fields = CustomField.select("id, name").where("type = ? AND name IN (?)", "ProjectCustomField", Setting["plugin_redmine_templates"]['custom_fields'])
      
-   concerned_projects_ids = (@allowed_target_projects_attributes_array | @issue_projects_attributes_array).map{ |el| el[0] }
+   concerned_projects_ids = (@allowed_target_projects_attributes_array | @template_projects_attributes_array).map{ |el| el[0] }
 
    options_for_selects = {}
    custom_fields.each do |field|
@@ -34,7 +34,7 @@
 
    end
 
-   nested_projects_list = render_project_nested_lists_by_attributes(@allowed_target_projects_attributes_array | @issue_projects_attributes_array) do |project|
+   nested_projects_list = render_project_nested_lists_by_attributes(@allowed_target_projects_attributes_array | @template_projects_attributes_array) do |project|
       # Project is these informations [:id, :name, :status, :lft, :rgt] 
       project_id = project[0]
       project_name = project[1]
@@ -48,7 +48,7 @@
                  check_box_tag(
                    'template_project_ids[]',
                    project_id,
-                   @issue_template != nil && @issue_projects_attributes_array.include?(project),
+                   @issue_template != nil && @template_projects_attributes_array.include?(project),
                    disabled: @allowed_target_projects_attributes_array.include?(project) ? false : true,
                    :class => ("inactive" unless @allowed_target_projects_attributes_array.include?(project)),
                    data: custom_fields_data

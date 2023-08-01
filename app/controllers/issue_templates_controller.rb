@@ -163,10 +163,10 @@ class IssueTemplatesController < ApplicationController
       [id.to_i, name, status.to_i, lft.to_i, rgt.to_i]
     end
 
-    vals_issue_projects = []
-    vals_issue_projects = Rails.env.test? && params[:format] == 'js' ? JSON.parse(params[:template_projects]) : params[:template_projects].permit!.to_h.values if params[:template_projects].present?
+    vals_template_projects = []
+    vals_template_projects = Rails.env.test? && params[:format] == 'js' ? JSON.parse(params[:template_projects]) : params[:template_projects].permit!.to_h.values if params[:template_projects].present?
     # convert to int
-    @issue_projects_attributes_array = vals_issue_projects.map do |id, name, status, lft, rgt|
+    @template_projects_attributes_array = vals_template_projects.map do |id, name, status, lft, rgt|
       [id.to_i, name, status.to_i, lft.to_i, rgt.to_i]
     end
 
