@@ -1,0 +1,28 @@
+require "spec_helper"
+require_relative '../../lib/redmine_templates/helpers/application_helper_patch'
+require 'erb' # to get "h" method
+include ERB::Util
+
+describe ApplicationHelper, type: :helper do
+
+  fixtures :projects, :enabled_modules, :users, :user_preferences, :members,
+           :member_roles, :roles, :trackers, :issue_statuses,
+           :issue_categories, :enumerations, :issues,
+           :watchers, :custom_fields, :custom_values, :versions,
+           :queries,
+           :projects_trackers,
+           :custom_fields_trackers,
+           :workflows, :journals,
+           :attachments, :time_entries
+
+  describe 'render_project_nested_lists_by_attributes_for_template' do
+
+    it "should return the same value of render_project_nested_lists" do
+      User.current = User.find(1)
+      st_origin = render_project_nested_lists(Project.all)
+      st_simulated = render_project_nested_lists_by_attributes_for_template(Project.all.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt))
+
+      expect(st_origin).to eq(st_simulated)
+    end
+  end
+end

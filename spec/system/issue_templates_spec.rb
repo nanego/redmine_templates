@@ -23,7 +23,7 @@ RSpec.describe "creating issues with templates", type: :system do
 
   fixtures :projects, :users, :issues,
            :issue_templates, :issue_template_projects, :issue_template_section_groups, :issue_template_sections
- 
+
   before do
     log_user('admin', 'admin')
   end
@@ -31,9 +31,9 @@ RSpec.describe "creating issues with templates", type: :system do
   describe "test read only values in the list of values of section template" do
     it "Save the read only values in the column empty_data of the table issue_template_sections" do
       visit edit_issue_template_path(1)
- 
+
       expect(page).to have_selector('#issue_template_split_description')
-      
+
       find("#issue_template_split_description").click
       find(".icon-add").click
       find(".icon-list").click
@@ -41,13 +41,13 @@ RSpec.describe "creating issues with templates", type: :system do
 
       # add section group
       find('button[data-action="split-description#addSection"]').click
-      # click on Show the details    
+      # click on Show the details
       all('a[data-action="description-item-form#expand_collapse"]')[1].click
       # select list of values
       fill_in 'issue_template_section_groups_attributes__id_group_section__sections_attributes_0_title', with: 'list test'
 
       array_values = ['val_1', 'val_2', 'val_3']
-      # **** add the first value  **** 
+      # **** add the first value  ****
       find(".add_possible_value").click
 
       # fill the informations
@@ -55,24 +55,56 @@ RSpec.describe "creating issues with templates", type: :system do
       fill_in "value", with: 'val_1'
       find("#read_only").click
 
-      # **** add the second value  **** 
+      # **** add the second value  ****
       find(".add_possible_value").click
-      all('#checked')[1].click 
+      all('#checked')[1].click
       all("#value")[1].fill_in with: 'val_2'
-      
-      # **** add the third value  **** 
+
+      # **** add the third value  ****
       find(".add_possible_value").click
       all('#value')[2].fill_in with: 'val_3'
       all('#read_only')[2].click
- 
+
       # save the template
       find('input[name=commit]').click
-      
+
       section_test = IssueTemplate.find(1).section_groups[0].sections[0]
       expect(section_test.empty_value).to eq("#{array_values[0]};#{array_values[2]}")
       expect(section_test.placeholder).to eq("#{array_values[0]};#{array_values[1]}")
- 
-    end   
+
+    end
   end
-  
+
+  describe "Fail validation of template" do
+    it "Should keep the selected projects" do
+      visit new_issue_template_path
+      # open selected projects modal
+      find('#link_update_project_list').click
+
+      within '#ajax-modal' do
+        # select projects with id  3 , 5
+        find("input[value='5']").click
+        find("input[value='3']").click
+        find("input[id='button_apply_projects']").click
+      end
+
+      # Make fail validation
+      find("input[name='commit']").click
+
+      # selected projects 3, project_id=3 +project_id= 5 + its child project_id=6
+      expect(page).to have_selector("span", text: "#{Project.find(3).name}")
+      expect(page).to have_selector("span", text: "#{Project.find(5).name}")
+      expect(page).to have_selector("span", text: "#{Project.find(6).name}")
+
+      # Remake succes validation
+      fill_in 'issue_template_template_title', with: 'test'
+      
+      find("input[name='commit']").click
+
+      # wait for the methode similar_templates (in ajax)
+      sleep(5)
+      expect(IssueTemplate.last.template_projects.count).to eq(3)
+    end
+
+  end
 end

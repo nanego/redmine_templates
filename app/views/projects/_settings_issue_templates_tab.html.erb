@@ -71,22 +71,21 @@
             <td class="template_projects">
               <div>
                 <%
-                  nb_other_projects = 0
-                  nb_visible_projects = 0
                   template_projects_names = issue_template.template_projects.pluck(:name)
                   allowed_projects_names = issue_template.allowed_target_projects.pluck(:name)
+
+                  visible_projects = (allowed_projects_names & template_projects_names).to_a
+                  other_projects =  (template_projects_names - allowed_projects_names).to_a
+
+                  nb_other_projects = other_projects.count
+                  nb_visible_projects = visible_projects.count
                 %>
                 <% template_projects_names.each do |project_name| %>
-                  <% if allowed_projects_names.include?(project_name) %>
-                    <%= link_to project_name.gsub(/ /, "&nbsp;").html_safe,
-                                "#",
-                                class: "project_id_#{project_name.parameterize} list_templates_projects_names #{@project && @project.name == project_name ? "current" : ""}",
-                                :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project_name.parameterize}\").toggleClass('current')"
-                    %>
-                    <% nb_visible_projects += 1 %>
-                  <% else %>
-                    <% nb_other_projects += 1 %>
-                  <% end %>
+                  <%= link_to project_name.gsub(/ /, "&nbsp;").html_safe,
+                              "#",
+                              class: "project_id_#{project_name.parameterize} list_templates_projects_names #{@project && @project.name == project_name ? "current" : ""}",
+                              :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project_name.parameterize}\").toggleClass('current')"
+                  %>
                 <% end %>
                 <% if nb_other_projects > 0 %>
                   <span class="list_templates_other_projects">

@@ -153,6 +153,28 @@ class IssueTemplatesController < ApplicationController
     render partial: "issues/sections/add_repeatable_group"
   end
 
+  def render_select_projects_modal_by_ajax
+
+    @issue_template = params[:template_id].present? ? IssueTemplate.find(params[:template_id]) : IssueTemplate.new
+
+    vals_allowed_target = Rails.env.test? && params[:format] == 'js' ? JSON.parse(params[:allowed_projects]) : params[:allowed_projects].permit!.to_h.values
+    # convert to int
+    @allowed_target_projects_attributes_array = vals_allowed_target.map do |id, name, status, lft, rgt|
+      [id.to_i, name, status.to_i, lft.to_i, rgt.to_i]
+    end
+
+    if params[:project_ids]
+      project_ids = params[:project_ids].split(',')
+      vals_template_projects = (project_ids.present? ? Project.find(project_ids).pluck(:id, :name, :status, :lft, :rgt) : [])
+    end
+
+    # convert to int
+    @template_projects_attributes_array = vals_template_projects.map do |id, name, status, lft, rgt|
+      [id.to_i, name, status.to_i, lft.to_i, rgt.to_i]
+    end
+
+    render json: { html: render_to_string(partial: 'modal_select_projects') }
+  end
   private
 
   def find_project

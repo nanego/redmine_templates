@@ -21,33 +21,33 @@
   <td class="template_projects">
     <div>
       <%
-        nb_other_projects = 0
-        nb_visible_projects = 0
-        template_projects = issue_template.template_projects.all
-        allowed_projects = issue_template.allowed_target_projects
+        template_projects = issue_template.template_projects.all.select('id','name')
+        allowed_projects = issue_template.allowed_target_projects.select('id','name')
+
+        visible_projects = (allowed_projects & template_projects).to_a
+        other_projects =  (template_projects - allowed_projects).to_a
+
+        nb_other_projects = other_projects.count
+        nb_visible_projects = visible_projects.count
       %>
-      <% template_projects.each do |project| %>
-        <% if allowed_projects.include?(project) %>
+
+      <% visible_projects.each do |project| %>
           <%= link_to project.name.gsub(/ /, "&nbsp;").html_safe,
                       "#",
-                      class: "project_id_#{project.id} list_templates_projects_names #{@project && @project == project ? "current" : ""}",
+                      class: "project_id_#{project.id} list_templates_projects_names #{@project && @project.id == project.id ? "current" : ""}",
                       :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project.id}\").toggleClass('current')"
           %>
-          <% nb_visible_projects += 1 %>
-        <% else %>
-          <% nb_other_projects += 1 %>
-        <% end %>
       <% end %>
       <% if nb_other_projects > 0 %>
-                <span class="list_templates_other_projects">
-                  <% if nb_visible_projects > 0 %>
-                    <%= l("support.array.sentence_connector") %>
-                    <%= pluralize(nb_other_projects, l("other")) %>
-                    <%= nb_other_projects > 1 ? l("project").pluralize : l("project") %>
-                  <% else %>
-                    <%= pluralize(nb_other_projects, l("project")) %>
-                  <% end %>
-                </span>
+          <span class="list_templates_other_projects">
+            <% if nb_visible_projects > 0 %>
+              <%= l("support.array.sentence_connector") %>
+              <%= pluralize(nb_other_projects, l("other")) %>
+              <%= nb_other_projects > 1 ? l("project").pluralize : l("project") %>
+            <% else %>
+              <%= pluralize(nb_other_projects, l("project")) %>
+            <% end %>
+          </span>
       <% end %>
     </div>
   </td>
