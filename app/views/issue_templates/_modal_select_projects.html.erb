@@ -34,7 +34,7 @@
 
    end
 
-   nested_projects_list = render_project_nested_lists_by_attributes(@allowed_target_projects_attributes_array | @template_projects_attributes_array) do |project|
+   nested_projects_list = render_project_nested_lists_by_attributes_for_template(@allowed_target_projects_attributes_array | @template_projects_attributes_array) do |project|
       # Project is these informations [:id, :name, :status, :lft, :rgt] 
       project_id = project[0]
       project_name = project[1]

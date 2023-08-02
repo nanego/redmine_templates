@@ -4,7 +4,7 @@ module PluginRedmineTemplates
   module ApplicationHelperPatch
 
     # adapted from standard method "is_descendant_of?(other)"
-    def is_descendant_of_by_attributes?(project, other_project)
+    def is_descendant_of_by_attributes_for_template?(project, other_project)
       # project, other_project are represented by array [:id, :name, :status, :lft, :rgt]
       project_lft = project[3]
       project_rgt = project[4]
@@ -15,7 +15,7 @@ module PluginRedmineTemplates
     end
 
     # This function simulate  render_project_nested_lists, but projects are an array of attributes not activerecord
-    def render_project_nested_lists_by_attributes(projects, &block)
+    def render_project_nested_lists_by_attributes_for_template(projects, &block)
       s = +''
       if projects.any?
         ancestors = []
@@ -24,13 +24,13 @@ module PluginRedmineTemplates
         projects.each do |project|
           project_status = project[0]
           project_name = project[1]
-          # use is_descendant_of_by_attributes instead of is_descendant_of
-          if ancestors.empty? || is_descendant_of_by_attributes?(project, ancestors.last)
+          # use is_descendant_of_by_attributes_for_template instead of is_descendant_of
+          if ancestors.empty? || is_descendant_of_by_attributes_for_template?(project, ancestors.last)
             s << "<ul class='projects #{ancestors.empty? ? 'root' : nil}'>\n"
           else
             ancestors.pop
             s << "</li>"
-            while ancestors.any? && !is_descendant_of_by_attributes?(project, ancestors.last)
+            while ancestors.any? && !is_descendant_of_by_attributes_for_template?(project, ancestors.last)
               ancestors.pop
               s << "</ul></li>\n"
             end
