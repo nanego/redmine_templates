@@ -13,6 +13,7 @@ ActiveSupport::Reloader.to_prepare do
   require_dependency 'redmine_templates/issue_query_patch'
   require_dependency 'redmine_templates/helpers/issues_helper_patch'
   require_dependency 'redmine_templates/helpers/application_helper_patch'
+  require_dependency 'redmine_templates/project_patch'
 end
 
 Redmine::Plugin.register :redmine_templates do

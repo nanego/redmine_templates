@@ -47,7 +47,7 @@
       </thead>
       <tbody>
       <% @templates.each do |issue_template| %>
-        <%= render 'list_template', issue_template: issue_template  %>
+        <%= render 'list_template', issue_template: issue_template, allowed_projects: @allowed_projects  %>
       <% end %>
       <% reset_cycle %>
       </tbody>

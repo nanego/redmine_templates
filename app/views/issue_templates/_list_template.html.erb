@@ -16,13 +16,13 @@
     <%= image_tag 'icons8-form-64.png', plugin: 'redmine_templates', style: 'width: 40px;padding: 5px;' if issue_template.split_description? %>
   </td>
   <td><%= link_to_edition.call h(issue_template.template_title), issue_template.template_title %></td>
-  <td><%= (link_to_edition.call h(issue_template.tracker.name), issue_template.tracker.name) if issue_template.tracker.present? %></td>
+  <td><%= (link_to_edition.call h(issue_template.tracker_by_attributes.name), issue_template.tracker_by_attributes.name) if issue_template.tracker_by_attributes.present? %></td>
   <td><%= link_to_edition.call h(issue_template.subject), issue_template.subject %></td>
   <td class="template_projects">
     <div>
       <%
-        template_projects = issue_template.template_projects.all.select('id','name')
-        allowed_projects = issue_template.allowed_target_projects.select('id','name')
+
+        template_projects = issue_template.template_projects_by_attributes.all
 
         visible_projects = (allowed_projects & template_projects).to_a
         other_projects =  (template_projects - allowed_projects).to_a
@@ -53,7 +53,7 @@
   </td>
   <td class="template_column_count"><%= issue_template.issue_template_projects.size %></td>
   <td class="template_column_count"><%= issue_template.usage %></td>
-  <td class="template_column_count"><%= issue_template.issues.size %></td>
+  <td class="template_column_count"><%= issue_template.issues_by_attributes.size %></td>
   <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
     <td class="center image_enabled_<%= issue_template.id %>">
       <%= render "issue_templates/enable_form", issue_template: issue_template %>
@@ -65,7 +65,7 @@
       <%= link_to l(:button_edit), edit_issue_template_path(id: issue_template.id
       #, project_id: project.id
       ), :class => 'icon icon-edit' %>
-      <% if User.current.admin || (issue_template.template_projects - User.current.projects).empty? %>
+      <% if User.current.admin || (issue_template.template_projects_by_attributes - User.current.projects).empty? %>
         <%= delete_link issue_template_path(issue_template) %>
       <% end %>
     <% end %>
