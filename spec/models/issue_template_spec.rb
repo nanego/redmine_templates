@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe "IssueTemplate" do
   fixtures :projects, :users, :members, :member_roles, :roles,
-            :trackers, :issue_statuses, :projects_trackers
+           :trackers, :issue_statuses, :projects_trackers
 
   include Redmine::I18n
 
@@ -105,24 +105,24 @@ describe "IssueTemplate" do
 
   it "shouldn't save section with no title" do
     template = IssueTemplate.new(:project_id => 1,
-                                    :tracker_id => 1,
-                                    :status_id => 1,
-                                    :author_id => 2,
-                                    :subject => 'test_create',
-                                    :template_title => 'New title template',
-                                    :template_enabled => true,
-                                    :template_project_ids => [1],
-                                    :section_groups_attributes => [{
-                                                                     :title => "Section group title",
-                                                                     :position => 1,
-                                                                     sections_attributes: [
-                                                                       {
-                                                                         :title => nil,
-                                                                         :description => "Section description",
-                                                                         :type => "IssueTemplateSectionTextArea",
-                                                                         :position => 1 }
-                                                                     ]
-                                                                   }]
+                                 :tracker_id => 1,
+                                 :status_id => 1,
+                                 :author_id => 2,
+                                 :subject => 'test_create',
+                                 :template_title => 'New title template',
+                                 :template_enabled => true,
+                                 :template_project_ids => [1],
+                                 :section_groups_attributes => [{
+                                                                  :title => "Section group title",
+                                                                  :position => 1,
+                                                                  sections_attributes: [
+                                                                    {
+                                                                      :title => nil,
+                                                                      :description => "Section description",
+                                                                      :type => "IssueTemplateSectionTextArea",
+                                                                      :position => 1 }
+                                                                  ]
+                                                                }]
     )
     expect(template.valid?).to eq false
     expect(template.save).to eq false
@@ -252,20 +252,19 @@ describe "IssueTemplate" do
   context "Update relationship tables on cascading delete" do
     let(:template_test) {
       template_test = IssueTemplate.create(:project_id => 1,
-                                  :tracker_id => 1,
-                                  :status_id => 1,
-                                  :author_id => 2 ,
-                                  :subject => 'test_create',
-                                  :description => 'IssueTest#test_create',
-                                  :template_title => 'New title template',
-                                  :template_enabled => true,
-                                  :template_project_ids => [1]
-      )}     
+                                           :tracker_id => 1,
+                                           :status_id => 1,
+                                           :author_id => 2,
+                                           :subject => 'test_create',
+                                           :description => 'IssueTest#test_create',
+                                           :template_title => 'New title template',
+                                           :template_enabled => true,
+                                           :template_project_ids => [1]
+      ) }
 
     it "when deleting a tracker" do
-      
       tracker_test = Tracker.create!(:name => 'Test', :default_status_id => 1)
-      template_test.tracker_id = Tracker.last.id
+      template_test.tracker_id = tracker_test.id
       template_test.save
       tracker_test.destroy
 
@@ -275,7 +274,7 @@ describe "IssueTemplate" do
 
     it "when deleting a issue status" do
       status_test = IssueStatus.create!(:name => 'Test')
-      template_test.status_id = IssueStatus.last.id
+      template_test.status_id = status_test.id
       template_test.save
       status_test.destroy
 
@@ -286,7 +285,7 @@ describe "IssueTemplate" do
     it "when deleting a issue category" do
       category_test = IssueCategory.create(project: Project.find(1), name: "To Be Removed Issue Category")
       template_test.category_id = category_test.id
-      template_test.save       
+      template_test.save
       category_test.destroy
       template_test.reload
 
@@ -295,7 +294,7 @@ describe "IssueTemplate" do
 
     it "when deleting a author user" do
       user_test = User.create(:login => "test", :firstname => 'test', :lastname => 'test',
-              :mail => 'test.test@test.fr', :language => 'fr')
+                              :mail => 'test.test@test.fr', :language => 'fr')
       template_test.author_id = user_test.id
       template_test.save
 
@@ -306,7 +305,7 @@ describe "IssueTemplate" do
 
     it "when deleting a assigne_to user" do
       user_test = User.create(:login => "test", :firstname => 'test', :lastname => 'test',
-              :mail => 'test.test@test.fr', :language => 'fr')
+                              :mail => 'test.test@test.fr', :language => 'fr')
       template_test.assigned_to_id = user_test.id
       template_test.save
 
@@ -315,13 +314,13 @@ describe "IssueTemplate" do
       expect(template_test.assigned_to_id).to be_nil
     end
 
-    it "calculate issue_templates in the method objects_count" do 
+    it "calculate issue_templates in the method objects_count" do
       priority_test = IssuePriority.all[5]
       expect(priority_test.objects_count).to eq(0)
-      
+
       template_test.priority_id = priority_test.id
       template_test.save
-      #Since there are objects_count is greater than 0, it does not accept removing priority
+      # Since there are objects_count is greater than 0, it does not accept removing priority
       expect(priority_test.issue_templates.count).to eq(1)
       expect(priority_test.issues.count).to eq(0)
       expect(priority_test.objects_count).to eq(1)
@@ -338,6 +337,6 @@ describe "IssueTemplate" do
         expect(template_test.typology_id).to be_nil
       end
     end
-     
-  end  
+
+  end
 end

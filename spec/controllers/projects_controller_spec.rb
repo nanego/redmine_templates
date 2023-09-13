@@ -61,7 +61,7 @@ describe ProjectsController, type: :controller do
           }
         end
         new_project = Project.find('copy-with-templates')
-        assert_equal source_project.issue_templates, new_project.issue_templates, "All issue_templates were not copied"
+        expect(source_project.issue_templates.sort).to eq new_project.issue_templates.sort
 
         expect(IssueTemplateProject.where(issue_template_id: 1, project_id: new_project.id).first.visibility).to eq('1|3')
         expect(IssueTemplateProject.where(issue_template_id: 4, project_id: new_project.id).first.visibility).to eq('1')
