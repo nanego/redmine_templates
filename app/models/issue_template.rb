@@ -26,6 +26,10 @@ class IssueTemplate < ActiveRecord::Base
   has_many :issue_template_projects, dependent: :destroy
   has_many :template_projects, through: :issue_template_projects, source: :project
 
+  has_many :template_projects_by_attributes, -> { select(:id, :name) }, through: :issue_template_projects, source: :project
+  has_many :issues_by_attributes, -> { select(:issue_template_id) }, class_name: 'Issue'
+  belongs_to :tracker_by_attributes, -> { select(:id, :name) }, class_name: 'Tracker', :foreign_key => 'tracker_id'
+
   if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
     has_and_belongs_to_many :secondary_projects, class_name: 'Project', join_table: 'multiprojects_issue_templates'
   end
@@ -99,6 +103,10 @@ class IssueTemplate < ActiveRecord::Base
 
   def allowed_target_projects
     Project.active
+  end
+
+  def self.allowed_target_projects_by_attributes
+    Project.active_by_attributes
   end
 
   def disabled_projects

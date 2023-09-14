@@ -83,7 +83,11 @@ class IssueTemplatesController < ApplicationController
   end
 
   def index
-    @templates = IssueTemplate.order("custom_form desc, tracker_id desc, usage desc").includes(:issues)
+    @templates = IssueTemplate.order("custom_form desc, tracker_id desc, usage desc")
+      .includes(:issues_by_attributes, :template_projects_by_attributes,:tracker_by_attributes)
+      .select(:id, :template_title, :usage,:tracker_id, :template_enabled, :custom_form, :split_description, :subject)
+
+    @allowed_projects = IssueTemplate.allowed_target_projects_by_attributes
   end
 
   # Updates the template form when changing the project, status or tracker on template creation/update
