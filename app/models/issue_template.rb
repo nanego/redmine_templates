@@ -34,7 +34,7 @@ class IssueTemplate < ActiveRecord::Base
   validates_length_of :subject, :maximum => 255
   # validates_inclusion_of :done_ratio, :in => 0..100
 
-  validates :estimated_hours, :numericality => {:greater_than_or_equal_to => 0, :allow_nil => true, :message => :invalid}
+  validates :estimated_hours, :numericality => { :greater_than_or_equal_to => 0, :allow_nil => true, :message => :invalid }
   validates :start_date, :date => true
   validates :due_date, :date => true
   # validate :validate_issue, :validate_required_fields
@@ -118,13 +118,11 @@ class IssueTemplate < ActiveRecord::Base
 
   # Overrides Redmine::Acts::Customizable::InstanceMethods#available_custom_fields
   def available_custom_fields
-    available_custom_fields = []     
-    #(project && tracker) ? (project.all_issue_custom_fields & tracker.custom_fields.all) : []
-    template_projects.each do |project| 
+    available_custom_fields = []
+    template_projects.each do |project|
       available_custom_fields |= project.all_issue_custom_fields.to_a
     end
-    tracker ? available_custom_fields |= tracker.custom_fields.all.to_a : available_custom_fields
-      
+    available_custom_fields |= tracker.custom_fields.all.to_a if tracker.present?
     available_custom_fields
   end
 
@@ -178,7 +176,7 @@ class IssueTemplate < ActiveRecord::Base
   end
 
   def assigned_to_function_id
-    nil #TODO Make templates compatible with this functionality
+    nil # TODO Make templates compatible with this functionality
   end
 
   def description_is_empty?(attributes)
@@ -197,7 +195,7 @@ class IssueTemplate < ActiveRecord::Base
     return (!persisted && has_no_title && has_no_sections)
   end
 
-  def safe_attribute_names(user=nil)
+  def safe_attribute_names(user = nil)
     names = super
     names -= disabled_core_fields
     names
