@@ -41,6 +41,8 @@ class IssueTemplatesController < ApplicationController
   def edit
     @issue_template = IssueTemplate.find(params[:id])
     @priorities = IssuePriority.active
+    @issue_template.assignable_projects = @issue_template.template_projects
+    @issue_template.assignable_secondary_projects = @issue_template.secondary_projects
   end
 
   def create
@@ -48,6 +50,17 @@ class IssueTemplatesController < ApplicationController
     @issue_template.safe_attributes = params[:issue_template]
     @issue_template.author ||= User.current
     @issue_template.usage = 0
+
+    projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
+    secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids])
+    # in case of fail validation
+    @issue_template.template_projects = projects
+    @issue_template.secondary_projects = secondary_projects
+
+    unless @issue_template.valid?
+      @issue_template.assignable_projects = projects
+      @issue_template.assignable_secondary_projects = secondary_projects
+    end
 
     if @issue_template.save
       respond_to do |format|
@@ -68,6 +81,21 @@ class IssueTemplatesController < ApplicationController
   def update
     @issue_template = IssueTemplate.find(params[:id])
     @issue_template.safe_attributes = params[:issue_template]
+
+    projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
+    secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids])
+
+    @issue_template.skip_template_projects_validation = true if projects.present?
+
+    # check the validation
+    if @issue_template.valid?
+      @issue_template.template_projects = projects
+      @issue_template.secondary_projects = secondary_projects
+    else
+      @issue_template.assignable_projects = projects
+      @issue_template.assignable_secondary_projects = secondary_projects
+    end
+
     if @issue_template.save
       respond_to do |format|
         format.html {
@@ -92,6 +120,10 @@ class IssueTemplatesController < ApplicationController
 
   # Updates the template form when changing the project, status or tracker on template creation/update
   def update_form
+    
+    projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
+    secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids])
+
     unless params[:issue_template][:id].blank?
       @issue_template = IssueTemplate.find(params[:issue_template][:id])
       @issue_template.safe_attributes = params[:issue_template]
@@ -99,6 +131,10 @@ class IssueTemplatesController < ApplicationController
       @issue_template = IssueTemplate.new
       @issue_template.safe_attributes = params[:issue_template]
     end
+
+    # to avoid insert to DB,beacuse of template_projects are a collection
+    @issue_template.assignable_projects = projects
+    @issue_template.secondary_projects = secondary_projects
     @priorities = IssuePriority.active
   end
 

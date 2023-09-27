@@ -2,7 +2,7 @@
      style="margin-top: 30px;"
      data-target="template-form.custom_form">
   <div id="custom_form">
-    <% if @issue_template.custom_form_path.present? && @issue_template.template_projects.present? %>
+    <% if @issue_template.custom_form_path.present? && @issue_template.assignable_projects.present? %>
 
       <div style="margin-bottom: 30px;">Aperçu du formulaire :</div>
 
@@ -10,7 +10,7 @@
       <% file_name = "#{File.join(Redmine::Plugin.directory, 'redmine_scn')}/app/views/issues/_#{@issue_template.custom_form_path}.html.erb" %>
 
       <% if File.exist?(file_name) %>
-        <% @issue = Issue.new(project: @issue_template.template_projects.first) %>
+        <% @issue = Issue.new(project: @issue_template.assignable_projects.first) %>
         <%= form_for @issue, :url => '#' do |f| %>
           <%= render :partial => "issues/#{@issue_template.custom_form_path}", :locals => {:f => f} %>
         <% end %>
