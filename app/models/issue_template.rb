@@ -48,7 +48,7 @@ class IssueTemplate < ActiveRecord::Base
   scope :active, -> { where(template_enabled: true) }
 
   #to avoid fires update without waiting for the save or update call
-  attr_accessor :assignable_projects, :assignable_secondary_projects, :skip_template_projects_validation 
+  attr_accessor :assignable_projects, :assignable_secondary_projects, :skip_template_projects_validation
 
   safe_attributes :project_id,
                   :tracker_id,
@@ -129,7 +129,7 @@ class IssueTemplate < ActiveRecord::Base
   # Overrides Redmine::Acts::Customizable::InstanceMethods#available_custom_fields
   def available_custom_fields
     available_custom_fields = []
-    template_projects.each do |project|
+    assignable_projects&.each do |project|
       available_custom_fields |= project.all_issue_custom_fields.to_a
     end
     available_custom_fields |= tracker.custom_fields.all.to_a if tracker.present?
