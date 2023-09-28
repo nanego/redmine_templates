@@ -212,25 +212,4 @@ describe IssueTemplatesController, type: :controller do
     expect(response.body).to have_css("tr[data-template-id=#{template.id}] td[class='template_column_count']")
     expect(response.body).to have_css("tr[data-template-id=#{template.id}] td:nth-child(6)", text: "#{template.issue_template_projects.size}", exact_text: true)
   end
-
-  it "Should not trigger the SQL update + callbacks without save call" do
-    template = IssueTemplate.find(2)
-    title_test = "title test"
-
-    # check old values
-    expect(template.template_title).to eq("Template title two")
-    expect(template.template_projects.count).to eq(1)
-
-    template.safe_attributes = { "template_title" => title_test }
-    template.template_projects.template_project_ids = [1, 2, 3]
-
-    expect(template.template_title).to eq(title_test)
-    expect(template.template_projects.count).to eq(3)
-
-    # check DB
-    expect(IssueTemplate.find(2).template_title).to eq("Template title two")
-    # Take the new value into account
-    expect(IssueTemplate.find(2).template_projects.count).to eq(1)
-  end 
-
 end

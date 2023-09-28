@@ -76,5 +76,19 @@ RSpec.describe "issue_template view", type: :system do
       end
       expect(page).to_not have_selector("label", text: custom_field_1.name)
     end
+
+    it "Should not trigger the SQL update + callbacks without save call" do
+      visit '/issue_templates/2/edit'
+
+      expect(IssueTemplate.find(2).template_projects.count).to eq(1)
+      find("#link_update_project_list").click
+
+      within '#ajax-modal' do
+        page.find("a", :text => 'All').click
+        page.find("#button_apply_projects").click
+      end
+
+      expect(IssueTemplate.find(2).template_projects.count).to eq(1)
+    end
   end
 end
