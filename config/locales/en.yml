@@ -60,3 +60,4 @@ en:
   delete_repeatable_bloc: Delete this bloc
   add_repeatable_bloc_label: Custom text for block add button (optional)
   delete_repeatable_bloc_label: Custom text for block delete button (optional)
+  field_assignable_projects: "Template projects"
