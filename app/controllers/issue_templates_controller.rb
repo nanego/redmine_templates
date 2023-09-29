@@ -84,16 +84,16 @@ class IssueTemplatesController < ApplicationController
 
     projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
     secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids])
+    @issue_template.assignable_projects = projects
+    @issue_template.assignable_secondary_projects = secondary_projects
 
+    @issue_template.assignable_projects_validation = true
     @issue_template.skip_template_projects_validation = true if projects.present?
 
     # check the validation
     if @issue_template.valid?
       @issue_template.template_projects = projects
       @issue_template.secondary_projects = secondary_projects
-    else
-      @issue_template.assignable_projects = projects
-      @issue_template.assignable_secondary_projects = secondary_projects
     end
 
     if @issue_template.save
@@ -120,21 +120,25 @@ class IssueTemplatesController < ApplicationController
 
   # Updates the template form when changing the project, status or tracker on template creation/update
   def update_form
-    
+
     projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
     secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids])
 
     unless params[:issue_template][:id].blank?
       @issue_template = IssueTemplate.find(params[:issue_template][:id])
+      # to avoid insert to DB,beacuse of template_projects are a collection
+      @issue_template.assignable_projects = projects
+      @issue_template.secondary_projects = secondary_projects
       @issue_template.safe_attributes = params[:issue_template]
     else
       @issue_template = IssueTemplate.new
+      # to avoid insert to DB,beacuse of template_projects are a collection
+      @issue_template.assignable_projects = projects
+      @issue_template.secondary_projects = secondary_projects
       @issue_template.safe_attributes = params[:issue_template]
     end
 
-    # to avoid insert to DB,beacuse of template_projects are a collection
-    @issue_template.assignable_projects = projects
-    @issue_template.secondary_projects = secondary_projects
+    @issue_template.assignable_secondary_projects = secondary_projects
     @priorities = IssuePriority.active
   end
 

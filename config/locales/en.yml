@@ -56,3 +56,4 @@ en:
   display_mode: Display mode
   projects_count: Number of projects
   read_only: Read only
+  field_assignable_projects: "Template projects"
