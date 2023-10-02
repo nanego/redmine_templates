@@ -61,3 +61,7 @@ fr:
   display_mode: Type de rendu
   projects_count: Nombre de projets
   read_only: Lecture seule
+  add_repeatable_bloc: Répéter ce bloc
+  delete_repeatable_bloc: Supprimer ce bloc
+  add_repeatable_bloc_label: Texte personnalisé pour le bouton d\'ajout du bloc (facultatif)
+  delete_repeatable_bloc_label: Texte personnalisé pour le bouton de suppression du bloc (facultatif)
