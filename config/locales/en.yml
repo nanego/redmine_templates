@@ -56,3 +56,7 @@ en:
   display_mode: Display mode
   projects_count: Number of projects
   read_only: Read only
+  add_repeatable_bloc: Repeat this bloc
+  delete_repeatable_bloc: Delete this bloc
+  add_repeatable_bloc_label: Custom text for block add button (optional)
+  delete_repeatable_bloc_label: Custom text for block delete button (optional)

@@ -18,9 +18,10 @@
             <div class="section_group_repeater">
               <%= render 'issues/sections/separator_form' %>
               <p style="margin-top: -1.5em">
-                <%= link_to 'Répéter ce bloc', '#',
+                <% add_section_title_button = section_group.add_button_title.present? ? section_group.add_button_title : t("add_repeatable_bloc") %>
+                <%= link_to add_section_title_button, '#',
                             class: 'add_sections_group icon icon-add',
-                            title: "Répéter ce groupe de sections",
+                            title: add_section_title_button,
                             data: {
                               sections_group_id: section_group.id,
                               sections_group_type: section_group.class.name

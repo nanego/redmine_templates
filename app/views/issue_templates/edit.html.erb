@@ -5,3 +5,14 @@
 <div id="all_attributes">
   <%= render :partial => 'issue_templates/form' %>
 </div>
+
+<%= javascript_tag do %>
+  // Display button title form if bloc is set as repeatable
+  $( document ).ready(function() {
+    $(".repeatable_checkbox").each(function(){
+      if($(this).is(':checked')){
+        $(this.parentElement.nextElementSibling).show();
+      }
+    });
+  });
+<% end %>
