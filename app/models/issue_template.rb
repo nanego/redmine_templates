@@ -49,7 +49,11 @@ class IssueTemplate < ActiveRecord::Base
 
   #to avoid fires update without waiting for the save or update call, we add these 3 attributtes
   validates_presence_of :assignable_projects, if: :assignable_projects_validation
-  attr_accessor :assignable_projects, :assignable_secondary_projects, :skip_template_projects_validation, :assignable_projects_validation
+  attr_accessor :assignable_projects, :skip_template_projects_validation, :assignable_projects_validation
+
+  if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+    attr_accessor :assignable_secondary_projects
+  end
 
   safe_attributes :project_id,
                   :tracker_id,
