@@ -42,7 +42,7 @@ class IssueTemplatesController < ApplicationController
     @issue_template = IssueTemplate.find(params[:id])
     @priorities = IssuePriority.active
     @issue_template.assignable_projects = @issue_template.template_projects
-    @issue_template.assignable_secondary_projects = @issue_template.secondary_projects
+    @issue_template.assignable_secondary_projects = @issue_template.secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
   end
 
   def create
@@ -52,14 +52,14 @@ class IssueTemplatesController < ApplicationController
     @issue_template.usage = 0
 
     projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
-    secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids])
+    secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids]) if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
     # in case of fail validation
     @issue_template.template_projects = projects
-    @issue_template.secondary_projects = secondary_projects
+    @issue_template.secondary_projects = secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
 
     unless @issue_template.valid?
       @issue_template.assignable_projects = projects
-      @issue_template.assignable_secondary_projects = secondary_projects
+      @issue_template.assignable_secondary_projects = secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
     end
 
     if @issue_template.save
@@ -83,9 +83,12 @@ class IssueTemplatesController < ApplicationController
     @issue_template.safe_attributes = params[:issue_template]
 
     projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
-    secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids])
     @issue_template.assignable_projects = projects
-    @issue_template.assignable_secondary_projects = secondary_projects
+
+    if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+      secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids])
+      @issue_template.assignable_secondary_projects = secondary_projects
+    end
 
     @issue_template.assignable_projects_validation = true
     @issue_template.skip_template_projects_validation = true if projects.present?
@@ -93,7 +96,7 @@ class IssueTemplatesController < ApplicationController
     # check the validation
     if @issue_template.valid?
       @issue_template.template_projects = projects
-      @issue_template.secondary_projects = secondary_projects
+      @issue_template.secondary_projects = secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
     end
 
     if @issue_template.save
@@ -122,23 +125,23 @@ class IssueTemplatesController < ApplicationController
   def update_form
 
     projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
-    secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids])
+    secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids]) if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
 
     unless params[:issue_template][:id].blank?
       @issue_template = IssueTemplate.find(params[:issue_template][:id])
       # to avoid insert to DB,beacuse of template_projects are a collection
       @issue_template.assignable_projects = projects
-      @issue_template.secondary_projects = secondary_projects
+      @issue_template.secondary_projects = secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
       @issue_template.safe_attributes = params[:issue_template]
     else
       @issue_template = IssueTemplate.new
       # to avoid insert to DB,beacuse of template_projects are a collection
       @issue_template.assignable_projects = projects
-      @issue_template.secondary_projects = secondary_projects
+      @issue_template.secondary_projects = secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
       @issue_template.safe_attributes = params[:issue_template]
     end
 
-    @issue_template.assignable_secondary_projects = secondary_projects
+    @issue_template.assignable_secondary_projects = secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
     @priorities = IssuePriority.active
   end
 
