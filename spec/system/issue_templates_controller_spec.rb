@@ -26,15 +26,16 @@ RSpec.describe "issue_template view", type: :system do
            :enumerations, :custom_fields, :custom_values, :custom_fields_trackers,
            :workflows, :issue_templates, :issue_template_projects, :issue_template_section_groups, :issue_template_sections
 
-  let(:template_with_sections) { IssueTemplate.find(3) }
-  let(:template_4) { IssueTemplate.find(4) }
-  let(:project) { Project.find(2) }
-
-  before do
-    log_user('admin', 'admin')
-  end
+  let!(:template_with_sections) { IssueTemplate.find(3) }
+  let!(:template_4) { IssueTemplate.find(4) }
+  let!(:project) { Project.find(2) }
 
   describe "Display all custom fields used in issue_template view" do
+
+    before do
+      log_user('admin', 'admin')
+    end
+
     it "displays all project's custom-fields when selecting a project" do
       custom_field = CustomField.create(name: "CustomField_project2", field_format: "string", visible: "1", type: "IssueCustomField", projects: [project])
 
@@ -89,6 +90,29 @@ RSpec.describe "issue_template view", type: :system do
       end
 
       expect(IssueTemplate.find(2).template_projects.count).to eq(1)
+    end
+  end
+
+  describe "Template edition by a non-admin" do
+
+    before do
+      # Add permission to user
+      user_jsmith = User.find(2)
+      role = Member.where(user: user_jsmith, project: project).first.roles.first
+      role.add_permission!(:create_issue_templates)
+      role.add_permission!(:manage_project_issue_templates)
+      log_user('jsmith', 'jsmith')
+    end
+
+    it "should be accessible by a non-admin user with permissions" do
+      visit new_issue_template_path
+
+      find("#link_update_project_list").click
+
+      within '#ajax-modal' do
+        page.find("label", :text => project.name).click
+        page.find("#button_apply_projects").click
+      end
     end
   end
 end
