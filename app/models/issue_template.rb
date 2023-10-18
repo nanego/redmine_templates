@@ -34,7 +34,8 @@ class IssueTemplate < ActiveRecord::Base
     has_and_belongs_to_many :secondary_projects, class_name: 'Project', join_table: 'multiprojects_issue_templates'
   end
 
-  validates_presence_of :template_title, :tracker, :author, :status, :template_projects
+  validates_presence_of :template_title, :tracker, :author, :status
+  validates_presence_of :template_projects, unless: :skip_template_projects_validation
   validates_length_of :subject, :maximum => 255
   # validates_inclusion_of :done_ratio, :in => 0..100
 
@@ -46,9 +47,15 @@ class IssueTemplate < ActiveRecord::Base
   scope :displayed_on_overview, -> { active.where(show_on_overview: true) }
   scope :active, -> { where(template_enabled: true) }
 
-  safe_attributes :template_project_ids,
-                  :secondary_project_ids,
-                  :project_id,
+  #to avoid fires update without waiting for the save or update call, we add these 3 attributtes
+  validates_presence_of :assignable_projects, if: :assignable_projects_validation
+  attr_accessor :assignable_projects, :skip_template_projects_validation, :assignable_projects_validation
+
+  if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+    attr_accessor :assignable_secondary_projects
+  end
+
+  safe_attributes :project_id,
                   :tracker_id,
                   :subject,
                   :description,
@@ -127,7 +134,7 @@ class IssueTemplate < ActiveRecord::Base
   # Overrides Redmine::Acts::Customizable::InstanceMethods#available_custom_fields
   def available_custom_fields
     available_custom_fields = []
-    template_projects.each do |project|
+    assignable_projects&.each do |project|
       available_custom_fields |= project.all_issue_custom_fields.to_a
     end
     available_custom_fields |= tracker.custom_fields.all.to_a if tracker.present?

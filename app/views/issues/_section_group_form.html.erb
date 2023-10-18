@@ -23,18 +23,17 @@
       <% end %>
 
       <% if group_index.to_i > 0 %>
-
         <p style="margin-top: 0.5em">
-          <%= link_to 'Supprimer ce bloc', '#',
+          <% remove_section_title_button = section_group.delete_button_title.present? ? section_group.delete_button_title : t("delete_repeatable_bloc") %>
+          <%= link_to remove_section_title_button, '#',
                       class: 'destroy_sections_group icon icon-del',
-                      title: "Répéter ce groupe de sections",
+                      title: remove_section_title_button,
                       data: {
                         group_id: section_group.id,
                         group_index: group_index
                       }
           %>
         </p>
-
       <% end %>
 
     </div>

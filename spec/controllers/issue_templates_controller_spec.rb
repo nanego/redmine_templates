@@ -72,7 +72,7 @@ describe IssueTemplatesController, type: :controller do
       role.remove_permission!(:create_issue_templates)
 
       expect {
-        put :update, params: { :id => template.id, issue_template: { subject: "Modified subject" } }
+        put :update, params: { :id => template.id, issue_template: { subject: "Modified subject", "template_project_ids" => template.template_projects.map(&:id) } }
       }.to_not change { template.subject }
 
       expect(response).to have_http_status(:forbidden)
@@ -82,7 +82,7 @@ describe IssueTemplatesController, type: :controller do
       post :create, params: { :issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] } }
       template = IssueTemplate.last
       assert_no_difference('IssueTemplate.count') do
-        put :update, params: { :id => template.id, issue_template: { subject: "Modified subject" } }
+        put :update, params: { :id => template.id, issue_template: { subject: "Modified subject", template_project_ids: [1] } }
       end
       expect(response).to redirect_to edit_issue_template_path(template)
       template.reload
@@ -106,6 +106,7 @@ describe IssueTemplatesController, type: :controller do
           "issue_template" => {
             "template_title" => "New template with instructions",
             "id" => "5",
+            "template_project_ids" => template_with_instruction.template_projects.map(&:id),
             section_groups_attributes: [
               { "position" => "1",
                 "title" => "",
