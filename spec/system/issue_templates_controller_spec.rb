@@ -80,7 +80,7 @@ RSpec.describe "issue_template view", type: :system do
     it "Should display deactivated projects in the correct order" do
       template_test = IssueTemplate.find(2)
       project_test = Project.find(5)
-      project_test.status = 9
+      project_test.status = Project::STATUS_ARCHIVED
       project_test.save
       template_test.template_project_ids = Project.all.map(&:id)
       project_parent = project_test.parent.name
