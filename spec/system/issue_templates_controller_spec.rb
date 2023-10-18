@@ -76,5 +76,39 @@ RSpec.describe "issue_template view", type: :system do
       end
       expect(page).to_not have_selector("label", text: custom_field_1.name)
     end
+
+    it "Should display deactivated projects in the correct order" do
+      template_test = IssueTemplate.find(2)
+      project_test = Project.find(5)
+      project_test.status = 9
+      project_test.save
+      template_test.template_project_ids = Project.all.map(&:id)
+      project_parent = project_test.parent.name
+      expect(IssueTemplate.find(2).template_projects.count).to eq(6)
+
+      visit '/issue_templates/2/edit'
+
+      find("#link_update_project_list").click
+
+      within '#ajax-modal' do
+        label_parent = find(:xpath, "//label[text()=' #{project_parent}']")
+        labels = all('label')
+        filtered_labels = labels.reject { |label| label == label_parent }
+        closest_label = find_closest_label(filtered_labels, label_parent)
+
+        expect(closest_label.text).to eq(project_test.name)
+      end
+
+    end
+
+    def find_closest_label(labels ,target_element)
+      closest_label = labels.min_by do |label|
+        label_distance = (target_element['offsetTop'].to_i - label['offsetTop'].to_i).abs +
+                        (target_element['offsetLeft'].to_i - label['offsetLeft'].to_i).abs
+      end
+
+      return closest_label
+    end
+
   end
 end
