@@ -29,6 +29,7 @@ RSpec.describe "creating issues with templates", type: :system do
 
   let(:template_with_sections) { IssueTemplate.find(3) }
   let(:template_4) { IssueTemplate.find(4) }
+  let(:template_with_repeatable_sections) {IssueTemplate.find(6)}
   let(:project) { Project.find(2) }
 
   before do
@@ -92,6 +93,37 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to_not have_css("input[type='checkbox'][id='issue_issue_template_section_groups_attributes_2_0_sections_attributes_10_1']:disabled")
       expect(page).to have_css("input[type='checkbox'][id='issue_issue_template_section_groups_attributes_2_0_sections_attributes_10_2']:disabled")
 
+    end
+
+    it "show generic button text (add/delete)" do
+      visit new_issue_path(project_id: project.identifier, template_id: template_with_repeatable_sections.id)
+  
+      expect(page).to have_selector("a.add_sections_group", text: "Repeat this bloc")
+
+      # Add repeatable section
+      find("a.add_sections_group").click
+
+      expect(page).to have_selector("a.destroy_sections_group", text: "Delete this bloc")
+    end
+
+    it "show personalized button text (add/delete)" do
+      personalized_add_button_text = "Add section"
+      personalized_delete_button_text = "Delete section"
+
+      # Add personalized delete/add button text
+      template_section_group = IssueTemplateSectionGroup.find_by(issue_template_id: template_with_repeatable_sections.id)
+      template_section_group.add_button_title = personalized_add_button_text
+      template_section_group.delete_button_title = personalized_delete_button_text
+      template_section_group.save
+
+      visit new_issue_path(project_id: project.identifier, template_id: template_with_repeatable_sections.id)
+  
+      expect(page).to have_selector("a.add_sections_group", text: personalized_add_button_text)
+
+      # Add repeatable section
+      find("a.add_sections_group").click
+
+      expect(page).to have_selector("a.destroy_sections_group", text: personalized_delete_button_text)
     end
   end
 
