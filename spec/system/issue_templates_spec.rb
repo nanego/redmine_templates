@@ -24,6 +24,9 @@ RSpec.describe "creating issues with templates", type: :system do
   fixtures :projects, :users, :issues,
            :issue_templates, :issue_template_projects, :issue_template_section_groups, :issue_template_sections
 
+  let(:template_with_sections) { IssueTemplate.find(3) }
+  let(:template_with_repeatable_sections) {IssueTemplate.find(6)}
+
   before do
     log_user('admin', 'admin')
   end
@@ -105,6 +108,52 @@ RSpec.describe "creating issues with templates", type: :system do
       sleep(5)
       expect(IssueTemplate.last.template_projects.count).to eq(3)
     end
+  end
 
+  describe "Template with sections" do 
+    it "it display personalized button title field (add/delete)" do
+      personalized_add_button_text = "Add section"
+      personalized_delete_button_text = "Delete section"
+
+      # Add personalized delete/add button text
+      template_section_group = IssueTemplateSectionGroup.find_by(issue_template_id: template_with_repeatable_sections.id)
+      template_section_group.add_button_title = personalized_add_button_text
+      template_section_group.delete_button_title = personalized_delete_button_text
+      template_section_group.save
+
+      visit edit_issue_template_path(template_with_repeatable_sections.id)
+
+      # Display add/delete button text prefilled fields
+      expect(page).to have_selector("input[value='"+ personalized_add_button_text +"']")
+      expect(page).to have_selector("input[value='"+ personalized_delete_button_text +"']")
+    end
+
+    it "it do not display personalized button title field (add/delete)" do
+      visit edit_issue_template_path(template_with_sections.id)
+
+      # Do not display add/delete button text fields 
+      expect(page).not_to have_selector("input[name='issue_template[section_groups_attributes][0][add_button_title]']")
+      expect(page).not_to have_selector("input[name='issue_template[section_groups_attributes][0][delete_button_title]']")
+      
+    end
+
+    it "it display personalized button title field (add/delete) on click" do
+      visit edit_issue_template_path(1)
+
+      # Do not display add/delete button text fields
+      expect(page).not_to have_selector("input[name='issue_template[section_groups_attributes][0][add_button_title]']")
+      expect(page).not_to have_selector("input[name='issue_template[section_groups_attributes][0][delete_button_title]']")
+
+      expect(page).to have_selector('#issue_template_split_description')
+
+      find("#issue_template_split_description").click
+      find(".icon-add").click
+      find(".icon-list").click
+      find("#issue_template_section_groups_attributes_0_repeatable").click
+
+      # Display add/delete button text prefilled fields
+      expect(page).to have_selector("input[name='issue_template[section_groups_attributes][0][add_button_title]']")
+      expect(page).to have_selector("input[name='issue_template[section_groups_attributes][0][delete_button_title]']")   
+    end
   end
 end
