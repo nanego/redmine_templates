@@ -1,6 +1,6 @@
-<% 
+<%
    custom_fields = CustomField.select("id, name").where("type = ? AND name IN (?)", "ProjectCustomField", Setting["plugin_redmine_templates"]['custom_fields'])
-     
+
    concerned_projects_ids = (@allowed_target_projects_attributes_array | @template_projects_attributes_array).map{ |el| el[0] }
 
    options_for_selects = {}
@@ -34,8 +34,13 @@
 
    end
 
-   nested_projects_list = render_project_nested_lists_by_attributes_for_template(@allowed_target_projects_attributes_array | @template_projects_attributes_array) do |project|
-      # Project is these informations [:id, :name, :status, :lft, :rgt] 
+   # reorder by lft
+   result = @allowed_target_projects_attributes_array | @template_projects_attributes_array
+   index_to_sort_by = 3 # lft
+   sorted_array = result.sort_by { |inner_array| inner_array[index_to_sort_by] }
+
+   nested_projects_list = render_project_nested_lists_by_attributes_for_template(sorted_array) do |project|
+      # Project is these informations [:id, :name, :status, :lft, :rgt]
       project_id = project[0]
       project_name = project[1]
      custom_fields_data = {}
