@@ -1,4 +1,8 @@
-<% if @project.present? && @project.module_enabled?('issue_tracking') && @project.issue_templates.present? && (Issue.allowed_target_trackers(@project) & @project.issue_templates.displayed_on_overview.map(&:tracker)).any? %>
+<% if @project.present? &&
+  @project.module_enabled?('issue_tracking') &&
+  @project.active? &&
+  @project.issue_templates.present? &&
+  (Issue.allowed_target_trackers(@project) & @project.issue_templates.displayed_on_overview.map(&:tracker)).any? %>
 
   <div class="templates_cards">
 
