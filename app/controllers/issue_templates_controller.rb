@@ -51,8 +51,8 @@ class IssueTemplatesController < ApplicationController
     @issue_template.author ||= User.current
     @issue_template.usage = 0
 
-    projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
-    secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids]) if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+    projects = Project.where(:id => params[:issue_template][:template_project_ids])
+    secondary_projects = Project.where(:id => params[:issue_template][:secondary_project_ids]) if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
     # in case of fail validation
     @issue_template.template_projects = projects
     @issue_template.secondary_projects = secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
@@ -82,11 +82,11 @@ class IssueTemplatesController < ApplicationController
     @issue_template = IssueTemplate.find(params[:id])
     @issue_template.safe_attributes = params[:issue_template]
 
-    projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
+    projects = Project.where(:id => params[:issue_template][:template_project_ids])
     @issue_template.assignable_projects = projects
 
     if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
-      secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids])
+      secondary_projects = Project.where(:id => params[:issue_template][:secondary_project_ids])
       @issue_template.assignable_secondary_projects = secondary_projects
     end
 
@@ -115,8 +115,8 @@ class IssueTemplatesController < ApplicationController
 
   def index
     @templates = IssueTemplate.order("custom_form desc, tracker_id desc, usage desc")
-      .includes(:issues_by_attributes, :template_projects_by_attributes,:tracker_by_attributes)
-      .select(:id, :template_title, :usage,:tracker_id, :template_enabled, :custom_form, :split_description, :subject)
+                              .includes(:issues_by_attributes, :template_projects_by_attributes, :tracker_by_attributes)
+                              .select(:id, :template_title, :usage, :tracker_id, :template_enabled, :custom_form, :split_description, :subject)
 
     @allowed_projects = IssueTemplate.allowed_target_projects_by_attributes
   end
@@ -124,8 +124,8 @@ class IssueTemplatesController < ApplicationController
   # Updates the template form when changing the project, status or tracker on template creation/update
   def update_form
 
-    projects = Project.where(:id =>  params[:issue_template][:template_project_ids])
-    secondary_projects = Project.where(:id =>  params[:issue_template][:secondary_project_ids]) if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+    projects = Project.where(:id => params[:issue_template][:template_project_ids])
+    secondary_projects = Project.where(:id => params[:issue_template][:secondary_project_ids]) if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
 
     unless params[:issue_template][:id].blank?
       @issue_template = IssueTemplate.find(params[:issue_template][:id])
@@ -167,7 +167,7 @@ class IssueTemplatesController < ApplicationController
     @new_template.safe_attributes = params[:issue_template]
     @templates = IssueTemplate.all
     @similar_templates = []
-    #compare subjects
+    # compare subjects
     @templates.each do |t|
       sims = []
       taux = 0
@@ -222,6 +222,7 @@ class IssueTemplatesController < ApplicationController
 
     render json: { html: render_to_string(partial: 'modal_select_projects') }
   end
+
   private
 
   def find_project

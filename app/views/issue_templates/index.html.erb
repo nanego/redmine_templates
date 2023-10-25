@@ -46,8 +46,12 @@
       </tr>
       </thead>
       <tbody>
-      <% @templates.each do |issue_template| %>
-        <%= render 'list_template', issue_template: issue_template, allowed_projects: @allowed_projects  %>
+      <% cache(['TemplatesIndex', IssueTemplate.maximum(:updated_at), Project.maximum(:updated_on)]) do %>
+        <% @templates.each do |issue_template| %>
+          <%= render partial: 'issue_templates/list_template',
+                     locals: { issue_template: issue_template, allowed_projects: @allowed_projects },
+                     cached: true %>
+        <% end %>
       <% end %>
       <% reset_cycle %>
       </tbody>

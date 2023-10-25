@@ -1,3 +1,13 @@
+<%
+  template_projects = issue_template.template_projects_by_attributes
+
+  visible_projects = allowed_projects & template_projects
+  other_projects = template_projects - allowed_projects
+
+  nb_other_projects = other_projects.size
+  nb_visible_projects = visible_projects.size
+%>
+
 <tr class="issue_template issue"
     data-tracker-id="<%= issue_template.tracker_id %>"
     data-template-id="<%= issue_template.id %>"
@@ -20,22 +30,12 @@
   <td><%= link_to_edition.call h(issue_template.subject), issue_template.subject %></td>
   <td class="template_projects">
     <div>
-      <%
-        template_projects = issue_template.template_projects_by_attributes.all
-
-        visible_projects = (allowed_projects & template_projects).to_a
-        other_projects =  (template_projects - allowed_projects).to_a
-
-        nb_other_projects = other_projects.count
-        nb_visible_projects = visible_projects.count
-      %>
-
       <% visible_projects.each do |project| %>
-          <%= link_to project.name.gsub(/ /, "&nbsp;").html_safe,
-                      "#",
-                      class: "project_id_#{project.id} list_templates_projects_names #{@project && @project.id == project.id ? "current" : ""}",
-                      :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project.id}\").toggleClass('current')"
-          %>
+        <%= link_to project.name.gsub(/ /, "&nbsp;").html_safe,
+                    "#",
+                    class: "project_id_#{project.id} list_templates_projects_names #{@project && @project.id == project.id ? "current" : ""}",
+                    :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project.id}\").toggleClass('current')"
+        %>
       <% end %>
       <% if nb_other_projects > 0 %>
           <span class="list_templates_other_projects">
@@ -55,7 +55,7 @@
   <td class="template_column_count"><%= issue_template.issues_by_attributes.size %></td>
   <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
     <td class="center image_enabled_<%= issue_template.id %>">
-      <%= render "issue_templates/enable_form", issue_template: issue_template %>
+      <%= render partial: "issue_templates/enable_form", locals: { issue_template: issue_template }, cache: true %>
     </td>
   <% end %>
   <td class="buttons">
@@ -64,7 +64,7 @@
       <%= link_to l(:button_edit), edit_issue_template_path(id: issue_template.id
       #, project_id: project.id
       ), :class => 'icon icon-edit' %>
-      <% if User.current.admin || (issue_template.template_projects_by_attributes - User.current.projects).empty? %>
+      <% if User.current.admin || (template_projects - User.current.projects).empty? %>
         <%= delete_link issue_template_path(issue_template) %>
       <% end %>
     <% end %>
