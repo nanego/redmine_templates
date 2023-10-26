@@ -59,14 +59,6 @@
     </td>
   <% end %>
   <td class="buttons">
-    <% if true
-         #User.current.allowed_to?(:manage_templates, project) %>
-      <%= link_to l(:button_edit), edit_issue_template_path(id: issue_template.id
-      #, project_id: project.id
-      ), :class => 'icon icon-edit' %>
-      <% if User.current.admin || (template_projects - User.current.projects).empty? %>
-        <%= delete_link issue_template_path(issue_template) %>
-      <% end %>
-    <% end %>
+    <%= link_to l(:button_edit), edit_issue_template_path(issue_template), :class => 'icon icon-edit' %>
   </td>
 </tr>

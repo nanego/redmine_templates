@@ -1,3 +1,9 @@
+<div class="contextual">
+  <% if User.current.admin || (@issue_template.projects - User.current.projects).empty? %>
+    <%= delete_link issue_template_path(@issue_template) %>
+  <% end %>
+</div>
+
 <h2>
   <%= link_to l(:label_issue_templates), issue_templates_path %> &#187; <%= @issue_template.template_title %>
 </h2>

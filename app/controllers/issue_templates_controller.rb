@@ -151,7 +151,7 @@ class IssueTemplatesController < ApplicationController
     respond_to do |format|
       format.html {
         flash[:notice] = l(:notice_issue_template_successfully_deleted)
-        redirect_to(:back)
+        redirect_to issue_templates_path
       }
     end
   end
