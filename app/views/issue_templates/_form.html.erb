@@ -168,13 +168,7 @@
               <% end %>
 
               <% if @issue_template.safe_attribute?('category_id') %>
-                <p><%= f.select :category_id, (IssueCategory.all.collect { |c| [c.name, c.id] }), :include_blank => true, :required => false %>
-                  <%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
-                              new_project_issue_category_path(@issue_template.project),
-                              :remote => true,
-                              :method => 'get',
-                              :title => l(:label_issue_category_new),
-                              :tabindex => 200) if User.current.allowed_to?(:manage_categories, @issue_template.project) %></p>
+                <p><%= f.select :category_id, (IssueCategory.all.collect { |c| [c.name, c.id] }), :include_blank => true, :required => false %></p>
               <% end %>
 
             </div>
@@ -209,9 +203,9 @@
                   <div class="splitcontentright">
                 <% end -%>
                 <% i += 1 -%>
-              <% end -%>
-              </div>
-              </div>
+              <% end %>
+            </div>
+          </div>
           <% include_calendar_headers_tags %>
         </div>
 
@@ -260,30 +254,31 @@
             $(this).find(':input').removeAttr('disabled');
         });
 
-        function buildSelectprojectsModal(id){
-          var allowed_projects = <%= allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
+        function buildSelectprojectsModal(id) {
+            var allowed_projects =
+            <%= allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
 
-          var project_ids = $('#issue_template_template_project_ids').val();
-          if (project_ids.length == 0) {
-            project_ids = ''
-          }
+            var project_ids = $('#issue_template_template_project_ids').val();
+            if (project_ids.length == 0) {
+                project_ids = ''
+            }
 
-          $.ajax({
-            url: "<%= render_select_projects_modal_by_ajax_path(template_id: @issue_template.id) %>",
-            type: 'POST',
-            data : { allowed_projects : allowed_projects, project_ids : project_ids },
-            success: function(response) {
-              $('#ajax-indicator').removeClass('bottom');
-              if(response){
-                $('#ajax-modal').html(response.html);
-                showModal("ajax-modal", "1000px");
-                $("#button_apply_projects").focus();
-              }
-            },error: function(response) {
-              $('#ajax-indicator').removeClass('bottom');
-              console.error(response);
-            },
-          });
+            $.ajax({
+                url: "<%= render_select_projects_modal_by_ajax_path(template_id: @issue_template.id) %>",
+                type: 'POST',
+                data: {allowed_projects: allowed_projects, project_ids: project_ids},
+                success: function (response) {
+                    $('#ajax-indicator').removeClass('bottom');
+                    if (response) {
+                        $('#ajax-modal').html(response.html);
+                        showModal("ajax-modal", "1000px");
+                        $("#button_apply_projects").focus();
+                    }
+                }, error: function (response) {
+                    $('#ajax-indicator').removeClass('bottom');
+                    console.error(response);
+                },
+            });
         }
     </script>
 
@@ -297,11 +292,11 @@
 
 </div>
 <script>
-  $(document).ready(function() {
-    $("#link_update_project_list").click(function (e) {
-      e.preventDefault();
-      buildSelectprojectsModal();
-      $('#ajax-indicator').show();
+    $(document).ready(function () {
+        $("#link_update_project_list").click(function (e) {
+            e.preventDefault();
+            buildSelectprojectsModal();
+            $('#ajax-indicator').show();
+        });
     });
-  });
 </script>

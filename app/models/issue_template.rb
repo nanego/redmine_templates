@@ -121,7 +121,7 @@ class IssueTemplate < ActiveRecord::Base
   end
 
   def assignable_users
-    if template_projects.any?
+    if template_projects.any? && template_projects.size < 2
       users = template_projects.map(&:assignable_users).flatten.uniq
     else
       users = []
