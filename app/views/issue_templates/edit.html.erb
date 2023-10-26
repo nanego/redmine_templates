@@ -1,5 +1,5 @@
 <div class="contextual">
-  <% if User.current.admin || (@issue_template.projects - User.current.projects).empty? %>
+  <% if User.current.admin || (@issue_template.template_projects - User.current.projects).empty? %>
     <%= delete_link issue_template_path(@issue_template) %>
   <% end %>
 </div>

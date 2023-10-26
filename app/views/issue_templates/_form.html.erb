@@ -196,7 +196,7 @@
             <div class="splitcontentleft">
               <% i = 0 %>
               <% split_on = (@issue_template.custom_field_values.size / 2.0).ceil - 1 %>
-              <% @issue_template.editable_custom_field_values.each do |value| %>
+              <% @issue_template.custom_field_values.each do |value| %>
                 <p><%= custom_field_tag_with_label :issue_template, value, :required => false %></p>
                 <% if i == split_on -%>
                   </div>

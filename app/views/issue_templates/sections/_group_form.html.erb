@@ -4,14 +4,22 @@
   </p>
   <div class="collapsible">
     <p>
-      <%= form.check_box :repeatable, label: "Bloc répétable", onclick: "displayRepeatableButtonField(event)", class: "repeatable_checkbox"%>
+      <%= form.check_box :repeatable, label: "Bloc répétable", onclick: "displayRepeatableButtonField(event)", class: "repeatable_checkbox" %>
     </p>
     <div style="display: none;">
       <p>
-        <%= form.text_field :add_button_title, :placeholder => t("add_repeatable_bloc"), :label => t("add_repeatable_bloc_label"), :size => 45, :required => false %>
+        <%= form.text_field :add_button_title,
+                            :placeholder => t("add_repeatable_bloc"),
+                            :label => t("add_repeatable_bloc_label"),
+                            :size => 45,
+                            :required => false %>
       </p>
       <p>
-        <%= form.text_field :delete_button_title, :placeholder => t("delete_repeatable_bloc"), :label => t("delete_repeatable_bloc_label"), :size => 45, :required => false %>
+        <%= form.text_field :delete_button_title,
+                            :placeholder => t("delete_repeatable_bloc"),
+                            :label => t("delete_repeatable_bloc_label"),
+                            :size => 45,
+                            :required => false %>
       </p>
     </div>
     <p>
@@ -56,11 +64,11 @@
 <% end %>
 
 <%= javascript_tag do %>
-  function displayRepeatableButtonField(){
-    if(event.target.checked) {
-      event.target.parentElement.nextElementSibling.style.display = "";
+  function displayRepeatableButtonField(e){
+    if(e.target.checked) {
+        e.target.parentElement.nextElementSibling.style.display = "";
     } else {
-      event.target.parentElement.nextElementSibling.style.display = "none";
-    }   
+        e.target.parentElement.nextElementSibling.style.display = "none";
+    }
   }
 <% end %>

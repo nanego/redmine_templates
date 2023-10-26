@@ -121,7 +121,7 @@ class IssueTemplate < ActiveRecord::Base
   end
 
   def assignable_users
-    if template_projects.any? && template_projects.size < 2
+    if template_projects.any? && template_projects.size < 4
       users = template_projects.map(&:assignable_users).flatten.uniq
     else
       users = []
@@ -139,51 +139,6 @@ class IssueTemplate < ActiveRecord::Base
     end
     available_custom_fields |= tracker.custom_fields.all.to_a if tracker.present?
     available_custom_fields
-  end
-
-  # Returns the custom_field_values that can be edited by the given user
-  def editable_custom_field_values(user = nil)
-    custom_field_values.reject do |value|
-      read_only_attribute_names(user).include?(value.custom_field_id.to_s)
-    end
-  end
-
-  # Returns the names of attributes that are read-only for user or the current user
-  # For users with multiple roles, the read-only fields are the intersection of
-  # read-only fields of each role
-  # The result is an array of strings where sustom fields are represented with their ids
-  def read_only_attribute_names(user = nil)
-    workflow_rule_by_attribute(user).reject { |attr, rule| rule != 'readonly' }.keys
-  end
-
-  # Returns a hash of the workflow rule by attribute for the given user # TODO : Cleanup these methods
-  def workflow_rule_by_attribute(user = nil)
-    return @workflow_rule_by_attribute if @workflow_rule_by_attribute && user.nil?
-
-    user_real = user || User.current
-    roles = user_real.admin ? Role.all : user_real.roles_for_project(project)
-    return {} if roles.empty?
-
-    result = {}
-    workflow_permissions = WorkflowPermission.where(:tracker_id => tracker_id, :old_status_id => status_id, :role_id => roles.map(&:id)).all
-    if workflow_permissions.any?
-      workflow_rules = workflow_permissions.inject({}) do |h, wp|
-        h[wp.field_name] ||= []
-        h[wp.field_name] << wp.rule
-        h
-      end
-      workflow_rules.each do |attr, rules|
-        next if rules.size < roles.size
-        uniq_rules = rules.uniq
-        if uniq_rules.size == 1
-          result[attr] = uniq_rules.first
-        else
-          result[attr] = 'required'
-        end
-      end
-    end
-    @workflow_rule_by_attribute = result if user.nil?
-    result
   end
 
   def authorized_viewer_ids
