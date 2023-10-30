@@ -41,32 +41,3 @@
   <% end %>
 
 <% end %>
-
-<script>
-
-    $('form#issue-form').on('click', '.add_sections_group', function (event) {
-        event.preventDefault()
-        $.ajax({
-            url: '<%= add_repeatable_group_path %>',
-            type: 'post',
-            data: event.target.dataset
-        });
-    })
-    $('form#issue-form').on('click', '.destroy_sections_group', function (event) {
-        event.preventDefault()
-        let group_to_destroy = $("#section_groups_" + event.target.getAttribute("data-group-id") + '_' + event.target.getAttribute("data-group-index"))
-        group_to_destroy.remove()
-    })
-
-    $('form#issue-form').on('click', '.subtitle_container .expander', function (event) {
-        event.preventDefault()
-        let group_to_display = $("#section_group_container_" + event.target.getAttribute("data-group-id"))
-        group_to_display.removeClass('retracted')
-    })
-    $('form#issue-form').on('click', '.subtitle_container .retracter', function (event) {
-        event.preventDefault()
-        let group_to_hide = $("#section_group_container_" + event.target.getAttribute("data-group-id"))
-        group_to_hide.addClass('retracted')
-    })
-
-</script>

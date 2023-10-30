@@ -8,3 +8,8 @@ Deface::Override.new :virtual_path => 'issues/new',
                      :name         => 'hide_attachment_form_if_template_say_so',
                      :replace      => 'p#attachments_form',
                      :partial      => "issues/attachments_form"
+
+Deface::Override.new :virtual_path  => 'issues/new',
+                     :name          => 'add_script_to_hide_and_show_sections',
+                     :insert_before => 'erb[silent]:contains("header_tags")',
+                     :partial       => "issues/hide_and_show_sections_script"
