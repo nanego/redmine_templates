@@ -248,21 +248,25 @@ function makeListsSortable() {
             wikiToolbar.setPreviewUrl(field.dataset.previewLink);
             wikiToolbar.draw();
 
-            if (typeof initRedmineWysiwygEditor === "function") {
+            if (typeof RedmineWysiwygEditorManager === "function") {
                 this.launchWysiwygEditor();
             }
         }
 
         launchWysiwygEditor() {
-            $(".jstEditor").each(initRedmineWysiwygEditor);
+            let redmineWysiwygEditorManager = new RedmineWysiwygEditorManager();
 
-            $(document).ajaxSuccess(function () {
-                $(".jstEditor").each(initRedmineWysiwygEditor);
-            });
+            $(function() {
+                redmineWysiwygEditorManager.update();
 
-            // Redmine 4.1+
-            $(document).on("ajax:success", function () {
-                $(".jstEditor").each(initRedmineWysiwygEditor);
+                $(document).ajaxSuccess(function (event, jqXHR, ajaxSettings, thrownError) {
+                    redmineWysiwygEditorManager.update();
+                });
+
+                // Redmine 4.1+
+                $(document).on('ajax:success', function (event) {
+                    redmineWysiwygEditorManager.update();
+                });
             });
         }
     });
