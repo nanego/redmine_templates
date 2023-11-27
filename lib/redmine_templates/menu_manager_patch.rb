@@ -9,7 +9,7 @@ module RedmineTemplates
           project.issue_templates.includes(:tracker).reorder('trackers.position asc, issue_templates.template_title asc').each do |template|
             unless project_menu.find("new_issue_template_#{template.id}".to_sym)
               project_menu.push "new_issue_template_#{template.id}".to_sym,
-                                { :controller => 'issues', :action => 'new', :template_id => template.id },
+                                new_project_issue_path(project_id: project.identifier, template_id: template.id),
                                 :param => :project_id,
                                 :caption => Proc.new {
                                   template.reload unless template.has_been_deleted?
