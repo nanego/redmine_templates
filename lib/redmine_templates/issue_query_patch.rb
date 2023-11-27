@@ -1,10 +1,8 @@
-require_dependency 'issue_query'
-
 class IssueQuery < Query
   self.available_columns << QueryColumn.new(:issue_template, :sortable => "#{IssueTemplate.table_name}.template_title", :groupable => true)
 end
 
-module PluginRedmineTemplates
+module RedmineTemplates
   module IssueQueryPatch
 
     def initialize_available_filters
@@ -26,4 +24,4 @@ module PluginRedmineTemplates
   end
 end
 
-IssueQuery.prepend PluginRedmineTemplates::IssueQueryPatch
+IssueQuery.prepend RedmineTemplates::IssueQueryPatch

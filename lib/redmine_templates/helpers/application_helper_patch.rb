@@ -1,6 +1,4 @@
-require_dependency 'application_helper'
-
-module PluginRedmineTemplates
+module RedmineTemplates::Helpers
   module ApplicationHelperPatch
 
     # adapted from standard method "is_descendant_of?(other)"
@@ -50,5 +48,5 @@ module PluginRedmineTemplates
   end
 end
 
-ApplicationHelper.prepend PluginRedmineTemplates::ApplicationHelperPatch
+ApplicationHelper.prepend RedmineTemplates::Helpers::ApplicationHelperPatch
 ActionView::Base.prepend ApplicationHelper

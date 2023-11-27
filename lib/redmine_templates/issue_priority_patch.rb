@@ -1,10 +1,8 @@
-require_dependency 'issue_priority'
-
 class IssuePriority < Enumeration
   has_many :issue_templates, :foreign_key => 'priority_id'
 end
 
-module PluginRedmineTemplates
+module RedmineTemplates
   module IssuePriorityPatch
     def objects_count
       count = super
@@ -19,4 +17,4 @@ module PluginRedmineTemplates
   end
 end
 
-IssuePriority.prepend PluginRedmineTemplates::IssuePriorityPatch
+IssuePriority.prepend RedmineTemplates::IssuePriorityPatch

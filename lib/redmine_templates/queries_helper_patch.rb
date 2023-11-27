@@ -1,7 +1,5 @@
-require_dependency 'projects_queries_helper'
-
-module PluginRedmineTemplates
-  module QueriesHelper
+module RedmineTemplates
+  module QueriesHelperPatch
 
     def column_content(column, item)
       if item.is_a? Project
@@ -34,6 +32,6 @@ module PluginRedmineTemplates
   end
 end
 
-QueriesHelper.prepend PluginRedmineTemplates::QueriesHelper
+QueriesHelper.prepend RedmineTemplates::QueriesHelperPatch
 ActionView::Base.prepend QueriesHelper
 ProjectsController.prepend QueriesHelper

@@ -1,6 +1,4 @@
-require_dependency 'issue'
-
-class Issue < ActiveRecord::Base
+module RedmineTemplates::IssuePatch
 
   # Substitute variables with values
   def substituted(text, sections_params = {})
@@ -43,4 +41,11 @@ class Issue < ActiveRecord::Base
     end
   end
 
+end
+
+Issue.prepend RedmineTemplates::IssuePatch
+
+class Issue < ActiveRecord::Base
+  belongs_to :issue_template, optional: true
+  safe_attributes 'issue_template_id'
 end

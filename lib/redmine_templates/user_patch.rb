@@ -1,4 +1,4 @@
-module PluginRedmineTemplates
+module RedmineTemplates
   module UserPatch
     def remove_references_before_destroy
       super
@@ -9,4 +9,4 @@ module PluginRedmineTemplates
   end
 end
 
-User.prepend PluginRedmineTemplates::UserPatch
+User.prepend RedmineTemplates::UserPatch

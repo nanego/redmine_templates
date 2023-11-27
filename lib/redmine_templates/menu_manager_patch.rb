@@ -1,5 +1,5 @@
-module PluginTemplates
-  module MenuHelper
+module RedmineTemplates
+  module MenuManagerPatch
     def render_menu(menu, project = nil)
 
       if project.present? &&
@@ -39,5 +39,5 @@ module PluginTemplates
   end
 end
 
-Redmine::MenuManager::MenuHelper.prepend PluginTemplates::MenuHelper
+Redmine::MenuManager::MenuHelper.prepend RedmineTemplates::MenuManagerPatch
 include Redmine::MenuManager::MenuHelper

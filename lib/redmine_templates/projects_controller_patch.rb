@@ -1,6 +1,28 @@
-require_dependency 'projects_controller'
+module RedmineTemplates
+  module ProjectsControllerPatch
+
+    def issue_template_map
+      @issue_template_map ||= Rails.cache.fetch("issue_templates_by_projects-#{IssueTemplate.maximum("updated_at").to_i}") do
+
+        templates_by_project_map = {}
+
+        IssueTemplate.includes(:issue_template_projects).each do |template|
+          template.issue_template_projects.map(&:project_id).each do |project_id|
+            templates_by_project_map[project_id] ||= []
+            templates_by_project_map[project_id] << template
+          end
+        end
+
+        templates_by_project_map
+      end
+    end
+  end
+end
 
 class ProjectsController < ApplicationController
+  prepend RedmineTemplates::ProjectsControllerPatch
+
+  helper_method :issue_template_map
 
   if Redmine::Plugin.installed?(:redmine_limited_visibility)
     after_action :set_visilibity_by_template, :only => [:update]
@@ -22,24 +44,4 @@ class ProjectsController < ApplicationController
       end
     end
   end
-
-  def issue_template_map
-    @issue_template_map ||= Rails.cache.fetch("issue_templates_by_projects-#{IssueTemplate.maximum("updated_at").to_i}") do
-
-      templates_by_project_map = {}
-
-      IssueTemplate.includes(:issue_template_projects).each do |template|
-        template.issue_template_projects.map(&:project_id).each do |project_id|
-          templates_by_project_map[project_id] ||= []
-          templates_by_project_map[project_id] << template
-        end
-      end
-
-      templates_by_project_map
-
-    end
-  end
-
-  helper_method :issue_template_map
-
 end

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require File.dirname(__FILE__) + "/../support/issue_template_spec_helpers"
 
 describe "IssueQuery" do
   fixtures :issue_templates, :issues

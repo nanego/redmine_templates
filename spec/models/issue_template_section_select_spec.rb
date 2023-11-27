@@ -1,6 +1,6 @@
 require "spec_helper"
 
-require_dependency "issue_template_section"
+# require_relative "issue_template_section"
 
 describe IssueTemplateSectionSelect do
 

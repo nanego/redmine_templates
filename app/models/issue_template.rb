@@ -1,4 +1,4 @@
-require_dependency 'issue_template_description'
+require_relative 'issue_template_description'
 
 class IssueTemplate < ActiveRecord::Base
   include Redmine::SafeAttributes
