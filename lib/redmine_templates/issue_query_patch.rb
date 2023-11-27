@@ -1,9 +1,12 @@
-class IssueQuery < Query
-  self.available_columns << QueryColumn.new(:issue_template, :sortable => "#{IssueTemplate.table_name}.template_title", :groupable => true)
-end
-
 module RedmineTemplates
   module IssueQueryPatch
+
+    def self.prepended(base)
+      base.class_eval do
+        unloadable
+        self.available_columns << QueryColumn.new(:issue_template, :sortable => "#{IssueTemplate.table_name}.template_title", :groupable => true)
+      end
+    end
 
     def initialize_available_filters
       super
