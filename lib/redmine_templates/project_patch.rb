@@ -38,7 +38,7 @@ module RedmineTemplates
   end
 end
 
-class Project
+class Project < ActiveRecord::Base
   prepend RedmineTemplates::ProjectPatch
 
   scope :active_by_attributes, -> do
