@@ -1,3 +1,4 @@
+require_relative '../../helpers/issue_templates_helper'
 include IssueTemplatesHelper
 
 Deface::Override.new :virtual_path  => 'issues/show',

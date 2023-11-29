@@ -6,7 +6,7 @@ Deface::Override.new :virtual_path  => 'issues/new',
                                         <%= link_to "Enregistrer en tant que template",
                                             "#",
                                             id: "init_issue_template",
-                                            "data-href": init_issue_template_path(project_id: @issue.project.id),
+                                            "data-href": "/issue_templates/init?project_id=#{@issue.project_id}",
                                             class: "icon icon-copy pull-right" %>
                                         <% end %>
                                         <%= f.hidden_field :issue_template_id %>
