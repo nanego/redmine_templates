@@ -16,7 +16,7 @@ Redmine::Plugin.register :redmine_templates do
   permission :manage_issue_templates_visibility_per_project, {}
   settings :default => {'custom_fields' => [], 'disable_templates' => false},
            :partial => 'settings/redmine_plugin_templates_settings'
-  menu :admin_menu, :issue_templates, {:controller => 'issue_templates', :action => 'index'},
+  menu :admin_menu, :issue_templates, '/issue_templates',
        :caption => :label_issue_templates,
        :html => {:class => 'icon'}
 end
