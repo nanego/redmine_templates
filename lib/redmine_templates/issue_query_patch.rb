@@ -4,7 +4,9 @@ module RedmineTemplates
     def self.prepended(base)
       base.class_eval do
         unloadable
-        self.available_columns << QueryColumn.new(:issue_template, :sortable => "#{IssueTemplate.table_name}.template_title", :groupable => true)
+        unless self.available_columns.map(&:name).include?(:issue_template)
+          self.available_columns << QueryColumn.new(:issue_template, :sortable => "#{IssueTemplate.table_name}.template_title", :groupable => true)
+        end
       end
     end
 

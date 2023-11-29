@@ -1,5 +1,3 @@
-include IssueTemplatesHelper
-
 Deface::Override.new :virtual_path  => 'issues/new',
                      :name          => 'add-save-template-button-to-issues-new',
                      :insert_after  => 'erb[loud]:contains("submit_tag l(:button_create_and_continue)")',

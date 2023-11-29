@@ -1,3 +1,5 @@
+include IssueTemplatesHelper
+
 Deface::Override.new :virtual_path  => 'issues/show',
                      :name          => 'add-template-field',
                      :original      => '8f374ec2439b27545906aae44228462dfe14d196',

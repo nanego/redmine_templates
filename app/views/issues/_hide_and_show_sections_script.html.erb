@@ -2,7 +2,7 @@
     $('form#issue-form').on('click', '.add_sections_group', function (event) {
         event.preventDefault()
         $.ajax({
-            url: '<%= add_repeatable_group_path %>',
+            url: '/issue_templates/add_repeatable_group',
             type: 'post',
             data: event.target.dataset
         });
