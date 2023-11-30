@@ -216,7 +216,7 @@ class IssueTemplateSectionInstruction < IssueTemplateSection
   end
 
   def rendered_value(section_attributes, textile: true, value_only: false)
-    '' # Nothing to render
+    "\n p(wiki-class-#{instruction_type}). #{text}\n"
   end
 end
 

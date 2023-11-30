@@ -73,6 +73,15 @@ module RedmineTemplates
           end
         end
         @issue.description = @issue.substituted(issue_description, @sections_attributes)
+
+    end
+    # integrate the instructions into the generated description.
+    @issue.issue_template.section_groups.each do |group|
+      group.sections.each do |section|
+        if (section.type == "IssueTemplateSectionInstruction") && !section.display_mode.to_i.zero?
+          @issue.description.present? ? @issue.description += section.rendered_value([]) : @issue.description = section.rendered_value([])
+        end
+      end
       end
     end
 
