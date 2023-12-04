@@ -74,17 +74,20 @@ module RedmineTemplates
         end
         @issue.description = @issue.substituted(issue_description, @sections_attributes)
 
-    end
-    # integrate the instructions into the generated description.
-    @issue.issue_template.section_groups.each do |group|
-      group.sections.each do |section|
-        if (section.type == "IssueTemplateSectionInstruction") && !section.display_mode.to_i.zero?
-          @issue.description.present? ? @issue.description += section.rendered_value([]) : @issue.description = section.rendered_value([])
+      end
+
+      if @issue.issue_template.present?
+        # integrate the instructions into the generated description.
+        @issue.issue_template.section_groups.each do |group|
+          group.sections.each do |section|
+            if (section.type == "IssueTemplateSectionInstruction") && !section.display_mode.to_i.zero?
+              @issue.description.present? ? @issue.description += section.rendered_value([]) : @issue.description = section.rendered_value([])
+            end
+          end
         end
       end
-      end
     end
-
+    
     def update_subject_when_autocomplete
       issue_template = @issue.issue_template
       if issue_template.present? && issue_template.autocomplete_subject && issue_template.subject.present?
