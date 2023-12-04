@@ -347,7 +347,8 @@ describe IssuesController, type: :controller do
       expect(issue.description).to eq("\r\n-----\r\n\r\n*Section title :* \r\nTest text\r\n\r\n*Second section title without Toolbar :* \r\nNothing to say\r\n")
     end
 
-    it "does not join instructions into description" do
+    it "does not join instructions into description when the option (Show in the generated issue)is unselected" do
+      section_test = IssueTemplateSection.find(6)
       assert_difference('Issue.count', 1) do
         post :create, :params => {
           :project_id => 1,
@@ -358,26 +359,37 @@ describe IssuesController, type: :controller do
             :description => 'Ignore default description',
             :priority_id => 5,
             :issue_template_id => template_with_instruction.id,
-            :issue_template => {
-              :section_groups_attributes => {
-                "4" => {
-                  "0" => {
-                    :sections_attributes => {
-                      "6" => {
-                        text: "Text in a section field"
-                      }
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       end
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to eq("\r\n-----\r\n")
+      expect(issue.description).to_not include(section_test.text)
+    end
+
+    it "Should join instructions into description when the option (Show in the generated issue)is selected" do
+      section_test = IssueTemplateSection.find(6)
+      section_test.display_mode = "1"
+      section_test.save
+
+      assert_difference('Issue.count', 1) do
+        post :create, :params => {
+          :project_id => 1,
+          :issue => {
+            :tracker_id => 3,
+            :status_id => 2,
+            :subject => 'This is the test_new issue',
+            :description => 'Ignore default description',
+            :priority_id => 5,
+            :issue_template_id => template_with_instruction.id,
+          }
+        }
+      end
+
+      issue = Issue.last
+      expect(issue).not_to be_nil
+      expect(issue.description).to include(section_test.text)
     end
 
     it "sends a notification by mail with multiple sections concatenated into one description" do

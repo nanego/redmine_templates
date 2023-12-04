@@ -148,6 +148,35 @@ describe IssueTemplatesController, type: :controller do
       expect(template_with_instruction.sections.third.text).to eq "New warning!"
       expect(template_with_instruction.sections.third.position).to eq 3
     end
+
+    it "should successfully select (option show in the generated issue)" do
+      expect do
+        post :create, params: {
+          :issue_template => {
+            :template_title => "New template",
+            :template_enabled => "1",
+            :template_project_ids => ["1"],
+            :tracker_id => 1,
+            :status_id => 1,
+            section_groups_attributes: [
+              { "position" => "1",
+                "title" => "",
+                "repeatable" => "0",
+                sections_attributes: [
+                  { "position" => "1",
+                    "type" => "IssueTemplateSectionInstruction",
+                    "instruction_type" => "info",
+                    "text" => "New instruction",
+                    "display_mode" => "1",
+                  },
+                ]
+              }
+            ]
+          }
+        }
+      end.to change { IssueTemplate.count }.by(1)
+      expect(IssueTemplate.last.section_groups.first.sections.first.display_mode).to eq("1")
+    end
   end
 
   describe "issue creation" do
