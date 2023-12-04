@@ -14,17 +14,24 @@ describe IssueTemplateSection do
     end
   end
 
-  describe "rendered_value of instruction type" do
+  describe "rendered_value of instruction type when the option (Show in the generated issue)is selected" do
     it "Should return the correct value" do
-      section = IssueTemplateSection.new(text: 'new info', type: "IssueTemplateSectionInstruction", instruction_type: "note")
+      section = IssueTemplateSection.new(text: 'new info', type: "IssueTemplateSectionInstruction", instruction_type: "note", display_mode: "1")
       expect(section.rendered_value([])).to eq("\n p(wiki-class-note). new info\n")
     end
 
     it "Should return the correct wiki class" do
       IssueTemplateDescriptionInstruction::TYPES.each do |type|
-        section = IssueTemplateSection.new(text: 'new info', type: "IssueTemplateSectionInstruction", instruction_type: type)
+        section = IssueTemplateSection.new(text: 'new info', type: "IssueTemplateSectionInstruction", instruction_type: type, display_mode: "1")
         expect(section.rendered_value([])).to include("\n p(wiki-class-#{type}). new info\n")
       end
+    end
+  end
+
+  describe "rendered_value of instruction type when the option (Show in the generated issue)is unselected" do
+    it "Should return empty value" do
+      section = IssueTemplateSection.new(text: 'new info', type: "IssueTemplateSectionInstruction", instruction_type: "note", display_mode: "0")
+      expect(section.rendered_value([])).to eq("")
     end
   end
 end
