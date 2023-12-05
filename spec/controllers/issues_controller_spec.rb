@@ -383,6 +383,19 @@ describe IssuesController, type: :controller do
             :description => 'Ignore default description',
             :priority_id => 5,
             :issue_template_id => template_with_instruction.id,
+            :issue_template => {
+              :section_groups_attributes => {
+                "4" => {
+                  "0" => {
+                    :sections_attributes => {
+                      "6" => {
+                        text: section_test.text
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       end
