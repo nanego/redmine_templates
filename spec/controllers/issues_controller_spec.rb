@@ -368,7 +368,7 @@ describe IssuesController, type: :controller do
       expect(issue.description).to_not include(section_test.text)
     end
 
-    it "Should join instructions into description when the option (Show in the generated issue)is selected" do
+    it "joins instructions into description when the option (show in the generated issue) is selected" do
       section_test = IssueTemplateSection.find(6)
       section_test.display_mode = "1"
       section_test.save
@@ -389,7 +389,7 @@ describe IssuesController, type: :controller do
                   "0" => {
                     :sections_attributes => {
                       "6" => {
-                        text: section_test.text
+                        text: "Text of an instruction field"
                       }
                     }
                   }
@@ -402,7 +402,7 @@ describe IssuesController, type: :controller do
 
       issue = Issue.last
       expect(issue).not_to be_nil
-      expect(issue.description).to include(section_test.text)
+      expect(issue.description).to include("Text of an instruction field")
     end
 
     it "sends a notification by mail with multiple sections concatenated into one description" do

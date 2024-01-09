@@ -216,10 +216,11 @@ class IssueTemplateSectionInstruction < IssueTemplateSection
   end
 
   def rendered_value(section_attributes, textile: true, value_only: false)
-    value = ''
-    value = "\n p(wiki-class-#{instruction_type}). #{text}\n" unless display_mode.to_i.zero?
-
-    return value
+    if display_mode.to_i == 1
+      "\n p(wiki-class-#{instruction_type}). #{text}\n"
+    else
+      "" # Nothing to render
+    end
   end
 end
 
