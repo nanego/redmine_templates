@@ -73,7 +73,8 @@ module RedmineTemplates
           end
         end
         @issue.description = @issue.substituted(issue_description, @sections_attributes)
-      end
+
+      end     
     end
 
     def update_subject_when_autocomplete

@@ -1,3 +1,4 @@
 <div class="instruction instruction-<%= section.instruction_type %>">
   <%= textilizable section.text %>
+  <%= form.hidden_field :text, value: section.text %>
 </div>

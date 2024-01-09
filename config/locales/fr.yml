@@ -66,3 +66,4 @@ fr:
   add_repeatable_bloc_label: Texte personnalisé pour le bouton d'ajout du bloc (facultatif)
   delete_repeatable_bloc_label: Texte personnalisé pour le bouton de suppression du bloc (facultatif)  
   field_assignable_projects: "Projets"
+  show_in_generated_issue: Afficher dans la demande générée
