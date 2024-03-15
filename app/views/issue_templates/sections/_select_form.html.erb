@@ -1,6 +1,8 @@
 <% values = (form.object && form.object.text.present?) ? form.object.text.split(';') : [] %>
 <% default_values = (form.object && form.object.placeholder.present?) ? form.object.placeholder.split(';') : [] %>
 
+<% icon_icon_names = (form.object && form.object.icon_name.present?) ? form.object.icon_name.split(';') : [] %>
+
 <% empty_value = (form.object && form.object.empty_value.present?) ? form.object.empty_value.split(';') : [] %>
 <%= issue_template_section_form(form, IssueTemplateSectionSelect, template) do %>
   <p>
@@ -16,12 +18,17 @@
     <p>
       <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
     </p>
-
+    <p>
+      <%= form.select :select_type,
+                      options_for_select(IssueTemplateSectionSelect.select_types_options,
+                                         selected: (form.object.present? ? form.object.select_type : '')),
+                      label: "Type" %>
+    </p>
     <div class="possible-values">
       <label>Valeurs possibles<span class="required"> *</span></label>
       <ul>
-        <% values.each do |value| %>
-          <%= render 'issue_templates/sections/select_possible_value', value: value, default_values: default_values, empty_value: empty_value %>
+        <% values.each_with_index  do |value, key| %>
+          <%= render 'issue_templates/sections/select_possible_value', value: values[key], default_values: default_values, empty_value: empty_value, icon_name: icon_icon_names[key] %>
         <% end %>
       </ul>
       <%= link_to 'Ajouter une valeur', '#', class: 'add_possible_value' %>
@@ -32,12 +39,8 @@
     <%= form.hidden_field :placeholder, class: "placeholder" %>
     <!-- save read only values in the column empty_value -->
     <%= form.hidden_field :empty_value, class: "empty_value", label: "", :size => 80 %>
-    <p>
-      <%= form.select :select_type,
-                      options_for_select(IssueTemplateSectionSelect.select_types_options,
-                                         selected: (form.object.present? ? form.object.select_type : '')),
-                      label: "Type" %>
-    </p>
+    <!-- save icons values in the column icon_name -->
+    <%= form.hidden_field :icon_name, class: "icon_name", label: "", :size => 80 %>
 
     <p>
       <%= form.select :display_mode,
