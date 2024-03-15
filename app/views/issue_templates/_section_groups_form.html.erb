@@ -14,15 +14,24 @@
         resetHiddenTextField(sectionElement)
         resetHiddenPlaceholderField(sectionElement)
         resetEmptyValueField(sectionElement)
+        resetHiddenIconField(sectionElement)
     }
 
     function resetHiddenTextField(sectionElement) {
         let text = $(sectionElement).find('input.text')
+        let icon_name = $(sectionElement).find('input.icon_name');
+
+        // Object (passed by reference)
+        let icon_object = { values : icon_name.val() }
+
         let ul = $(sectionElement).find('ul')
         let joined_values = ul.find('li .value').map(function () {
             return $(this).val()
-        }).get().filter(item => item).join(';')
-        text.val(joined_values)
+        }).get().join(';')
+
+        let text_object = { values : joined_values }
+        removeEmptyElementsValuesFromTwoObjects(text_object, icon_object)
+        text.val(text_object.values)
     }
 
     function resetHiddenPlaceholderField(sectionElement) {
@@ -34,7 +43,26 @@
         placeholder.val(joined_values)
     }
 
+    function resetHiddenIconField(sectionElement) {
+        let icon_name = $(sectionElement).find('input.icon_name')
+        let text = $(sectionElement).find('input.text')
+
+        // Object (passed by reference)
+        let text_object = { values : text.val() }
+
+        let ul = $(sectionElement).find('ul')
+        let joined_values = ul.find('li .buttons-icons').map(function () {
+            return $(this).val()
+        }).get().join(';')
+
+        // Object (passed by reference)
+        let icon_object = { values : joined_values }
+        removeEmptyElementsValuesFromTwoObjects(icon_object,text_object)
+        icon_name.val(icon_object.values)
+    }
+
     function resetEmptyValueField(sectionElement) {
+        //let type = $(sectionElement).find('#type')[0]
         let empty_value = $(sectionElement).find('input.empty_value')
         let list_of_value = $(sectionElement).find('ul')
         let joined_values = list_of_value.find('li input[type=checkbox][name=read_only]:checked').map(function () {
@@ -50,16 +78,51 @@
     $('form#issue-template-form').on('change', '.possible-values input[type=checkbox][name=read_only]', function (event) {
         let section = event.target.closest('.split_description.select')
         resetEmptyValueField(section)
-    }) 
+    })
     $('form#issue-template-form').on('click', '.add_possible_value', function (event) {
         event.preventDefault()
         let ul = $(event.target).parent().find('ul')
         ul.append('<%= escape_javascript(render('issue_templates/sections/select_possible_value')) %>')
+        toggleIconSpanVisibilityBasedOnType($(this));
     })
-    $('form#issue-template-form').on('keyup change', '.possible-values input.value', function (event) {
+
+    $('form#issue-template-form').on('change', 'select[id*="select_type"][class="select2-hidden-accessible"]', function (event) {
+        toggleIconSpanOnChangeType($(this));
+    });
+
+    function toggleIconSpanOnChangeType(elem){
+        let divParent = elem.parent().parent();
+        if (elem.val() != "buttons_icons") {
+            divParent.find('.span-icons').each(function() {
+                $(this).hide();
+            });
+        } else {
+            divParent.find('.span-icons').each(function() {
+                $(this).show();
+            });
+        }
+    }
+
+    function toggleIconSpanVisibilityBasedOnType(elem){
+        let divParent = elem.parent();
+        // Select the neighboring select element of the parent div.which corresponds to the selected type
+        let selectType = divParent.prev('p').find('select');
+        if (selectType.val() != "buttons_icons") {
+            divParent.find('.span-icons').each(function() {
+                $(this).hide();
+            });
+        } else {
+            divParent.find('.span-icons').each(function() {
+                $(this).show();
+            });
+        }
+    }
+
+    $('form#issue-template-form').on('keyup change', '.possible-values input.value, .possible-values input.buttons-icons', function (event) {
         let ul = $(event.target).closest('ul')
         resetHiddenFields(ul)
     })
+
     $('form#issue-template-form').on('click', '.remove_possible_value', function (event) {
         event.preventDefault()
         let ul = $(event.target).closest('ul')
@@ -72,4 +135,28 @@
     $('form#issue-template-form').on('mouseleave', '.split_description', function () {
         $(this).removeClass("hover")
     })
+
+    //  Removes empty elements at corresponding indices from the 'values' property of two objects.
+    function removeEmptyElementsValuesFromTwoObjects(object1, object2) {
+        // Split the values into arrays
+        object1.values = object1.values.split(";");
+        object2.values = object2.values.split(";");
+        // Arrays to store non-empty values
+        let newArray1 = [];
+        let newArray2 = [];
+        // Iterate over the values of the arrays
+        for (let i = 0; i < object1.values.length; i++) {
+            // Check if the values are not empty, undefined, or null in either object
+            if ((object1.values[i] !== "" && object1.values[i] !== undefined && object1.values[i] !== null) ||
+                (object2.values[i] !== "" && object2.values[i] !== undefined && object2.values[i] !== null)) {
+                // Add non-empty values to the new arrays
+                newArray1.push(object1.values[i]);
+                newArray2.push(object2.values[i]);
+            }
+        }
+        // Join the non-empty values back into strings and assign them back to the objects
+        object1.values = newArray1.join(";");
+        object2.values = newArray2.join(";");
+    }
+
 </script>
