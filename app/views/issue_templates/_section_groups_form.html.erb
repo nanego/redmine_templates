@@ -62,13 +62,13 @@
     }
 
     function resetEmptyValueField(sectionElement) {
-        //let type = $(sectionElement).find('#type')[0]
-        let empty_value = $(sectionElement).find('input.empty_value')
-        let list_of_value = $(sectionElement).find('ul')
-        let joined_values = list_of_value.find('li input[type=checkbox][name=read_only]:checked').map(function () {
-            return $(this).parent().find('.value').val()
-        }).get().filter(item => item).join(';')
-        empty_value.val(joined_values)
+      //let type = $(sectionElement).find('#type')[0]
+      let empty_value = $(sectionElement).find('input.empty_value')
+      let list_of_value = $(sectionElement).find('ul')
+      let joined_values = list_of_value.find('li input[type=checkbox][name=read_only]:checked').map(function () {
+        return $(this).parent().find('.value').val()
+      }).get().filter(item => item).join(';')
+      empty_value.val(joined_values)
     }
 
     $('form#issue-template-form').on('change', '.possible-values input[type=checkbox][name=checked]', function (event) {
@@ -83,39 +83,43 @@
         event.preventDefault()
         let ul = $(event.target).parent().find('ul')
         ul.append('<%= escape_javascript(render('issue_templates/sections/select_possible_value')) %>')
-        toggleIconSpanVisibilityBasedOnType($(this));
+        toggleFieldAndLinkIconVisibilityOnAddPossibleValue($(this));
     })
 
     $('form#issue-template-form').on('change', 'select[id*="select_type"][class="select2-hidden-accessible"]', function (event) {
-        toggleIconSpanOnChangeType($(this));
+      toggleIconSpanOnChangeType($(this));
     });
 
     function toggleIconSpanOnChangeType(elem){
-        let divParent = elem.parent().parent();
-        if (elem.val() != "buttons_icons") {
-            divParent.find('.span-icons').each(function() {
-                $(this).hide();
-            });
-        } else {
-            divParent.find('.span-icons').each(function() {
-                $(this).show();
-            });
-        }
+      let divParent = elem.parent().parent();
+      toggleFieldAndLinkIconVisibility(divParent, elem);
     }
 
-    function toggleIconSpanVisibilityBasedOnType(elem){
-        let divParent = elem.parent();
-        // Select the neighboring select element of the parent div.which corresponds to the selected type
-        let selectType = divParent.prev('p').find('select');
-        if (selectType.val() != "buttons_icons") {
-            divParent.find('.span-icons').each(function() {
-                $(this).hide();
-            });
-        } else {
-            divParent.find('.span-icons').each(function() {
-                $(this).show();
-            });
-        }
+    function toggleFieldAndLinkIconVisibilityOnAddPossibleValue(elem){
+      let divParent = elem.parent();
+      // Select the neighboring select element of the parent div.which corresponds to the selected type
+      let selectType = divParent.prev('p').find('select');
+      toggleFieldAndLinkIconVisibility(divParent, selectType);
+    }
+
+    function toggleFieldAndLinkIconVisibility(divParent, selectType) {
+      if (selectType.val() != "buttons_icons") {
+        divParent.find('.span-icons').each(function() {
+          $(this).hide();
+        });
+      } else {
+        divParent.find('.span-icons').each(function() {
+          $(this).show();
+        });
+      }
+    }
+
+    function updateFieldAndLinkIconVisibilityBasedOnSelectedType(){
+      let elements = document.querySelectorAll('div.sections');
+      elements.forEach(function( ele) {
+      let selectType =  $(ele).find('select[id*="select_type"]');
+        toggleIconSpanOnChangeType(selectType );
+      });
     }
 
     $('form#issue-template-form').on('keyup change', '.possible-values input.value, .possible-values input.buttons-icons', function (event) {
@@ -159,4 +163,8 @@
         object2.values = newArray2.join(";");
     }
 
+    $(document).ready(function() {
+      updateFieldAndLinkIconVisibilityBasedOnSelectedType();
+    });
+    $(document).bind('ajaxStop', updateFieldAndLinkIconVisibilityBasedOnSelectedType);
 </script>
