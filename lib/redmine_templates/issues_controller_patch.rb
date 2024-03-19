@@ -59,6 +59,7 @@ module RedmineTemplates
         section_groups_attributes = params[:issue][:issue_template][:section_groups_attributes]
 
         section_groups_attributes.each do |section_group_id, section_groups_attributes|
+
           group = @issue.issue_template.section_groups.find(section_group_id)
           section_groups_attributes.each do |group_index, group_attributes|
 
@@ -67,14 +68,19 @@ module RedmineTemplates
             group_attributes["sections_attributes"].each do |section_id, section_attributes|
               section = @issue.issue_template.sections.find(section_id)
               if section.present?
-                issue_description += section.rendered_value(section_attributes)
+                # This condition handles cases where there are buttons with icons but no default value.
+                if section.select_type == "buttons_icons"
+                  issue_description += section.rendered_value(section_attributes) unless section_attributes[:text] == ""
+                else
+                  issue_description += section.rendered_value(section_attributes)
+                end
               end
             end
           end
         end
         @issue.description = @issue.substituted(issue_description, @sections_attributes)
 
-      end     
+      end
     end
 
     def update_subject_when_autocomplete

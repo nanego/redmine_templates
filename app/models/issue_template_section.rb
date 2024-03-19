@@ -194,7 +194,7 @@ class IssueTemplateSectionSelect < IssueTemplateSection
 
   def rendered_value(section_attributes, textile: true, value_only: false)
     case self.select_type
-    when "monovalue_select", "radio"
+    when "monovalue_select", "radio", "buttons_icons"
       value = value_from_text_attribute(section_attributes)
       if value_only
         section_basic_entry(value, textile: textile)

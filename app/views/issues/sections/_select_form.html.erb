@@ -48,17 +48,41 @@
       <% end %>
     </div>
   <% when 'buttons_icons' %>
+    <% defaultValue =  values.present? ? values["text"] : default_values.first  %>
+    <%# This variable tracks whether an option has already been selected,
+     so that another one doesn't need to be selected,
+      particularly when they have the same value %>
+    <% isOptionSelected  =  false  %>
     <% possible_values.each_with_index do |select_value, value_index| %>
-      <div class="template_card" style="display: inline-block; text-align: center;">
+      <%
+        if !values.present?
+          if defaultValue == select_value && !isOptionSelected
+            selected =  "selected-button-icon"
+            isOptionSelected  =  true
+          else
+            selected = ""
+          end
+        else
+          if defaultValue == select_value && !isOptionSelected
+            selected =  "selected-button-icon"
+            isOptionSelected  =  true
+          else
+            selected = ""
+          end
+        end
+      %>
+      <div class="template_card <%= selected %>" style="display: inline-block; text-align: center;" id="<%= "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]"%>" value="<%= select_value%>">
         <% begin %>
-          <%= octicon(possible_icons[value_index], :height => 20, :class => "right left", :"aria-label" => "hi") %>
+          <%= octicon(possible_icons[value_index], :height => 30, :class => "right left", :"aria-label" => "hi") %>
         <% rescue => e %>
           <%= octicon("alert-fill", :height => 20, :class => "right left", :"aria-label" => "hi") %>
         <% end %>
-        <%= hidden_field_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]", select_value %>
-        <span style="display: block;"><%= possible_icons[value_index] %></span>
+
+        <%= hidden_field_tag "", select_value, :id => "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]" %>
+        <span style="display: block;"><%= select_value %></span>
       </div>
     <% end %>
+    <%= hidden_field_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]",  defaultValue %>
   <% when 'monovalue_select', 'multivalue_select' %>
 
     <%= select_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]",
@@ -70,3 +94,39 @@
     PROBLEM
   <% end %>
 </p>
+<script type="text/javascript">
+
+  // Function to handle clicks on Boutons with icons
+  function cardOnClick(event) {
+     // Get the event trigger element
+    let target = event.target;
+    // Find the parent element with class 'template_card'
+    let card = target.closest('.template_card');
+
+    // Retrieve the card's name
+    let cardName  = target.getAttribute('id') || card.getAttribute('id');
+    // Remove the "selected-button-icon" class from all elements with the same ID
+    let allCards = document.querySelectorAll('[id="' + cardName + '"]');
+    allCards.forEach(card => {
+      card.classList.remove("selected-button-icon");
+    })
+    // Add the "selected-button-icon" class to the current parent element
+    card.classList.add("selected-button-icon");
+    // Retrieve the card's value
+    let value  = target.getAttribute('value') || card.getAttribute('value');
+    // Find the corresponding hidden_tag element and update its value
+    let hidden_tag = document.querySelector('[name="' + cardName + '"]');
+    hidden_tag.setAttribute("value", value)
+
+  }
+
+  // Function to attach event handlers to selectable cards
+  function selectTemplateCard() {
+    const templateCards = document.querySelectorAll('.template_card');
+    templateCards.forEach(card => {
+      card.addEventListener('click', cardOnClick)
+    })
+  }
+  document.addEventListener("DOMContentLoaded", selectTemplateCard);
+
+</script>
