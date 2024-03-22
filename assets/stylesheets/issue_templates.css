@@ -459,3 +459,7 @@ a.list_templates_projects_names.current {
         width: auto;
     }
 }
+
+.selected-button-icon {
+    background-color: #FCF5C1;
+}

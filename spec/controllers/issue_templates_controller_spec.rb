@@ -177,6 +177,38 @@ describe IssueTemplatesController, type: :controller do
       end.to change { IssueTemplate.count }.by(1)
       expect(IssueTemplate.last.section_groups.first.sections.first.display_mode).to eq("1")
     end
+
+    it "Should successfully creates issue template section with button icons and sets default icon if not provided" do
+      expect do
+        post :create, params: {
+          :issue_template => {
+            :template_title => "New template",
+            :template_enabled => "1",
+            :template_project_ids => ["1"],
+            :tracker_id => 1,
+            :status_id => 1,
+            section_groups_attributes: [
+              { "position" => "1",
+                "title" => "",
+                "repeatable" => "0",
+                sections_attributes: [
+                  { "position" => "1",
+                    "type" => "IssueTemplateSectionSelect",
+                    "select_type" => "buttons_icons",
+                    "text" => "value1;value2",
+                    "title" => "section buttons icons",
+                    "icon_name" => "history;",
+                  },
+                ]
+              }
+            ]
+          }
+        }
+      end.to change { IssueTemplate.count }.by(1)
+
+      expect(IssueTemplate.last.section_groups.first.sections.first.text).to eq("value1;value2")
+      expect(IssueTemplate.last.section_groups.first.sections.first.icon_name).to eq("history;alert-fill")
+    end
   end
 
   describe "issue creation" do
