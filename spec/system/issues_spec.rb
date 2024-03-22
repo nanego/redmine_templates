@@ -86,9 +86,9 @@ RSpec.describe "creating issues with templates", type: :system do
       section_test.text = "value1;value2;value3"
       section_test.placeholder = "value2;value3"
       section_test.save
-      
+
       visit new_issue_path(project_id: project.identifier, template_id: 3)
- 
+
       expect(page).to have_css("input[type='checkbox'][id='issue_issue_template_section_groups_attributes_2_0_sections_attributes_10_0']:disabled")
       expect(page).to_not have_css("input[type='checkbox'][id='issue_issue_template_section_groups_attributes_2_0_sections_attributes_10_1']:disabled")
       expect(page).to have_css("input[type='checkbox'][id='issue_issue_template_section_groups_attributes_2_0_sections_attributes_10_2']:disabled")
@@ -97,7 +97,7 @@ RSpec.describe "creating issues with templates", type: :system do
 
     it "show generic button text (add/delete)" do
       visit new_issue_path(project_id: project.identifier, template_id: template_with_repeatable_sections.id)
-  
+
       expect(page).to have_selector("a.add_sections_group", text: "Repeat this bloc")
 
       # Add repeatable section
@@ -117,7 +117,7 @@ RSpec.describe "creating issues with templates", type: :system do
       template_section_group.save
 
       visit new_issue_path(project_id: project.identifier, template_id: template_with_repeatable_sections.id)
-  
+
       expect(page).to have_selector("a.add_sections_group", text: personalized_add_button_text)
 
       # Add repeatable section
@@ -180,5 +180,46 @@ RSpec.describe "creating issues with templates", type: :system do
 
       end
     end
+  end
+
+  describe "buttons icons" do
+
+    before do
+      section_test = IssueTemplate.find(3).section_groups[1].sections[0]
+      section_test.text = "value1;value2;value3"
+      section_test.icon_name = "person-fill;history"
+      section_test.position = 1
+      section_test.placeholder = "value1" # default value
+      section_test.select_type = "buttons_icons"
+      section_test.save
+    end
+
+    let (:group_id) { group_id =  IssueTemplate.find(3).section_groups[1].id }
+    let (:section_id) { section_id = IssueTemplate.find(3).section_groups[1].sections[0].id }
+
+    it "displays expected button icons on the 'New Issue' page" do
+      visit new_issue_path(project_id: project.identifier, template_id: 3)
+
+      expect(page).to have_css("div[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value", class:"selected-button-icon")
+      expect(page).to have_css("div[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value2")
+      expect(page).to have_css("div[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value3")
+      expect(page).to have_css(".octicon-person-fill")
+      expect(page).to have_css(".octicon-history")
+    end
+
+    it "keeps the selected value in issue escription" do
+      visit new_issue_path(project_id: project.identifier, template_id: 3)
+
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', with: 'One-line edited content'
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: '01/01/2020'
+
+      div_element = find("div[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value2")
+      div_element.click
+
+      click_on 'Create'
+
+      expect(Issue.last.description).to include("value2")
+    end
+
   end
 end

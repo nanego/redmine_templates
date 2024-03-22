@@ -23,7 +23,7 @@ class IssueTemplateSection < ActiveRecord::Base
       values.each_with_index do |value, key|
         # Check if the value is empty
         if value.blank?
-          errors.add(self.title, "The value at index #{key}  is empty") # TODO METTRE un message
+          errors.add(self.title, "The value at index #{key}  is empty")
         end
       end
 
