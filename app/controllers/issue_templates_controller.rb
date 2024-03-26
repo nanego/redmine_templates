@@ -43,6 +43,9 @@ class IssueTemplatesController < ApplicationController
     @priorities = IssuePriority.active
     @issue_template.assignable_projects = @issue_template.template_projects
     @issue_template.assignable_secondary_projects = @issue_template.secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def create
@@ -154,6 +157,18 @@ class IssueTemplatesController < ApplicationController
         redirect_to issue_templates_path
       }
     end
+  end
+
+  def copy
+    original_template = IssueTemplate.find(params[:id])
+
+    @issue_template = IssueTemplate.copy_from(original_template)
+
+    @priorities = IssuePriority.active
+
+    render 'new'
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def enable
