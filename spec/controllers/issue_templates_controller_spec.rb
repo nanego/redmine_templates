@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 require "active_support/testing/assertions"
 
@@ -64,6 +66,80 @@ describe IssueTemplatesController, type: :controller do
       expect(response).to be_successful
       assert_template 'edit'
       expect(assigns(:issue_template).section_groups).to_not be_nil
+    end
+  end
+
+  context "GET copy" do
+    let (:template_origin) { IssueTemplate.find(3) }
+
+    it "forbids issue copy if user has no permission" do
+      role.remove_permission!(:create_issue_templates)
+      get :copy, params: { id: template.id }
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "Should duplicate all attributes of the original template" do
+      get :copy, params: { id: template_origin.id }
+      expect(response).to be_successful
+
+      assert_template 'new'
+
+      expect(assigns(:issue_template).template_title).to eq "Copy of #{template_origin.template_title}"
+      expect(assigns(:issue_template).subject).to eq template_origin.subject
+      expect(assigns(:issue_template).priority).to eq template_origin.priority
+      expect(assigns(:issue_template).status).to eq template_origin.status
+      expect(assigns(:issue_template).tracker).to eq template_origin.tracker
+    end
+
+    it "Should duplicate all section groups of the original template" do
+      get :copy, params: { id: template_origin.id }
+
+      expect(assigns(:issue_template).section_groups.size).to eq(template_origin.section_groups.count)
+
+      template_origin.section_groups.each_with_index do |group, ind|
+        expect(assigns(:issue_template).section_groups[ind].title).to eq(template_origin.section_groups[ind].title)
+        expect(assigns(:issue_template).section_groups[ind].id).to be_nil # Because it's a new instance as a copy
+      end
+    end
+
+    it "Should duplicate all projects of the original template" do
+
+      template_origin.secondary_projects = [Project.find(3), Project.find(4)] if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+      template_origin.save
+
+      get :copy, params: { id: template_origin.id }
+
+      expect(assigns(:issue_template).assignable_projects.size).to eq(template_origin.template_projects.count)
+      template_origin.template_projects.each_with_index do |group, ind|
+        expect(assigns(:issue_template).assignable_projects[ind]).to eq(template_origin.template_projects[ind])
+      end
+
+      if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+        expect(assigns(:issue_template).assignable_secondary_projects.size).to eq(template_origin.secondary_projects.count)
+        template_origin.secondary_projects.each_with_index do |group, ind|
+          expect(assigns(:issue_template).assignable_secondary_projects[ind]).to eq(template_origin.secondary_projects[ind])
+        end
+      end
+    end
+
+    it "Should duplicate all custom_field_values of the original template" do
+      template_origin = IssueTemplate.find(3)
+      field_attributes = { :field_format => 'string', :is_for_all => true, :is_filter => true, :trackers => Tracker.all }
+
+      IssueCustomField.create!(field_attributes.merge(:name => 'Field 1', :visible => true))
+      IssueCustomField.create!(field_attributes.merge(:name => 'Field 2', :visible => false, :role_ids => [1, 2]))
+      IssueCustomField.create!(field_attributes.merge(:name => 'Field 3', :visible => false, :role_ids => [1, 3]))
+
+      3.times do |i|
+        template_origin.custom_field_values =  { i + 1 => "Value for field #{i+1}" }
+      end
+      template_origin.save
+
+      get :copy, params: { id: template_origin.id }
+
+      assigns(:issue_template).custom_field_values.each_with_index do |field, ind|
+        expect(field.value).to eq("Value for field #{ind+1}")
+      end
     end
   end
 

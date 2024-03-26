@@ -60,6 +60,7 @@
     </td>
   <% end %>
   <td class="buttons">
+    <%= link_to l(:button_copy), copy_issue_template_path(issue_template), :class => 'icon icon-copy' %>
     <%= link_to l(:button_edit), edit_issue_template_path(issue_template), :class => 'icon icon-edit' %>
   </td>
 </tr>

@@ -71,3 +71,4 @@ fr:
   icon_name_placeholder: "Nom de l'octicon"
   field_buttons_with_icons_field: Boutons avec icones
   label_value_at_index: "%{title} : la valeur à l'indice %{key} est vide"
+  label_copy: Copie de
