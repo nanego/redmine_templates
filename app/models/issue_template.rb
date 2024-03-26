@@ -175,4 +175,26 @@ class IssueTemplate < ActiveRecord::Base
     tracker ? tracker.disabled_core_fields : []
   end
 
+  # Returns a new unsaved Template instance with attributes copied from +template+
+  def self.copy_from(template)
+    template = template.is_a?(IssueTemplate) ? template : IssueTemplate.find(template)
+    # Copy basic attributes
+    attributes = template.attributes.except('id')
+    copy = IssueTemplate.new(attributes)
+    copy.template_title = "#{l(:label_copy)} #{template.template_title}"
+
+    copy.assignable_projects = template.template_projects
+    copy.assignable_secondary_projects = template.secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+
+    # Copy custom_field_values
+    copy.custom_field_values = template.custom_field_values.to_h { |cv| [cv.custom_field_id.to_s, cv.value] }
+
+    # Copy sections associated with each section group by duplicating
+    template.section_groups.each do |group|
+      new_group = group.dup
+      new_group.sections = group.sections.map { |section| section.dup }
+      copy.section_groups << new_group
+    end
+    copy
+  end
 end

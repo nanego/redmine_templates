@@ -11,7 +11,7 @@ Redmine::Plugin.register :redmine_templates do
   requires_redmine :version_or_higher => '2.5.0'
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
   requires_redmine_plugin :redmine_base_stimulusjs, :version_or_higher => '1.1.1'
-  permission :create_issue_templates, {:issue_templates => [:init, :new, :create, :edit, :update, :index, :destroy]}
+  permission :create_issue_templates, {:issue_templates => [:init, :new, :create, :edit, :copy, :update, :index, :destroy]}
   permission :manage_project_issue_templates, {}
   permission :manage_issue_templates_visibility_per_project, {}
   settings :default => {'custom_fields' => [], 'disable_templates' => false},
