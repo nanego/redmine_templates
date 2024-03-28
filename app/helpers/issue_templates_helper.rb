@@ -119,4 +119,24 @@ module IssueTemplatesHelper
     end
   end
 
+  def integer_edit_tag(tag_id, tag_name, value, min_value, max_value, options = {})
+    edit_tag = range_field_tag(tag_name,
+                                    value,
+                                    options.merge(id:tag_id,
+                                                  min: min_value,
+                                                  max: max_value
+                                                ))
+
+    edit_tag << content_tag(:span, value, class: "range_selected_value")
+    edit_tag << javascript_tag(
+      <<~JAVASCRIPT
+        $(document).on("input change", "##{tag_id}", function(e) {
+          var value = $(this).val();
+          $(this).next('.range_selected_value').html(value);
+        })
+      JAVASCRIPT
+    )
+    edit_tag
+  end
+
 end
