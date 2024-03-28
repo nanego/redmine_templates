@@ -67,8 +67,19 @@ fr:
   delete_repeatable_bloc_label: Texte personnalisé pour le bouton de suppression du bloc (facultatif)
   field_assignable_projects: "Projets"
   show_in_generated_issue: Afficher dans la demande générée
+  label_integer: Entier
+  label_display_in_range: Affichage en range
+  new_section_options:
+    - ['Nouvelle consigne', 2]
+    - ['Nouveau champ texte (long)', 1]
+    - ['Nouveau champ texte (court)', 3]
+    - ['Nouvelle checkbox', 4]
+    - ['Nouveau champ date', 5]
+    - ['Nouvelle champ entier', 6]
+    - ['Nouvelle liste de valeurs', 7]
   label_icon: Icone
   icon_name_placeholder: "Nom de l'octicon"
   field_buttons_with_icons_field: Boutons avec icones
   label_value_at_index: "%{title} : la valeur à l'indice %{key} est vide"
   label_copy: Copie de
+  label_field_required: Champ obligatoire 

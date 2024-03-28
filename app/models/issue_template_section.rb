@@ -85,6 +85,23 @@ class IssueTemplateSectionCheckbox < IssueTemplateSection
   end
 end
 
+class IssueTemplateSectionInteger < IssueTemplateSection
+  validates_presence_of :title
+
+  def self.short_name
+    "integer"
+  end
+
+  def rendered_value(section_attributes, textile: true, value_only: false)
+    value = value_from_text_attribute(section_attributes)
+    if value_only
+      section_basic_entry(value, textile: textile)
+    else
+      section_title(title, value, textile: textile)
+    end
+  end
+end
+
 class IssueTemplateSectionTextArea < IssueTemplateSection
   validates_presence_of :title
 
