@@ -67,7 +67,7 @@ fr:
   delete_repeatable_bloc_label: Texte personnalisé pour le bouton de suppression du bloc (facultatif)
   field_assignable_projects: "Projets"
   show_in_generated_issue: Afficher dans la demande générée
-  label_integer: Entier
+  label_numeric: Entier
   label_display_in_range: Affichage en range
   new_section_options:
     - ['Nouvelle consigne', 2]

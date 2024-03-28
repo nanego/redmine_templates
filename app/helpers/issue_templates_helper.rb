@@ -119,7 +119,12 @@ module IssueTemplatesHelper
     end
   end
 
-  def integer_edit_tag(tag_id, tag_name, value, min_value, max_value, options = {})
+  def numeric_edit_tag(tag_id, tag_name, value, min, max, options = {})
+    #  Calculate the minimum value (smallest integer with min digits) (10^(min-1))
+    min_value = 10**(min.to_i - 1)
+    #  Calculate the maximum value (largest integer with max digits) (10^max - 1)
+    max_value = 10**(max.to_i) - 1
+    # Generate the range field tag with specified options
     edit_tag = range_field_tag(tag_name,
                                     value,
                                     options.merge(id:tag_id,
@@ -128,6 +133,7 @@ module IssueTemplatesHelper
                                                 ))
 
     edit_tag << content_tag(:span, value, class: "range_selected_value")
+    # Add JavaScript to update the displayed value
     edit_tag << javascript_tag(
       <<~JAVASCRIPT
         $(document).on("input change", "##{tag_id}", function(e) {

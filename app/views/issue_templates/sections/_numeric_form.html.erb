@@ -1,6 +1,6 @@
-<%= issue_template_section_form(form, IssueTemplateSectionInteger, template) do %>
+<%= issue_template_section_form(form, IssueTemplateSectionNumeric, template) do %>
   <p>
-    <%= form.text_field :title, :placeholder => :field_title, :label => :label_integer, :size => 45, :required => true %>
+    <%= form.text_field :title, :placeholder => :field_title, :label => :label_numeric, :size => 45, :required => true %>
   </p>
   <div class="collapsible">
     <%= render partial: "issue_templates/sections/section_id", locals: {section: form.object} %>

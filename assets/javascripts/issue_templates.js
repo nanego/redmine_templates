@@ -192,7 +192,7 @@ function makeListsSortable() {
                     template = sectionGroupElement.querySelector(".split_description.template.date").outerHTML
                     break
                 case('6'):
-                    template = sectionGroupElement.querySelector(".split_description.template.integer").outerHTML
+                    template = sectionGroupElement.querySelector(".split_description.template.numeric").outerHTML
                     break 
                 case('7'):
                     template = sectionGroupElement.querySelector(".split_description.template.select").outerHTML
