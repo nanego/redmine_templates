@@ -62,7 +62,7 @@ en:
   delete_repeatable_bloc_label: Custom text for block delete button (optional)
   field_assignable_projects: "Template projects"
   show_in_generated_issue: Show in the generated issue
-  label_integer: Integer
+  label_numeric: Numeric
   label_display_in_range: Range display
   new_section_options:
     - ['New Instruction', 2]
@@ -70,5 +70,5 @@ en:
     - ['New Short Text Field', 3]
     - ['New Checkbox', 4]
     - ['New Date Field', 5]
-    - ['New Integer Field', 6]
+    - ['New Numeric Field', 6]
     - ['New Value List', 7]

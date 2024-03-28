@@ -7,7 +7,7 @@
   	<% section_group = section.issue_template_section_group %>
   	<% field_id = "issue_issue_template_section_groups_attributes_#{section_group.id}_#{group_index}_sections_attributes_#{section.id}_empty_value" %>
   	<% field_name = "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][empty_value]" %>
-  	<%= integer_edit_tag field_id, field_name, section.empty_value, section.placeholder, section.text %>
+  	<%= numeric_edit_tag field_id, field_name, section.empty_value, section.placeholder, section.text %>
   <% else %>
 	  <%= form.text_field :empty_value,
 	                      size: 20,

@@ -2,12 +2,29 @@ class IssueTemplateSection < ActiveRecord::Base
 
   belongs_to :issue_template_section_group
 
+  before_validation :validate_single_value
+
   DISPLAY_MODES = [:all_values, :selected_values_only]
 
   acts_as_list scope: [:issue_template_section_group_id]
 
   def self.editable?
     true
+  end
+
+  def validate_single_value
+    if type == "IssueTemplateSectionNumeric"
+      max_length = text.to_i
+      min_length = placeholder.to_i
+
+      if min_length && empty_value.length < min_length
+        errors.add(self.title, ::I18n.t('activerecord.errors.messages.too_short', :count => min_length))
+      end
+      if max_length && max_length > 0 && empty_value.length > max_length
+        errors.add(self.title, ::I18n.t('activerecord.errors.messages.too_long', :count => max_length))
+      end
+      errors
+    end
   end
 
   def rendered_value(section_attributes, textile: true, value_only: false)
@@ -84,11 +101,11 @@ class IssueTemplateSectionCheckbox < IssueTemplateSection
   end
 end
 
-class IssueTemplateSectionInteger < IssueTemplateSection
+class IssueTemplateSectionNumeric < IssueTemplateSection
   validates_presence_of :title
 
   def self.short_name
-    "integer"
+    "numeric"
   end
 
   def rendered_value(section_attributes, textile: true, value_only: false)
