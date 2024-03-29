@@ -2,8 +2,6 @@ class IssueTemplateSection < ActiveRecord::Base
 
   belongs_to :issue_template_section_group
 
-  before_validation :validate_single_value
-
   DISPLAY_MODES = [:all_values, :selected_values_only]
   DEFAULT_ICON = "alert-fill"
 
@@ -11,21 +9,6 @@ class IssueTemplateSection < ActiveRecord::Base
 
   def self.editable?
     true
-  end
-
-  def validate_single_value
-    if type == "IssueTemplateSectionNumeric"
-      max_length = text.to_i
-      min_length = placeholder.to_i
-
-      if min_length && empty_value.length < min_length
-        errors.add(self.title, ::I18n.t('activerecord.errors.messages.too_short', :count => min_length))
-      end
-      if max_length && max_length > 0 && empty_value.length > max_length
-        errors.add(self.title, ::I18n.t('activerecord.errors.messages.too_long', :count => max_length))
-      end
-      errors
-    end
   end
 
   def rendered_value(section_attributes, textile: true, value_only: false)
@@ -81,7 +64,6 @@ class IssueTemplateSectionTextField < IssueTemplateSection
     else
       section_title(title, value, textile: textile)
     end
-
   end
 end
 
@@ -104,6 +86,22 @@ end
 
 class IssueTemplateSectionNumeric < IssueTemplateSection
   validates_presence_of :title
+  before_validation :validate_single_value
+
+  def validate_single_value
+    max_value = text.to_i
+    min_value = placeholder.to_i
+    value = empty_value.to_i
+
+    if value < min_value
+      errors.add(self.title, ::I18n.t('activerecord.errors.messages.greater_than_or_equal_to', :count => min_value))
+    end
+    if value > max_value
+      errors.add(self.title, ::I18n.t('activerecord.errors.messages.less_than_or_equal_to', :count => max_value))
+    end
+
+    errors
+  end
 
   def self.short_name
     "numeric"

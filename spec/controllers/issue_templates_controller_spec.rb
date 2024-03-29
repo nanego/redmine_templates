@@ -306,7 +306,7 @@ describe IssueTemplatesController, type: :controller do
                     "type" => "IssueTemplateSectionNumeric",
                     "placeholder" => 2,# min
                     "text" => 4,#max
-                    "empty_value" => 50,
+                    "empty_value" => 3,
                     "required" => false #display_in_range
                   },
                 ]
@@ -319,11 +319,11 @@ describe IssueTemplatesController, type: :controller do
       new_template = IssueTemplate.last.section_groups.first.sections.first
       expect(new_template.placeholder).to eq("2")
       expect(new_template.text).to eq("4")
-      expect(new_template.empty_value).to eq("50")
+      expect(new_template.empty_value).to eq("3")
       expect(new_template.required).to eq(false)
     end
 
-    it "Should not accept a default value longer than the maximum specified length" do
+    it "Should not accept a default value longer than the maximum specified" do
       expect do
         post :create, params: {
           :issue_template => {
@@ -342,7 +342,7 @@ describe IssueTemplatesController, type: :controller do
                     "type" => "IssueTemplateSectionNumeric",
                     "placeholder" => 1,# min
                     "text" => 2,#max
-                    "empty_value" => 500,
+                    "empty_value" => 5,
                     "required" => false #display_in_range
                   },
                 ]

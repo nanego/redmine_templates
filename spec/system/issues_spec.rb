@@ -127,6 +127,37 @@ RSpec.describe "creating issues with templates", type: :system do
     end
   end
 
+  describe "Numeric Field" do
+    let (:group_id) { group_id =  IssueTemplate.find(6).section_groups[0].id }
+    let (:section) { section_id = IssueTemplate.find(6).section_groups[0].sections[8] }
+
+    it "Displays the expected numeric field on the 'New Issue' page with the default value" do
+      visit new_issue_path(project_id: project.identifier, template_id: 6)
+      expect(page).to have_css("input[name='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section.id}][empty_value]'][value='#{section.empty_value}']")
+    end
+
+    it "Displays the expected numeric field on the 'New Issue' page with range display" do
+      template = IssueTemplate.find(6)
+      template.section_groups[0].sections[8].required = true
+      template.save
+
+      visit new_issue_path(project_id: project.identifier, template_id: 6)
+      expect(page).to have_css("input[type='range'][min='#{section.placeholder}'][max='#{section.text}'][value='#{section.empty_value}']")
+    end
+
+    it "keeps the value in issue description" do
+      visit new_issue_path(project_id: project.identifier, template_id: 6)
+
+      fill_in 'issue_issue_template_section_groups_attributes_5_0_sections_attributes_15_text', with: '01/01/2020'
+      fill_in("issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section.id}][empty_value]", with: "5")
+
+      click_on 'Create'
+
+      expect(Issue.last.description).to include("#{section.title}")
+      expect(Issue.last.description).to include("5")
+    end
+
+  end
   describe "hidden fields" do
     it "can hide file attachment part" do
       visit new_issue_path(project_id: project.identifier, template_id: template_4.id)
