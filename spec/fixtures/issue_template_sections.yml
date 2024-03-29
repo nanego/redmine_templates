@@ -164,3 +164,13 @@ repeatable_select_with_radio:
   position: 9
   required: true
   select_type: "radio"
+field_numeric_as_range:
+  id: 21
+  title: "Numeric Field as range"
+  type: "IssueTemplateSectionNumeric"
+  text: "8"
+  placeholder: "1"
+  empty_value: "5"
+  issue_template_section_group_id: 5
+  position: 10
+  required: false

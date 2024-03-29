@@ -5,6 +5,9 @@
   <div class="collapsible">
     <%= render partial: "issue_templates/sections/section_id", locals: {section: form.object} %>
     <p>
+      <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
+    </p>
+    <p>
   	  <label for="custom_field_min_range"><%=l(:label_min_max_range)%></label>
   	  <%= form.text_field :placeholder, :size => 5, :no_label => true %> -
   	  <%= form.text_field :text, :size => 5, :no_label => true %>
