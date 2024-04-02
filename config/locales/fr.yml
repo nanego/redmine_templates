@@ -69,6 +69,7 @@ fr:
   show_in_generated_issue: Afficher dans la demande générée
   label_numeric: Entier
   label_display_in_range: Affichage en range
+  field_integer_field: La valeur du champ entier
   new_section_options:
     - ['Nouvelle consigne', 2]
     - ['Nouveau champ texte (long)', 1]

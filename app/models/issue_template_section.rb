@@ -87,6 +87,9 @@ end
 class IssueTemplateSectionNumeric < IssueTemplateSection
   validates_presence_of :title
   before_validation :validate_single_value
+  # Accessor for the integer_field attribute
+  # Used for custom error message in case of validation failure
+  attr_accessor :integer_field
 
   def validate_single_value
     max_value = text.to_i
@@ -94,10 +97,10 @@ class IssueTemplateSectionNumeric < IssueTemplateSection
     value = empty_value.to_i
 
     if value < min_value
-      errors.add(self.title, ::I18n.t('activerecord.errors.messages.greater_than_or_equal_to', :count => min_value))
+      errors.add(:integer_field, ::I18n.t('activerecord.errors.messages.greater_than_or_equal_to', :count => min_value))
     end
     if value > max_value
-      errors.add(self.title, ::I18n.t('activerecord.errors.messages.less_than_or_equal_to', :count => max_value))
+      errors.add(:integer_field, ::I18n.t('activerecord.errors.messages.less_than_or_equal_to', :count => max_value))
     end
 
     errors
