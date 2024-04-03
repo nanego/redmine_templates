@@ -1,43 +1,6 @@
 class IssueTemplateSection < ActiveRecord::Base
 
   belongs_to :issue_template_section_group
-  before_validation :validate_labels_and_set_default_icon
-
-  # Validates the presence of labels
-  # Replaces empty elements in the icon_name string with the "default value" before validation.
-  #
-  # icon_name - The string containing icon names separated by semicolons.
-  #
-  # Examples
-  #
-  #   icon_name = ";icon1;;icon3;"
-  #
-  #   # => ";alert-fill;icon1;alert-fill;icon3;alert-fill;"
-  #
-  # Returns the modified icon_name string.
-  def validate_labels_and_set_default_icon
-    if type == "IssueTemplateSectionSelect"  && select_type == "buttons_icons"
-      # Validate the presence of labels in the text string
-      values = text.split(";", -1)
-
-      values.each_with_index do |value, key|
-        # Check if the value is empty
-        if value.blank?
-          errors.add(self.title, "The value at index #{key}  is empty")
-        end
-      end
-
-      # Replace empty values in the icon_name string with "default-value"
-      icons = icon_name.split(";" , -1)
-
-      icons.each_with_index do |value, key|
-        icons[key] = DEFAULT_ICON if value.blank?
-      end
-
-      self.icon_name = icons.join(";")
-
-    end
-  end
 
   DEFAULT_ICON = "alert-fill"
 
@@ -176,7 +139,46 @@ end
 
 class IssueTemplateSectionSelect < IssueTemplateSection
   validates_presence_of :title
+  before_validation :validate_labels_and_set_default_icon
+  # Accessor for the buttons_icons attribute
+  # Used for custom error message in case of validation failure
+  attr_accessor :buttons_icons_field
 
+  # Validates the presence of labels
+  # Replaces empty elements in the icon_name string with the "default value" before validation.
+  #
+  # icon_name - The string containing icon names separated by semicolons.
+  #
+  # Examples
+  #
+  #   icon_name = ";icon1;;icon3;"
+  #
+  #   # => ";alert-fill;icon1;alert-fill;icon3;alert-fill;"
+  #
+  # Returns the modified icon_name string.
+  def validate_labels_and_set_default_icon
+    if select_type == "buttons_icons"
+      # Validate the presence of labels in the text string
+      values = text.split(";", -1)
+
+      values.each_with_index do |value, key|
+        # Check if the value is empty
+        if value.blank?
+          errors.add(:buttons_icons_field, ::I18n.t('label_value_at_index', :title => title, :key => key))
+        end
+      end
+
+      # Replace empty values in the icon_name string with "default-value"
+      icons = icon_name.split(";" , -1)
+
+      icons.each_with_index do |value, key|
+        icons[key] = DEFAULT_ICON if value.blank?
+      end
+
+      self.icon_name = icons.join(";")
+
+    end
+  end
   TYPES = [:checkbox, :radio, :monovalue_select, :multivalue_select, :buttons_icons]
 
   after_initialize do
