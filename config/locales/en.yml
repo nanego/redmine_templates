@@ -62,3 +62,6 @@ en:
   delete_repeatable_bloc_label: Custom text for block delete button (optional)
   field_assignable_projects: "Template projects"
   show_in_generated_issue: Show in the generated issue
+  label_icon: Icon
+  field_buttons_icons_field: Buttons with icons
+  label_value_at_index: "%{title} : value at index %{key}  is empty"

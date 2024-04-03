@@ -64,6 +64,9 @@ fr:
   add_repeatable_bloc: Répéter ce bloc
   delete_repeatable_bloc: Supprimer ce bloc
   add_repeatable_bloc_label: Texte personnalisé pour le bouton d'ajout du bloc (facultatif)
-  delete_repeatable_bloc_label: Texte personnalisé pour le bouton de suppression du bloc (facultatif)  
+  delete_repeatable_bloc_label: Texte personnalisé pour le bouton de suppression du bloc (facultatif)
   field_assignable_projects: "Projets"
   show_in_generated_issue: Afficher dans la demande générée
+  label_icon: Icôn
+  field_buttons_icons_field: Boutons avec icônes
+  label_value_at_index: "%{title} : la valeur à l'indice %{key} est vide"
