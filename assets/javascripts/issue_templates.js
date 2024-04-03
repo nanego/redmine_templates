@@ -66,7 +66,10 @@ $(document).ready(function ($) {
 
 function applySelect2ToSelects() {
     if ((typeof $().select2) === 'function') {
-        $('.split_description.select select:visible').select2({
+        $('.split_description.select select:visible').filter(function() {
+            // Exclude elements with the class 'classic-select', because they have a short list
+            return !$(this).hasClass('classic-select');
+        }).select2({
             tags: true,
             tokenSeparators: [';'],
             containerCss: {

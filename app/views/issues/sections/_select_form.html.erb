@@ -12,12 +12,13 @@
     <% if section.required %>
       <span class="required"> *</span>
     <% end %>
-  </div>
+
     <% if section.description.present? %>
       <em class="info" style="padding-top: 3px; line-height: 1.5em;">
         <%= section.description %>
       </em>
     <% end %>
+  </div>
   <% end %>
 
   <% case section.select_type
@@ -48,41 +49,43 @@
       <% end %>
     </div>
   <% when 'buttons_icons' %>
-    <% defaultValue =  values.present? ? values["text"] : default_values.first  %>
-    <%# This variable tracks whether an option has already been selected,
-     so that another one doesn't need to be selected,
-      particularly when they have the same value %>
-    <% isOptionSelected  =  false  %>
-    <% possible_values.each_with_index do |select_value, value_index| %>
-      <%
-        if !values.present?
-          if defaultValue == select_value && !isOptionSelected
-            selected =  "selected-button-icon"
-            isOptionSelected  =  true
+    <div style="display:inline-flex">
+      <% defaultValue =  values.present? ? values["text"] : default_values.first  %>
+      <%# This variable tracks whether an option has already been selected,
+       so that another one doesn't need to be selected,
+        particularly when they have the same value %>
+      <% isOptionSelected  =  false  %>
+      <% possible_values.each_with_index do |select_value, value_index| %>
+        <%
+          if !values.present?
+            if defaultValue == select_value && !isOptionSelected
+              selected =  "selected-button-icon"
+              isOptionSelected  =  true
+            else
+              selected = ""
+            end
           else
-            selected = ""
+            if defaultValue == select_value && !isOptionSelected
+              selected =  "selected-button-icon"
+              isOptionSelected  =  true
+            else
+              selected = ""
+            end
           end
-        else
-          if defaultValue == select_value && !isOptionSelected
-            selected =  "selected-button-icon"
-            isOptionSelected  =  true
-          else
-            selected = ""
-          end
-        end
-      %>
-      <div class="template_card <%= selected %>" style="display: inline-block; text-align: center;" id="<%= "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]"%>" value="<%= select_value%>">
-        <% begin %>
-          <%= octicon(possible_icons[value_index], :height => 30, :class => "right left", :"aria-label" => "hi") %>
-        <% rescue => e %>
-          <%= octicon("alert-fill", :height => 20, :class => "right left", :"aria-label" => "hi") %>
-        <% end %>
+        %>
+        <div class="template_card <%= selected %>" style="display: inline-block; text-align: center;flex:0;min-width:150px" id="<%= "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]"%>" value="<%= select_value%>">
+          <% begin %>
+            <%= octicon(possible_icons[value_index], :height => 30, :class => "right left", :"aria-label" => "hi") %>
+          <% rescue => e %>
+            <%= octicon("alert-fill", :height => 20, :class => "right left", :"aria-label" => "hi") %>
+          <% end %>
 
-        <%= hidden_field_tag "", select_value, :id => "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]" %>
-        <span style="display: block;"><%= select_value %></span>
-      </div>
-    <% end %>
-    <%= hidden_field_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]",  defaultValue %>
+          <%= hidden_field_tag "", select_value, :id => "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]" %>
+          <span style="display: block;"><%= select_value %></span>
+        </div>
+      <% end %>
+      <%= hidden_field_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]",  defaultValue %>
+    </div>
   <% when 'monovalue_select', 'multivalue_select' %>
 
     <%= select_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]",

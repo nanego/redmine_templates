@@ -7,9 +7,9 @@
   <%= check_box_tag :checked, '1', default_values.include?(value) %>
   <span><%= text_field_tag 'value', value, size: 45, class: 'value' %></span>
 
-  <span class="span-icons">
-    <%= link_to 'Liste des icones compatibles', 'https://octicons.github.com', target: '_blank' %>
-    <%= text_field_tag 'icon_name', icon_name, size: 45, class: 'buttons-icons' %>
+  <span class="span-icons">     
+    <span style="font-weight: bold;"><%= l(:label_icon) %></span>
+    <%= text_field_tag 'icon_name', icon_name, size: 25, class: 'buttons-icons' , :placeholder => l(:label_icon) %>
   </span>
 
   <%= check_box_tag :read_only, '1', empty_value.include?(value) %><span style="cursor: default;"> <%= l(:read_only) %></span>
