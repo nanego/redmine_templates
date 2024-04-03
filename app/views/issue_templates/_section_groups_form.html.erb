@@ -86,7 +86,7 @@
         toggleFieldAndLinkIconVisibilityOnAddPossibleValue($(this));
     })
 
-    $('form#issue-template-form').on('change', 'select[id*="select_type"][class="select2-hidden-accessible"]', function (event) {
+    $('form#issue-template-form').on('change', 'select[id*="select_type"][class="classic-select select-type"]', function (event) {
       toggleIconSpanOnChangeType($(this));
     });
 
@@ -97,8 +97,9 @@
 
     function toggleFieldAndLinkIconVisibilityOnAddPossibleValue(elem){
       let divParent = elem.parent();
-      // Select the neighboring select element of the parent div.which corresponds to the selected type
-      let selectType = divParent.prev('p').find('select');
+      // Select the neighboring select element of the parent div.which corresponds to the selected type.
+      // This allows for handling multiple sections of select type.
+      let selectType = divParent.prev('p').find('select.classic-select.select-type');
       toggleFieldAndLinkIconVisibility(divParent, selectType);
     }
 
@@ -117,8 +118,10 @@
     function updateFieldAndLinkIconVisibilityBasedOnSelectedType(){
       let elements = document.querySelectorAll('div.sections');
       elements.forEach(function( ele) {
-      let selectType =  $(ele).find('select[id*="select_type"]');
-        toggleIconSpanOnChangeType(selectType );
+      let selectTypeList =  $(ele).find('select.classic-select.select-type');
+        selectTypeList.each(function() {
+          toggleIconSpanOnChangeType($(this));
+        });
       });
     }
 
