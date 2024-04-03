@@ -1,7 +1,7 @@
 <% values = (form.object && form.object.text.present?) ? form.object.text.split(';') : [] %>
 <% default_values = (form.object && form.object.placeholder.present?) ? form.object.placeholder.split(';') : [] %>
 
-<% icon_icon_names = (form.object && form.object.icon_name.present?) ? form.object.icon_name.split(';') : [] %>
+<% icon_names = (form.object && form.object.icon_name.present?) ? form.object.icon_name.split(';') : [] %>
 
 <% empty_value = (form.object && form.object.empty_value.present?) ? form.object.empty_value.split(';') : [] %>
 <%= issue_template_section_form(form, IssueTemplateSectionSelect, template) do %>
@@ -22,14 +22,28 @@
       <%= form.select :select_type,
                       options_for_select(IssueTemplateSectionSelect.select_types_options,
                                          selected: (form.object.present? ? form.object.select_type : '')),
-                      label: "Type" %>
+                      { label: "Type" }, { class: "classic-select select-type" } %>
+      <span class="span-icons">
+        <%= link_to 'Liste des icones compatibles', 'https://octicons.github.com', target: '_blank' %>
+      </span>
     </p>
     <div class="possible-values">
       <label>Valeurs possibles<span class="required"> *</span></label>
       <ul>
-        <% values.each_with_index  do |value, key| %>
-          <%= render 'issue_templates/sections/select_possible_value', value: values[key], default_values: default_values, empty_value: empty_value, icon_name: icon_icon_names[key] %>
-        <% end %>
+        <% if values.length >= icon_names.length %>
+
+          <% values.each_with_index  do |value, key| %> 
+            <!-- Use an empty string if the index does not exist in icon_names -->
+            <% icon_name = icon_names[key] || '' %>         
+            <%= render 'issue_templates/sections/select_possible_value', value: values[key], default_values: default_values, empty_value: empty_value, icon_name: icon_names[key] %>
+          <% end %>
+        <% else %>
+          <% icon_names.each_with_index do |icon_name, key| %>
+            <!-- Use an empty string if the index does not exist in values -->
+            <% value = values[key] || '' %> 
+            <%= render 'issue_templates/sections/select_possible_value', value: value, default_values: default_values, empty_value: empty_value, icon_name: icon_name %>
+          <% end %>
+        <% end %>  
       </ul>
       <%= link_to 'Ajouter une valeur', '#', class: 'add_possible_value' %>
     </div>
@@ -46,7 +60,7 @@
       <%= form.select :display_mode,
                       options_for_select(IssueTemplateSection::DISPLAY_MODES.collect { |mode| [l(mode), mode] },
                                          selected: (form.object.present? ? form.object.display_mode : '')),
-                      label: l('display_mode') %>
+                      { label: l('display_mode') }, { class: "classic-select" } %>
       <span><i>Option active uniquement pour les champs de type "Checkbox"</i></span>
     </p>
   </div>
