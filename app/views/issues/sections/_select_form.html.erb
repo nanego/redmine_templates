@@ -2,90 +2,47 @@
 <% default_values = section.placeholder.present? ? section.placeholder.split(';') : [] %>
 <% read_only_values = section.empty_value.present? ? section.empty_value.split(';') : [] %>
 <% possible_values = section.text.present? ? section.text.split(';') : [] %>
-<% possible_icons = section.icon_name.present? ? section.icon_name.split(';') : [] %>
+<% possible_values_icons = section.icon_name.present? ? section.icon_name.split(';') : [] %>
 <% section_group = section.issue_template_section_group %>
 
 <p>
   <%= label_tag do %>
-  <div style="display: inline-block;">
     <%= section.title %>
     <% if section.required %>
       <span class="required"> *</span>
     <% end %>
-
     <% if section.description.present? %>
       <em class="info" style="padding-top: 3px; line-height: 1.5em;">
         <%= section.description %>
       </em>
     <% end %>
-  </div>
   <% end %>
 
   <% case section.select_type
-    when 'checkbox' %>
-      <div style="display:inline-table">
-        <% possible_values.each_with_index do |select_value, value_index| %>
+     when 'checkbox' %>
 
-          <% field_name = "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][#{value_index}]" %>
-          <%= hidden_field_tag field_name, '', id: nil %>
-          <%= check_box_tag field_name, '1',
-                            values.present? ? values[value_index.to_s].present? : default_values.include?(select_value.to_s), disabled: read_only_values.include?(select_value.to_s) %>
-          <%= label_tag field_name, select_value.to_s, class: "no-style" %>
+    <% possible_values.each_with_index do |select_value, value_index| %>
+      <% field_name = "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][#{value_index}]" %>
+      <%= hidden_field_tag field_name, '', id: nil %>
+      <%= check_box_tag field_name, '1',
+                        values.present? ? values[value_index.to_s].present? : default_values.include?(select_value.to_s), disabled: read_only_values.include?(select_value.to_s) %>
+      <%= label_tag field_name, select_value.to_s, class: "no-style" %>
+      <br>
+    <% end %>
 
-          <br>
-        <% end %>
-      </div>
   <% when 'radio' %>
-    <div style="display:inline-table">
-      <% possible_values.each do |select_value| %>
-        <%= radio_button_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]",
-                            select_value,
-                            values.present? ? values["text"] == select_value : default_values.first == select_value %>
-        <%= label_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text][#{select_value}]",
-                      select_value,
-                      value: select_value,
-                      class: "no-style" %>
-        <br>
-      <% end %>
-    </div>
-  <% when 'buttons_icons' %>
-    <div style="display:inline-flex">
-      <% defaultValue =  values.present? ? values["text"] : default_values.first  %>
-      <%# This variable tracks whether an option has already been selected,
-       so that another one doesn't need to be selected,
-        particularly when they have the same value %>
-      <% isOptionSelected  =  false  %>
-      <% possible_values.each_with_index do |select_value, value_index| %>
-        <%
-          if !values.present?
-            if defaultValue == select_value && !isOptionSelected
-              selected =  "selected-button-icon"
-              isOptionSelected  =  true
-            else
-              selected = ""
-            end
-          else
-            if defaultValue == select_value && !isOptionSelected
-              selected =  "selected-button-icon"
-              isOptionSelected  =  true
-            else
-              selected = ""
-            end
-          end
-        %>
-        <div class="template_card <%= selected %>" style="display: inline-block; text-align: center;flex:0;min-width:150px" id="<%= "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]"%>" value="<%= select_value%>">
-          <% begin %>
-            <%= octicon(possible_icons[value_index], :height => 30, :class => "right left", :"aria-label" => "hi") %>
-          <% rescue => e %>
-            <%= octicon("alert-fill", :height => 20, :class => "right left", :"aria-label" => "hi") %>
-          <% end %>
 
-          <%= hidden_field_tag "", select_value, :id => "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]" %>
-          <span style="display: block;"><%= select_value %></span>
-        </div>
-      <% end %>
-      <%= hidden_field_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]",  defaultValue %>
-    </div>
+    <% possible_values.each do |select_value| %>
+      <%= radio_button_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]",
+                           select_value,
+                           values.present? ? values["text"] == select_value : default_values.first == select_value %>
+      <%= label_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text][#{select_value}]",
+                    select_value,
+                    value: select_value,
+                    class: "no-style" %>
+      <br>
+    <% end %>
+
   <% when 'monovalue_select', 'multivalue_select' %>
 
     <%= select_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]",
@@ -93,43 +50,58 @@
                    style: "max-width: 40em;width:269px;",
                    multiple: section.select_type == 'multivalue_select' %>
 
+  <% when 'buttons_with_icons' %>
+
+    <% defaultValue = values.present? ? values["text"] : default_values.first %>
+    <% selected_option = possible_values.find { |v| v == defaultValue } %>
+    <% possible_values.each_with_index do |select_value, value_index| %>
+      <span class="template_card <%= "selected-button-icon" if select_value == selected_option %>"
+            id="<%= "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]" %>"
+            value="<%= select_value %>">
+        <% begin %>
+          <% octicon_name = possible_values_icons[value_index] || "alert-fill" %>
+          <%= octicon(octicon_name, :height => 30, :class => "right left", :"aria-label" => "hi") %>
+        <% rescue => e %>
+          <span class="error">
+            Vérifiez le nom de l'octicon
+            <br>
+            <%= "('#{octicon_name}' n'existe pas)" %>
+          </span>
+        <% end %>
+        <%= hidden_field_tag "", select_value, :id => "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]" %>
+        <span style="display: block;"><%= select_value %></span>
+      </span>
+    <% end %>
+    <%= hidden_field_tag "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]", defaultValue %>
+    <%= javascript_tag do %>
+      // Handle clicks on buttons with icons
+      function cardOnClick(event) {
+      let target = event.target
+      let selected_card = target.closest('.template_card')
+      let card_name = selected_card.getAttribute('id')
+
+      // Reset the "selected-button-icon" class for all elements with the same ID (i.e. all cards for the same field)
+      document.querySelectorAll('[id="' + card_name + '"]')
+      .forEach(card => {
+      card.classList.remove("selected-button-icon")
+      })
+      selected_card.classList.add("selected-button-icon")
+
+      // Update the corresponding hidden_tag element value
+      let hidden_tag = document.querySelector('[name="' + card_name + '"]')
+      hidden_tag.setAttribute("value", selected_card.getAttribute('value'))
+      }
+
+      // Attach event handlers to every selectable cards
+      function selectTemplateCard() {
+      document.querySelectorAll('.template_card').forEach(card => {
+      card.addEventListener('click', cardOnClick)
+      })
+      }
+      document.addEventListener("DOMContentLoaded", selectTemplateCard)
+    <% end %>
+
   <% else %>
-    PROBLEM
+    UNKNOWN SELECT TYPE
   <% end %>
 </p>
-<script type="text/javascript">
-
-  // Function to handle clicks on Boutons with icons
-  function cardOnClick(event) {
-     // Get the event trigger element
-    let target = event.target;
-    // Find the parent element with class 'template_card'
-    let card = target.closest('.template_card');
-
-    // Retrieve the card's name
-    let cardName  = target.getAttribute('id') || card.getAttribute('id');
-    // Remove the "selected-button-icon" class from all elements with the same ID
-    let allCards = document.querySelectorAll('[id="' + cardName + '"]');
-    allCards.forEach(card => {
-      card.classList.remove("selected-button-icon");
-    })
-    // Add the "selected-button-icon" class to the current parent element
-    card.classList.add("selected-button-icon");
-    // Retrieve the card's value
-    let value  = target.getAttribute('value') || card.getAttribute('value');
-    // Find the corresponding hidden_tag element and update its value
-    let hidden_tag = document.querySelector('[name="' + cardName + '"]');
-    hidden_tag.setAttribute("value", value)
-
-  }
-
-  // Function to attach event handlers to selectable cards
-  function selectTemplateCard() {
-    const templateCards = document.querySelectorAll('.template_card');
-    templateCards.forEach(card => {
-      card.addEventListener('click', cardOnClick)
-    })
-  }
-  document.addEventListener("DOMContentLoaded", selectTemplateCard);
-
-</script>

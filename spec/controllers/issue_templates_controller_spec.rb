@@ -194,7 +194,7 @@ describe IssueTemplatesController, type: :controller do
                 sections_attributes: [
                   { "position" => "1",
                     "type" => "IssueTemplateSectionSelect",
-                    "select_type" => "buttons_icons",
+                    "select_type" => "buttons_with_icons",
                     "text" => "value1;value2",
                     "title" => "section buttons icons",
                     "icon_name" => "history;",

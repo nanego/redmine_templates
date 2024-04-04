@@ -140,9 +140,9 @@ end
 class IssueTemplateSectionSelect < IssueTemplateSection
   validates_presence_of :title
   before_validation :validate_labels_and_set_default_icon
-  # Accessor for the buttons_icons attribute
+  # Accessor for the buttons_with_icons attribute
   # Used for custom error message in case of validation failure
-  attr_accessor :buttons_icons_field
+  attr_accessor :buttons_with_icons_field
 
   # Validates the presence of labels
   # Replaces empty elements in the icon_name string with the "default value" before validation.
@@ -157,14 +157,14 @@ class IssueTemplateSectionSelect < IssueTemplateSection
   #
   # Returns the modified icon_name string.
   def validate_labels_and_set_default_icon
-    if select_type == "buttons_icons"
+    if select_type == "buttons_with_icons"
       # Validate the presence of labels in the text string
       values = text.split(";", -1)
 
       values.each_with_index do |value, key|
         # Check if the value is empty
         if value.blank?
-          errors.add(:buttons_icons_field, ::I18n.t('label_value_at_index', :title => title, :key => key))
+          errors.add(:buttons_with_icons_field, ::I18n.t('label_value_at_index', :title => title, :key => key))
         end
       end
 
@@ -179,7 +179,7 @@ class IssueTemplateSectionSelect < IssueTemplateSection
 
     end
   end
-  TYPES = [:checkbox, :radio, :monovalue_select, :multivalue_select, :buttons_icons]
+  TYPES = [:checkbox, :radio, :monovalue_select, :multivalue_select, :buttons_with_icons]
 
   after_initialize do
     self.select_type ||= :checkbox
@@ -196,7 +196,7 @@ class IssueTemplateSectionSelect < IssueTemplateSection
 
   def rendered_value(section_attributes, textile: true, value_only: false)
     case self.select_type
-    when "monovalue_select", "radio", "buttons_icons"
+    when "monovalue_select", "radio", "buttons_with_icons"
       value = value_from_text_attribute(section_attributes)
       if value_only
         section_basic_entry(value, textile: textile)

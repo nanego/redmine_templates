@@ -190,7 +190,7 @@ RSpec.describe "creating issues with templates", type: :system do
       section_test.icon_name = "person-fill;history"
       section_test.position = 1
       section_test.placeholder = "value1" # default value
-      section_test.select_type = "buttons_icons"
+      section_test.select_type = "buttons_with_icons"
       section_test.save
     end
 

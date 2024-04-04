@@ -206,6 +206,14 @@ a.list_templates_projects_names.current {
     margin-right: 15px;
     cursor: pointer;
 }
+#issue-form .template_card {
+    padding: 10px;
+    display: inline-block;
+    text-align: center;
+    min-width: 60px;
+    margin-left: 10px;
+    margin-right: 0;
+}
 
 .template_card .template-logo {
     display: inline-block;

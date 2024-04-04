@@ -69,7 +69,7 @@ module RedmineTemplates
               section = @issue.issue_template.sections.find(section_id)
               if section.present?
                 # This condition handles cases where there are buttons with icons but no default value.
-                if section.select_type == "buttons_icons"
+                if section.select_type == "buttons_with_icons"
                   issue_description += section.rendered_value(section_attributes) unless section_attributes[:text] == ""
                 else
                   issue_description += section.rendered_value(section_attributes)

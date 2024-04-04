@@ -34,7 +34,7 @@
 
           <% values.each_with_index  do |value, key| %> 
             <!-- Use an empty string if the index does not exist in icon_names -->
-            <% icon_name = icon_names[key] || '' %>         
+            <% icon_name = icon_names[key] || '' %>
             <%= render 'issue_templates/sections/select_possible_value', value: values[key], default_values: default_values, empty_value: empty_value, icon_name: icon_names[key] %>
           <% end %>
         <% else %>
