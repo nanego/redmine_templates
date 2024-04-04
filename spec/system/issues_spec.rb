@@ -189,7 +189,7 @@ RSpec.describe "creating issues with templates", type: :system do
 
     before do
       section_test = template_with_sections.section_groups[1].sections[0]
-      section_test.update_attributes(
+      section_test.update(
         text: "value1;value2;value3",
         icon_name: "person-fill;history",
         position: 1,
