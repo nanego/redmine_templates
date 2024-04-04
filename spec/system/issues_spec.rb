@@ -29,7 +29,7 @@ RSpec.describe "creating issues with templates", type: :system do
 
   let(:template_with_sections) { IssueTemplate.find(3) }
   let(:template_4) { IssueTemplate.find(4) }
-  let(:template_with_repeatable_sections) {IssueTemplate.find(6)}
+  let(:template_with_repeatable_sections) { IssueTemplate.find(6) }
   let(:project) { Project.find(2) }
 
   before do
@@ -147,7 +147,7 @@ RSpec.describe "creating issues with templates", type: :system do
     end
 
     it "displays a list of project field with only projects activated for the current template" do
-      #activate the template 4 on the project id=3
+      # activate the template 4 on the project id=3
       IssueTemplateProject.create(project_id: 3, issue_template_id: template_4.id)
       visit new_issue_path(project_id: 1, template_id: template_4.id)
 
@@ -169,7 +169,7 @@ RSpec.describe "creating issues with templates", type: :system do
         core_field.role_ids = [1, 2]
         core_field.save
 
-        #activate the template 4 on the project id=3
+        # activate the template 4 on the project id=3
         IssueTemplateProject.create(project_id: 3, issue_template_id: template_4.id)
 
         visit new_issue_path(project_id: 1, template_id: template_4.id)
@@ -184,25 +184,26 @@ RSpec.describe "creating issues with templates", type: :system do
 
   describe "buttons icons" do
 
-    before do
-      section_test = IssueTemplate.find(3).section_groups[1].sections[0]
-      section_test.text = "value1;value2;value3"
-      section_test.icon_name = "person-fill;history"
-      section_test.position = 1
-      section_test.placeholder = "value1" # default value
-      section_test.select_type = "buttons_with_icons"
-      section_test.save
-    end
+    let! (:group_id) { template_with_sections.section_groups[1].id }
+    let! (:section_id) { template_with_sections.section_groups[1].sections[0].id }
 
-    let (:group_id) { group_id =  IssueTemplate.find(3).section_groups[1].id }
-    let (:section_id) { section_id = IssueTemplate.find(3).section_groups[1].sections[0].id }
+    before do
+      section_test = template_with_sections.section_groups[1].sections[0]
+      section_test.update_attributes(
+        text: "value1;value2;value3",
+        icon_name: "person-fill;history",
+        position: 1,
+        placeholder: "value2", # default value
+        select_type: "buttons_with_icons"
+      )
+    end
 
     it "displays expected button icons on the 'New Issue' page" do
       visit new_issue_path(project_id: project.identifier, template_id: 3)
 
-      expect(page).to have_css("div[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value", class:"selected-button-icon")
-      expect(page).to have_css("div[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value2")
-      expect(page).to have_css("div[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value3")
+      expect(page).to have_css("[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value1")
+      expect(page).to have_css("[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value2", class: "selected-button-icon")
+      expect(page).to have_css("[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value3")
       expect(page).to have_css(".octicon-person-fill")
       expect(page).to have_css(".octicon-history")
     end
@@ -213,7 +214,7 @@ RSpec.describe "creating issues with templates", type: :system do
       fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', with: 'One-line edited content'
       fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: '01/01/2020'
 
-      div_element = find("div[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value2")
+      div_element = find("[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value2")
       div_element.click
 
       click_on 'Create'

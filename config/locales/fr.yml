@@ -68,5 +68,6 @@ fr:
   field_assignable_projects: "Projets"
   show_in_generated_issue: Afficher dans la demande générée
   label_icon: Icone
+  icon_name_placeholder: "Nom de l'octicon"
   field_buttons_with_icons_field: Boutons avec icones
   label_value_at_index: "%{title} : la valeur à l'indice %{key} est vide"

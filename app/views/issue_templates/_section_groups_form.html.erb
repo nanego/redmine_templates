@@ -22,14 +22,14 @@
         let icon_name = $(sectionElement).find('input.icon_name');
 
         // Object (passed by reference)
-        let icon_object = { values : icon_name.val() }
+        let icon_object = {values: icon_name.val()}
 
         let ul = $(sectionElement).find('ul')
         let joined_values = ul.find('li .value').map(function () {
             return $(this).val()
         }).get().join(';')
 
-        let text_object = { values : joined_values }
+        let text_object = {values: joined_values}
         removeEmptyElementsValuesFromTwoObjects(text_object, icon_object)
         text.val(text_object.values)
     }
@@ -48,7 +48,7 @@
         let text = $(sectionElement).find('input.text')
 
         // Object (passed by reference)
-        let text_object = { values : text.val() }
+        let text_object = {values: text.val()}
 
         let ul = $(sectionElement).find('ul')
         let joined_values = ul.find('li .buttons-icons').map(function () {
@@ -56,19 +56,18 @@
         }).get().join(';')
 
         // Object (passed by reference)
-        let icon_object = { values : joined_values }
-        removeEmptyElementsValuesFromTwoObjects(icon_object,text_object)
+        let icon_object = {values: joined_values}
+        removeEmptyElementsValuesFromTwoObjects(icon_object, text_object)
         icon_name.val(icon_object.values)
     }
 
     function resetEmptyValueField(sectionElement) {
-      //let type = $(sectionElement).find('#type')[0]
-      let empty_value = $(sectionElement).find('input.empty_value')
-      let list_of_value = $(sectionElement).find('ul')
-      let joined_values = list_of_value.find('li input[type=checkbox][name=read_only]:checked').map(function () {
-        return $(this).parent().find('.value').val()
-      }).get().filter(item => item).join(';')
-      empty_value.val(joined_values)
+        let empty_value = $(sectionElement).find('input.empty_value')
+        let list_of_value = $(sectionElement).find('ul')
+        let joined_values = list_of_value.find('li input[type=checkbox][name=read_only]:checked').map(function () {
+            return $(this).parent().find('.value').val()
+        }).get().filter(item => item).join(';')
+        empty_value.val(joined_values)
     }
 
     $('form#issue-template-form').on('change', '.possible-values input[type=checkbox][name=checked]', function (event) {
@@ -87,42 +86,42 @@
     })
 
     $('form#issue-template-form').on('change', 'select[id*="select_type"][class="classic-select select-type"]', function (event) {
-      toggleIconSpanOnChangeType($(this));
+        toggleIconSpanOnChangeType($(this));
     });
 
-    function toggleIconSpanOnChangeType(elem){
-      let divParent = elem.parent().parent();
-      toggleFieldAndLinkIconVisibility(divParent, elem);
+    function toggleIconSpanOnChangeType(elem) {
+        let divParent = elem.parent().parent();
+        toggleFieldAndLinkIconVisibility(divParent, elem);
     }
 
-    function toggleFieldAndLinkIconVisibilityOnAddPossibleValue(elem){
-      let divParent = elem.parent();
-      // Select the neighboring select element of the parent div.which corresponds to the selected type.
-      // This allows for handling multiple sections of select type.
-      let selectType = divParent.prev('p').find('select.classic-select.select-type');
-      toggleFieldAndLinkIconVisibility(divParent, selectType);
+    function toggleFieldAndLinkIconVisibilityOnAddPossibleValue(elem) {
+        let divParent = elem.parent();
+        // Select the neighboring select element of the parent div.which corresponds to the selected type.
+        // This allows for handling multiple sections of select type.
+        let selectType = divParent.prev('p').find('select.classic-select.select-type');
+        toggleFieldAndLinkIconVisibility(divParent, selectType);
     }
 
     function toggleFieldAndLinkIconVisibility(divParent, selectType) {
-      if (selectType.val() != "buttons_with_icons") {
-        divParent.find('.span-icons').each(function() {
-          $(this).hide();
-        });
-      } else {
-        divParent.find('.span-icons').each(function() {
-          $(this).show();
-        });
-      }
+        if (selectType.val() != "buttons_with_icons") {
+            divParent.find('.span-icons').each(function () {
+                $(this).hide();
+            });
+        } else {
+            divParent.find('.span-icons').each(function () {
+                $(this).show();
+            });
+        }
     }
 
-    function updateFieldAndLinkIconVisibilityBasedOnSelectedType(){
-      let elements = document.querySelectorAll('div.sections');
-      elements.forEach(function( ele) {
-      let selectTypeList =  $(ele).find('select.classic-select.select-type');
-        selectTypeList.each(function() {
-          toggleIconSpanOnChangeType($(this));
+    function updateFieldAndLinkIconVisibilityBasedOnSelectedType() {
+        let elements = document.querySelectorAll('div.sections');
+        elements.forEach(function (ele) {
+            let selectTypeList = $(ele).find('select.classic-select.select-type');
+            selectTypeList.each(function () {
+                toggleIconSpanOnChangeType($(this));
+            });
         });
-      });
     }
 
     $('form#issue-template-form').on('keyup change', '.possible-values input.value, .possible-values input.buttons-icons', function (event) {
@@ -166,8 +165,8 @@
         object2.values = newArray2.join(";");
     }
 
-    $(document).ready(function() {
-      updateFieldAndLinkIconVisibilityBasedOnSelectedType();
+    $(document).ready(function () {
+        updateFieldAndLinkIconVisibilityBasedOnSelectedType();
     });
     $(document).bind('ajaxStop', updateFieldAndLinkIconVisibilityBasedOnSelectedType);
 </script>

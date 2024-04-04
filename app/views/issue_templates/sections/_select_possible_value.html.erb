@@ -7,12 +7,13 @@
   <%= check_box_tag :checked, '1', default_values.include?(value) %>
   <span><%= text_field_tag 'value', value, size: 45, class: 'value' %></span>
 
-  <span class="span-icons">     
-    <span style="font-weight: bold;"><%= l(:label_icon) %></span>
-    <%= text_field_tag 'icon_name', icon_name, size: 25, class: 'buttons-icons' , :placeholder => l(:label_icon) %>
+  <span class="span-icons">
+    <span><%= l(:label_icon) %> :</span>
+    <%= text_field_tag 'icon_name', icon_name, size: 25, class: 'buttons-icons', :placeholder => l(:icon_name_placeholder) %>
   </span>
 
-  <%= check_box_tag :read_only, '1', empty_value.include?(value) %><span style="cursor: default;"> <%= l(:read_only) %></span>
+  <%= check_box_tag :read_only, '1', empty_value.include?(value) %>
+  <span style="cursor: default;"> <%= l(:read_only) %></span>
 
   <%= link_to 'Supprimer', '#', class: 'remove_possible_value' %>
 </li>

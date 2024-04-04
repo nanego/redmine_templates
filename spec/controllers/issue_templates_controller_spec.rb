@@ -178,7 +178,7 @@ describe IssueTemplatesController, type: :controller do
       expect(IssueTemplate.last.section_groups.first.sections.first.display_mode).to eq("1")
     end
 
-    it "Should successfully creates issue template section with button icons and sets default icon if not provided" do
+    it "creates issue template section with button icons and sets default icon if not provided" do
       expect do
         post :create, params: {
           :issue_template => {

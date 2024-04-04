@@ -206,6 +206,7 @@ a.list_templates_projects_names.current {
     margin-right: 15px;
     cursor: pointer;
 }
+
 #issue-form .template_card {
     padding: 10px;
     display: inline-block;
@@ -213,6 +214,10 @@ a.list_templates_projects_names.current {
     min-width: 60px;
     margin-left: 10px;
     margin-right: 0;
+}
+
+#issue-form .template_card.selected-button-icon {
+    background-color: #FCF5C1;
 }
 
 .template_card .template-logo {
@@ -423,6 +428,7 @@ a.list_templates_projects_names.current {
     width: 18px;
     flex: 0 1 auto;
 }
+
 #issue-form #attributes .expander {
     display: none;
 }
@@ -432,6 +438,7 @@ a.list_templates_projects_names.current {
 #issue-form #attributes .retracted .retracter {
     display: none;
 }
+
 #issue-form #attributes .retracted .expander {
     display: block;
 }
@@ -466,8 +473,4 @@ a.list_templates_projects_names.current {
     #issue-form #all_attributes input {
         width: auto;
     }
-}
-
-.selected-button-icon {
-    background-color: #FCF5C1;
 }
