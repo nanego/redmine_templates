@@ -70,7 +70,8 @@ describe IssueTemplatesController, type: :controller do
   end
 
   context "GET copy" do
-    let (:template_origin) { IssueTemplate.find(3) }
+
+    let!(:template_origin) { IssueTemplate.find(3) }
 
     it "forbids issue copy if user has no permission" do
       role.remove_permission!(:create_issue_templates)
@@ -78,7 +79,7 @@ describe IssueTemplatesController, type: :controller do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it "Should duplicate all attributes of the original template" do
+    it "duplicates all attributes of the original template" do
       get :copy, params: { id: template_origin.id }
       expect(response).to be_successful
 
@@ -91,7 +92,7 @@ describe IssueTemplatesController, type: :controller do
       expect(assigns(:issue_template).tracker).to eq template_origin.tracker
     end
 
-    it "Should duplicate all section groups of the original template" do
+    it "duplicates all section groups of the original template" do
       get :copy, params: { id: template_origin.id }
 
       expect(assigns(:issue_template).section_groups.size).to eq(template_origin.section_groups.count)
@@ -102,7 +103,7 @@ describe IssueTemplatesController, type: :controller do
       end
     end
 
-    it "Should duplicate all projects of the original template" do
+    it "duplicates all projects of the original template" do
 
       template_origin.secondary_projects = [Project.find(3), Project.find(4)] if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
       template_origin.save
@@ -122,7 +123,7 @@ describe IssueTemplatesController, type: :controller do
       end
     end
 
-    it "Should duplicate all custom_field_values of the original template" do
+    it "duplicates all custom_field_values of the original template" do
       template_origin = IssueTemplate.find(3)
       field_attributes = { :field_format => 'string', :is_for_all => true, :is_filter => true, :trackers => Tracker.all }
 
@@ -131,14 +132,14 @@ describe IssueTemplatesController, type: :controller do
       IssueCustomField.create!(field_attributes.merge(:name => 'Field 3', :visible => false, :role_ids => [1, 3]))
 
       3.times do |i|
-        template_origin.custom_field_values =  { i + 1 => "Value for field #{i+1}" }
+        template_origin.custom_field_values = { i + 1 => "Value for field #{i + 1}" }
       end
       template_origin.save
 
       get :copy, params: { id: template_origin.id }
 
       assigns(:issue_template).custom_field_values.each_with_index do |field, ind|
-        expect(field.value).to eq("Value for field #{ind+1}")
+        expect(field.value).to eq("Value for field #{ind + 1}")
       end
     end
   end
