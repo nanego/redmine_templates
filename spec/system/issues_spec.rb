@@ -138,11 +138,11 @@ RSpec.describe "creating issues with templates", type: :system do
 
     it "Displays the expected numeric field on the 'New Issue' page with range display" do
       template = IssueTemplate.find(6)
-      template.section_groups[0].sections[8].required = true
+      template.section_groups[0].sections[8].select_type = "1"
       template.save
 
       visit new_issue_path(project_id: project.identifier, template_id: 6)
-      expect(page).to have_css("input[type='range'][min='#{section.placeholder}'][max='#{section.text}'][value='#{section.empty_value}']")
+      expect(page).to have_css("input[type='range'][min='#{section.min_value}'][max='#{section.max_value}'][value='#{section.empty_value}']")
     end
 
     it "keeps the value in issue description" do
