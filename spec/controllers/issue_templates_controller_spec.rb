@@ -304,10 +304,10 @@ describe IssueTemplatesController, type: :controller do
                   { "position" => "1",
                     "title" => "test range",
                     "type" => "IssueTemplateSectionNumeric",
-                    "placeholder" => 2,# min
-                    "text" => 4,#max
+                    "min_value" => 2,
+                    "max_value" => 4,
                     "empty_value" => 3,
-                    "required" => false #display_in_range
+                    "select_type" => "0" #display_in_range
                   },
                 ]
               }
@@ -317,10 +317,10 @@ describe IssueTemplatesController, type: :controller do
       end.to change { IssueTemplate.count }.by(1)
 
       new_template = IssueTemplate.last.section_groups.first.sections.first
-      expect(new_template.placeholder).to eq("2")
-      expect(new_template.text).to eq("4")
+      expect(new_template.min_value).to eq(2)
+      expect(new_template.max_value).to eq(4)
       expect(new_template.empty_value).to eq("3")
-      expect(new_template.required).to eq(false)
+      expect(new_template.select_type).to eq("0")
     end
 
     it "Should not accept a default value longer than the maximum specified" do
@@ -340,10 +340,10 @@ describe IssueTemplatesController, type: :controller do
                   { "position" => "1",
                     "title" => "test range",
                     "type" => "IssueTemplateSectionNumeric",
-                    "placeholder" => 1,# min
-                    "text" => 2,#max
+                    "min_value" => 1,
+                    "max_value" => 2,
                     "empty_value" => 5,
-                    "required" => false #display_in_range
+                    "select_type" => "0" #display_in_range
                   },
                 ]
               }
@@ -370,10 +370,10 @@ describe IssueTemplatesController, type: :controller do
                   { "position" => "1",
                     "title" => "test range",
                     "type" => "IssueTemplateSectionNumeric",
-                    "placeholder" => 2,# min
-                    "text" => 4,# max
+                    "min_value" => 2,
+                    "max_value" => 4,
                     "empty_value" => 5,
-                    "required" => false #display_in_range
+                    "select_type" => "0" #display_in_range
                   },
                 ]
               }

@@ -8,15 +8,15 @@
       <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
     </p>
     <p>
-  	  <label for="custom_field_min_range"><%=l(:label_min_max_range)%></label>
-  	  <%= form.text_field :placeholder, :size => 5, :no_label => true %> -
-  	  <%= form.text_field :text, :size => 5, :no_label => true %>
-	 </p>
-    <p>
-      <%= form.text_field :empty_value, :label => :field_default_value %>
+      <label for="custom_field_min_range"><%=l(:label_min_max_range)%></label>
+      <%= form.text_field :min_value, :size => 5, :no_label => true, pattern: '[-+]?\d*' %> -
+      <%= form.text_field :max_value, :size => 5, :no_label => true, pattern: '[-+]?\d*' %>
     </p>
     <p>
-      <%= form.check_box :required, :label => :label_display_in_range %>
+      <%= form.text_field :empty_value, :label => :field_default_value, pattern: '[-+]?\d*' %>
+    </p>
+    <p>
+      <%= form.check_box :select_type, :label => :label_display_in_range %>
     </p>
   </div>
 <% end %>

@@ -48,6 +48,24 @@ class IssueTemplateSection < ActiveRecord::Base
     end
   end
 
+  # validate_numeric_value method
+  #
+  # Validates whether a given value is numeric.
+  #
+  # Parameters:
+  #   - field: The name of the field being validated.
+  #   - value: The value to be validated.
+  #   - errors: An optional object representing validation errors. If provided, errors will be added to it.
+  def validate_numerci_value(field, value, errors)
+    unless /^[+-]?\d+$/.match?(value.to_s.strip)
+      # Add an error if the value is not numeric
+      errors.add(field, ::I18n.t('activerecord.errors.messages.not_a_number')) unless errors.nil? || field.nil?
+      # Return false as validation failed
+      return false
+    end
+    # Return true as validation succeeded
+    return true
+  end
 end
 
 class IssueTemplateSectionTextField < IssueTemplateSection
@@ -89,20 +107,19 @@ class IssueTemplateSectionNumeric < IssueTemplateSection
   before_validation :validate_single_value
   # Accessor for the integer_field attribute
   # Used for custom error message in case of validation failure
-  attr_accessor :integer_field
+  attr_accessor :integer_field, :default_value_integer
 
   def validate_single_value
-    max_value = text.to_i
-    min_value = placeholder.to_i
-    value = empty_value.to_i
-
-    if value < min_value
-      errors.add(:integer_field, ::I18n.t('activerecord.errors.messages.greater_than_or_equal_to', :count => min_value))
+    # Call the method to validate if the value is numeric
+    if !empty_value.empty? && validate_numerci_value(:default_value_integer, empty_value, errors)
+      value = empty_value.to_i
+      if value < min_value
+        errors.add(:integer_field, ::I18n.t('activerecord.errors.messages.greater_than_or_equal_to', :count => min_value))
+      end
+      if value > max_value
+        errors.add(:integer_field, ::I18n.t('activerecord.errors.messages.less_than_or_equal_to', :count => max_value))
+      end
     end
-    if value > max_value
-      errors.add(:integer_field, ::I18n.t('activerecord.errors.messages.less_than_or_equal_to', :count => max_value))
-    end
-
     errors
   end
 

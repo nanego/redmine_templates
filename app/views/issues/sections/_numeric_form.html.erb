@@ -7,22 +7,22 @@
       </em>
     <% end %>
   <% end %>
-  <% value = reload_current_value(@sections_attributes, section, group_index) || section.empty_value%>
-  <% if section.required %>
-  	<% section_group = section.issue_template_section_group %>
-  	<% field_id = "issue_issue_template_section_groups_attributes_#{section_group.id}_#{group_index}_sections_attributes_#{section.id}_empty_value" %>
-  	<% field_name = "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][empty_value]" %>
-  	<%= numeric_edit_tag field_id, field_name, section.empty_value, section.placeholder, section.text %>
+  <% value = reload_current_value(@sections_attributes, section, group_index) || section.empty_value %>
+  <% if section.select_type =="1" %>
+    <% section_group = section.issue_template_section_group %>
+    <% field_id = "issue_issue_template_section_groups_attributes_#{section_group.id}_#{group_index}_sections_attributes_#{section.id}_empty_value" %>
+    <% field_name = "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][empty_value]" %>
+    <%= numeric_edit_tag field_id, field_name, section.empty_value, section.min_value, section.max_value %>
   <% else %>
-    <% min_value = section.placeholder || 0 %>
-    <% max_value = section.text || 100 %>
-	  <%= form.number_field :empty_value,
+    <% min_value = section.min_value || 0 %>
+    <% max_value = section.max_value || 100 %>
+    <%= form.number_field :empty_value,
 	                      size: 20,
 	                      accesskey: accesskey(:edit),
 	                      no_label: true,
 	                      value: value,
                         min: min_value,
                         max: max_value
-	  %>
+    %>
   <% end %>
 </p>

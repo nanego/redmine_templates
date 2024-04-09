@@ -168,9 +168,9 @@ field_numeric_as_range:
   id: 21
   title: "Numeric Field as range"
   type: "IssueTemplateSectionNumeric"
-  text: "8"
-  placeholder: "1"
+  max_value: 8
+  min_value: 1
   empty_value: "5"
   issue_template_section_group_id: 5
   position: 10
-  required: false
+  select_type: "0"
