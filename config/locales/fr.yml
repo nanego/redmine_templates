@@ -85,4 +85,3 @@ fr:
   field_buttons_with_icons_field: Boutons avec icones
   label_value_at_index: "%{title} : la valeur à l'indice %{key} est vide"
   label_copy: Copie de
-  label_field_required: Champ obligatoire 
