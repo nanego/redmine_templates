@@ -79,6 +79,7 @@ fr:
     - ['Nouveau champ date', 5]
     - ['Nouvelle champ entier', 6]
     - ['Nouvelle liste de valeurs', 7]
+  label_field_required: Champ obligatoire  
   label_icon: Icone
   icon_name_placeholder: "Nom de l'octicon"
   field_buttons_with_icons_field: Boutons avec icones

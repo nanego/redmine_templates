@@ -1,6 +1,9 @@
 <p>
   <%= label_tag do %>
     <%= section.title %>
+    <% if section.required %>
+      <span class="required"> *</span>
+    <% end %>
     <% if section.description.present? %>
       <em class="info" style="padding-top: 3px; line-height: 1.5em;">
         <%= section.description %>
@@ -20,6 +23,7 @@
 	                      size: 20,
 	                      accesskey: accesskey(:edit),
 	                      no_label: true,
+                        required: section.required,
 	                      value: value,
                         min: min_value,
                         max: max_value
