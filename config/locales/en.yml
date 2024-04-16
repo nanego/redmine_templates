@@ -79,3 +79,4 @@ en:
   field_buttons_with_icons_field: Buttons with icons
   label_value_at_index: "%{title} : value at index %{key}  is empty"
   label_copy: Copy of
+  label_issue_template: "Issue template"
