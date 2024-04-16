@@ -10,7 +10,7 @@
 %>
 
 <tr class="issue_template issue"
-    data-tracker-id="<%= issue_template.tracker_id %>"
+    data-tracker-id="<%= (issue_template.tracker_id.present? ? issue_template.tracker_id :  0) %>"
     data-template-id="<%= issue_template.id %>"
     data-template-enabled="<%= issue_template.template_enabled? ? '1' : '0' %>">
   <% link_to_edition = Proc.new do |label, title|

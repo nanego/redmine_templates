@@ -146,5 +146,26 @@ RSpec.describe "issue_template view", type: :system do
       end
     end
   end
-  
+
+  describe "Template index" do
+
+    before do
+      log_user('admin', 'admin')
+    end
+
+    it "Should not apply the filter by tracker if all trackers are selected" do
+      # Removing a tracker to simulate the absence of a tracker
+      tracker_to_remove = Tracker.find(3)
+      tracker_to_remove.destroy
+
+      # Retrieving the issue template without a tracker
+      template_without_tracker = IssueTemplate.last
+
+      # Verifying that the issue template has a tracker_id equal to 0
+      expect(template_without_tracker.tracker_id).to eq(0)
+
+      visit "/issue_templates"
+      expect(page.body).to have_selector("a", text: "#{template_without_tracker.template_title}")
+    end
+  end
 end
