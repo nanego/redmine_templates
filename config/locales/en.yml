@@ -66,15 +66,15 @@ en:
   label_display_in_range: Range display
   field_integer_field: "La valeur du champ entier"
   new_section_options:
-    - ['New Instruction', 2]
-    - ['New Long Text Field', 1]
-    - ['New Short Text Field', 3]
-    - ['New Checkbox', 4]
-    - ['New Date Field', 5]
-    - ['New Numeric Field', 6]
-    - ['New Value List', 7]
+    - [ 'New Instruction', 2 ]
+    - [ 'New Long Text Field', 1 ]
+    - [ 'New Short Text Field', 3 ]
+    - [ 'New Checkbox', 4 ]
+    - [ 'New Date Field', 5 ]
+    - [ 'New Numeric Field', 6 ]
+    - [ 'New Value List', 7 ]
   label_field_required: Required field
-  label_icon: Icon  
+  label_icon: Icon
   icon_name_placeholder: "Octicon name"
   field_buttons_with_icons_field: Buttons with icons
   label_value_at_index: "%{title} : value at index %{key}  is empty"

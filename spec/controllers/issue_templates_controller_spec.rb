@@ -287,7 +287,7 @@ describe IssueTemplatesController, type: :controller do
       expect(IssueTemplate.last.section_groups.first.sections.first.icon_name).to eq("history;alert-fill")
     end
 
-    it "Should successfully creates issue template section with range" do
+    it "creates issue template section with range" do
       expect do
         post :create, params: {
           :issue_template => {
@@ -307,7 +307,7 @@ describe IssueTemplatesController, type: :controller do
                     "min_value" => 2,
                     "max_value" => 4,
                     "empty_value" => 3,
-                    "select_type" => "0" #display_in_range
+                    "select_type" => "0" # display_in_range
                   },
                 ]
               }
@@ -323,7 +323,7 @@ describe IssueTemplatesController, type: :controller do
       expect(new_template.select_type).to eq("0")
     end
 
-    it "Should not accept a default value longer than the maximum specified" do
+    it "does not accept a default value longer than the maximum specified" do
       expect do
         post :create, params: {
           :issue_template => {
@@ -343,17 +343,17 @@ describe IssueTemplatesController, type: :controller do
                     "min_value" => 1,
                     "max_value" => 2,
                     "empty_value" => 5,
-                    "select_type" => "0" #display_in_range
+                    "select_type" => "0" # display_in_range
                   },
                 ]
               }
             ]
           }
         }
-      end.to change { IssueTemplate.count }.by(0)
+      end.to_not change { IssueTemplate.count }
     end
 
-    it "Should not accept a default value shorter than the minimum specified length" do
+    it "does not accept a default value shorter than the minimum specified length" do
       expect do
         post :create, params: {
           :issue_template => {
@@ -373,14 +373,14 @@ describe IssueTemplatesController, type: :controller do
                     "min_value" => 2,
                     "max_value" => 4,
                     "empty_value" => 5,
-                    "select_type" => "0" #display_in_range
+                    "select_type" => "0" # display_in_range
                   },
                 ]
               }
             ]
           }
         }
-      end.to change { IssueTemplate.count }.by(0)
+      end.to_not change { IssueTemplate.count }
     end
   end
 

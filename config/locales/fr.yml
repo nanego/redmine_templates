@@ -72,14 +72,14 @@ fr:
   field_integer_field: La valeur du champ entier
   field_default_value_integer: La valeur par défaut du champ entier
   new_section_options:
-    - ['Nouvelle consigne', 2]
-    - ['Nouveau champ texte (long)', 1]
-    - ['Nouveau champ texte (court)', 3]
-    - ['Nouvelle checkbox', 4]
-    - ['Nouveau champ date', 5]
-    - ['Nouvelle champ entier', 6]
-    - ['Nouvelle liste de valeurs', 7]
-  label_field_required: Champ obligatoire  
+    - [ 'Nouvelle consigne', 2 ]
+    - [ 'Nouveau champ texte (long)', 1 ]
+    - [ 'Nouveau champ texte (court)', 3 ]
+    - [ 'Nouvelle checkbox', 4 ]
+    - [ 'Nouveau champ date', 5 ]
+    - [ 'Nouvelle champ entier', 6 ]
+    - [ 'Nouvelle liste de valeurs', 7 ]
+  label_field_required: Champ obligatoire
   label_icon: Icone
   icon_name_placeholder: "Nom de l'octicon"
   field_buttons_with_icons_field: Boutons avec icones

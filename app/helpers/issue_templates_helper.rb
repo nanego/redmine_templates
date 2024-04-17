@@ -120,14 +120,11 @@ module IssueTemplatesHelper
   end
 
   def numeric_edit_tag(tag_id, tag_name, value, min_value, max_value, options = {})
-    # Generate the range field tag with specified options
     edit_tag = range_field_tag(tag_name,
-                                    value,
-                                    options.merge(id:tag_id,
-                                                  min: min_value,
-                                                  max: max_value
-                                                ))
-
+                               value,
+                               options.merge(id: tag_id,
+                                             min: min_value,
+                                             max: max_value))
     edit_tag << content_tag(:span, value, class: "range_selected_value")
     # Add JavaScript to update the displayed value
     edit_tag << javascript_tag(

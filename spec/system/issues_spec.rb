@@ -128,15 +128,15 @@ RSpec.describe "creating issues with templates", type: :system do
   end
 
   describe "Numeric Field" do
-    let (:group_id) { group_id =  IssueTemplate.find(6).section_groups[0].id }
-    let (:section) { section_id = IssueTemplate.find(6).section_groups[0].sections[8] }
+    let (:group_id) { IssueTemplate.find(6).section_groups[0].id }
+    let (:section) { IssueTemplate.find(6).section_groups[0].sections[8] }
 
-    it "Displays the expected numeric field on the 'New Issue' page with the default value" do
+    it "displays the expected numeric field on the 'New Issue' page with the default value" do
       visit new_issue_path(project_id: project.identifier, template_id: 6)
       expect(page).to have_css("input[name='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section.id}][empty_value]'][value='#{section.empty_value}']")
     end
 
-    it "Displays the expected numeric field on the 'New Issue' page with range display" do
+    it "displays the expected numeric field on the 'New Issue' page with range display" do
       template = IssueTemplate.find(6)
       template.section_groups[0].sections[8].select_type = "1"
       template.save
