@@ -286,6 +286,102 @@ describe IssueTemplatesController, type: :controller do
       expect(IssueTemplate.last.section_groups.first.sections.first.text).to eq("value1;value2")
       expect(IssueTemplate.last.section_groups.first.sections.first.icon_name).to eq("history;alert-fill")
     end
+
+    it "Should successfully creates issue template section with range" do
+      expect do
+        post :create, params: {
+          :issue_template => {
+            :template_title => "New template",
+            :template_enabled => "1",
+            :template_project_ids => ["1"],
+            :tracker_id => 1,
+            :status_id => 1,
+            section_groups_attributes: [
+              { "position" => "1",
+                "title" => "test",
+                "repeatable" => "0",
+                sections_attributes: [
+                  { "position" => "1",
+                    "title" => "test range",
+                    "type" => "IssueTemplateSectionNumeric",
+                    "min_value" => 2,
+                    "max_value" => 4,
+                    "empty_value" => 3,
+                    "select_type" => "0" #display_in_range
+                  },
+                ]
+              }
+            ]
+          }
+        }
+      end.to change { IssueTemplate.count }.by(1)
+
+      new_template = IssueTemplate.last.section_groups.first.sections.first
+      expect(new_template.min_value).to eq(2)
+      expect(new_template.max_value).to eq(4)
+      expect(new_template.empty_value).to eq("3")
+      expect(new_template.select_type).to eq("0")
+    end
+
+    it "Should not accept a default value longer than the maximum specified" do
+      expect do
+        post :create, params: {
+          :issue_template => {
+            :template_title => "New template",
+            :template_enabled => "1",
+            :template_project_ids => ["1"],
+            :tracker_id => 1,
+            :status_id => 1,
+            section_groups_attributes: [
+              { "position" => "1",
+                "title" => "test",
+                "repeatable" => "0",
+                sections_attributes: [
+                  { "position" => "1",
+                    "title" => "test range",
+                    "type" => "IssueTemplateSectionNumeric",
+                    "min_value" => 1,
+                    "max_value" => 2,
+                    "empty_value" => 5,
+                    "select_type" => "0" #display_in_range
+                  },
+                ]
+              }
+            ]
+          }
+        }
+      end.to change { IssueTemplate.count }.by(0)
+    end
+
+    it "Should not accept a default value shorter than the minimum specified length" do
+      expect do
+        post :create, params: {
+          :issue_template => {
+            :template_title => "New template",
+            :template_enabled => "1",
+            :template_project_ids => ["1"],
+            :tracker_id => 1,
+            :status_id => 1,
+            section_groups_attributes: [
+              { "position" => "1",
+                "title" => "test",
+                "repeatable" => "0",
+                sections_attributes: [
+                  { "position" => "1",
+                    "title" => "test range",
+                    "type" => "IssueTemplateSectionNumeric",
+                    "min_value" => 2,
+                    "max_value" => 4,
+                    "empty_value" => 5,
+                    "select_type" => "0" #display_in_range
+                  },
+                ]
+              }
+            ]
+          }
+        }
+      end.to change { IssueTemplate.count }.by(0)
+    end
   end
 
   describe "issue creation" do

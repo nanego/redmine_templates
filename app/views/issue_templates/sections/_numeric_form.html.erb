@@ -1,0 +1,25 @@
+<%= issue_template_section_form(form, IssueTemplateSectionNumeric, template) do %>
+  <p>
+    <%= form.text_field :title, :placeholder => :field_title, :label => :label_numeric, :size => 45, :required => true %>
+  </p>
+  <div class="collapsible">
+    <%= render partial: "issue_templates/sections/section_id", locals: {section: form.object} %>
+    <p>
+      <%= form.text_field :description, :placeholder => "Description", label: "Description", :size => 80 %>
+    </p>
+    <p>
+      <label for="custom_field_min_range"><%=l(:label_min_max_range)%></label>
+      <%= form.text_field :min_value, :size => 5, :no_label => true, pattern: '[-+]?\d*' %> -
+      <%= form.text_field :max_value, :size => 5, :no_label => true, pattern: '[-+]?\d*' %>
+    </p>
+    <p>
+      <%= form.text_field :empty_value, :label => :field_default_value, pattern: '[-+]?\d*' %>
+    </p>
+    <p>
+      <%= form.check_box :select_type, :label => :label_display_in_range %>
+    </p>
+    <p>
+      <%= form.check_box :required, :label => :label_field_required %>
+    </p>
+  </div>
+<% end %>

@@ -36,16 +36,12 @@
       <% end %>
 
     </div>
-
+ 
+    <% locale = I18n.locale || I18n.default_locale %>
+    <% options = I18n.t('new_section_options', locale: locale) %>
     <p data-target="split-description.add_buttons">
       <%= select_tag 'new_section',
-                     options_for_select([['Nouvelle consigne', 2],
-                                         ['Nouveau champ texte (long)', 1],
-                                         ['Nouveau champ texte (court)', 3],
-                                         ['Nouvelle checkbox', 4],
-                                         ['Nouveau champ date', 5],
-                                         ['Nouvelle liste de valeurs', 7]
-                                        ]),
+                     options_for_select(options),
                      data: { target: "split-description.select_new_section_type" },
                      class: "select_new_section_type"
       %>
