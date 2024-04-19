@@ -45,7 +45,7 @@ en:
   label_other_issue: "Other issue"
   disabled_tracker_for_this_project: Disabled tracker for this project
   comment: Comment
-  template: "Issue template"
+  label_issue_template: "Issue template"
   default_template_visibility: "Default template visibility"
   field_autocomplete_subject: "Autocomplete subject"
   field_issue_templates: "Issue templates"
@@ -79,4 +79,3 @@ en:
   field_buttons_with_icons_field: Buttons with icons
   label_value_at_index: "%{title} : value at index %{key}  is empty"
   label_copy: Copy of
-  label_issue_template: "Issue template"

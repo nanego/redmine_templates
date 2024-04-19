@@ -254,9 +254,10 @@ RSpec.describe "creating issues with templates", type: :system do
     end
 
   end
+
   describe "Field used issue template" do
     if Redmine::Plugin.installed?(:redmine_scn)
-      it "Should display the field when the user is an instance manager" do
+      it "displays the field issue-template when the user is an instance manager" do
         user = User.find(2)
         user.instance_manager = true
         user.save
@@ -265,7 +266,8 @@ RSpec.describe "creating issues with templates", type: :system do
         expect(page).to have_selector("div", text: "Issue template:")
       end
     end
-    it "Should display the field when the user is an admin" do
+
+    it "displays the field issue-template when the user is an admin" do
       user = User.find(2)
       user.admin = true
       user.save
@@ -274,7 +276,7 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to have_selector("div", text: "Issue template:")
     end
 
-    it "Should not display the field when the user is neither an admin nor a manager" do
+    it "does not display the field issue-template when the user is neither an admin nor a manager" do
       visit "issues/1"
       expect(page).not_to have_selector("div", text: "Issue template:")
     end
