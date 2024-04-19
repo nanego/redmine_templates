@@ -11,7 +11,7 @@
         </div>
       </label>
     <% end %>
-    <%= check_box_tag 'tracker_ids[]', 0, 1, :id => nil, :style => 'display:none;' %>
+    <label style="display: none;"><%= check_box_tag 'tracker_ids[]', 0, 1, :id => nil %></label>
   </fieldset>
 <% end %>
 
@@ -32,51 +32,34 @@
   function update_template_counters() {
     var trackers_filters = $('#filters_trackers input[type=checkbox]');
     for(const tracker of trackers_filters){
-        var templates_count = $('#templates_list .issue_template[data-tracker-id='+tracker.value+']').length
-        $(tracker.parentElement).find('.count-total').html(templates_count)
-        var enabled_templates_count = $('#templates_list .issue_template[data-tracker-id='+tracker.value+'][data-template-enabled=1]').length
-        $(tracker.parentElement).find('.count-enabled').html(enabled_templates_count)
+      var templates_count = $('#templates_list .issue_template[data-tracker-id='+tracker.value+']').length
+      $(tracker.parentElement).find('.count-total').html(templates_count)
+      var enabled_templates_count = $('#templates_list .issue_template[data-tracker-id='+tracker.value+'][data-template-enabled=1]').length
+      $(tracker.parentElement).find('.count-enabled').html(enabled_templates_count)
     }
   }
 
   function filter_templates() {
-
-    // Init
-    var templates_to_show_by_trackers = [];
-    var templates_to_show_by_enabled = [];
-
-    // Filter by Trackers
-    var trackers_values = $('#filters_trackers input[type=checkbox]:checked');
-    for(const v of trackers_values){
-      $('#templates_list .issue_template[data-tracker-id='+v.value+']').each(function(){
-        templates_to_show_by_trackers.push(this.getAttribute('data-template-id'));
-      });
+    $('#templates_list .issue_template').hide()
+    var checked_trackers_ids = $('#filters_trackers input[type=checkbox]:checked').map(function() {
+      return this.value
+    })
+    var checked_enabled_values = $('#filters_template_enabled input[type=checkbox]:checked').map(function() {
+      return this.value
+    })
+    for(const checked_tracker_id of checked_trackers_ids){
+      for(const checked_enabled_value of checked_enabled_values){
+        $('#templates_list .issue_template[data-tracker-id='+checked_tracker_id+'][data-template-enabled='+checked_enabled_value+']').show()
+      }
     }
-
-    // Filter by template enabled
-    var enabled_values = $('#filters_template_enabled input[type=checkbox]:checked');
-    for(const v of enabled_values){
-      $('#templates_list .issue_template[data-template-enabled='+v.value+']').each(function(){
-        templates_to_show_by_enabled.push(this.getAttribute('data-template-id'));
-      })
-    }
-
-    const templates_to_show = templates_to_show_by_trackers.filter(value => templates_to_show_by_enabled.includes(value));
-    $('#templates_list .issue_template').hide();
-    for(const template_id of templates_to_show){
-      $('#templates_list .issue_template[data-template-id='+template_id+']').show();
-    }
-
-    update_template_counters();
-
+    update_template_counters()
   }
 
-  $(document).on("input change", "#filters_trackers input, #filters_template_enabled input", function(event) {
-  filter_templates();
+  $(document).on("input change", "#filters_trackers input, #filters_template_enabled input", function() {
+    filter_templates()
   })
-  document.addEventListener('DOMContentLoaded', function(event) {
-  filter_templates();
+  document.addEventListener('DOMContentLoaded', function() {
+    filter_templates()
   })
-  filter_templates();
 
 <% end %>
