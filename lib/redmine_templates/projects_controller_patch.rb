@@ -1,4 +1,4 @@
-require "#{Rails.root}/app/controllers/projects_controller.rb"
+require_dependency "#{Rails.root}/app/controllers/projects_controller.rb"
 
 module RedmineTemplates
   module ProjectsControllerPatch
