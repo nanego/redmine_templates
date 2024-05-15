@@ -4,6 +4,8 @@ module RedmineTemplates
   end
 end
 
-class Typology < Enumeration
-  has_many :issue_templates, :dependent => :nullify
+if Redmine::Plugin.installed?(:redmine_typologies)
+  class Typology < Enumeration
+    has_many :issue_templates, :dependent => :nullify
+  end
 end
