@@ -112,6 +112,10 @@ class IssueTemplate < ActiveRecord::Base
     Project.active
   end
 
+  def allowed_for?(project:, user: User.current)
+    Issue.allowed_target_trackers(project, user).include?(self.tracker) && self.template_projects.include?(project)
+  end
+
   def self.allowed_target_projects_by_attributes
     Project.active_by_attributes
   end

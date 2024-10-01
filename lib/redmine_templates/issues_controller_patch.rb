@@ -21,7 +21,7 @@ module RedmineTemplates
 
     def finish_template_set_up
       if @issue_template
-        render_403 if @issue.project.issue_templates.exclude?(@issue_template)
+        render_403 unless @issue_template.allowed_for?(project: @project)
         @issue.custom_field_values = @issue_template.custom_field_values.to_h { |cv| [cv.custom_field_id.to_s, cv.value] }
         if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
           @issue.projects = @issue_template.secondary_projects
