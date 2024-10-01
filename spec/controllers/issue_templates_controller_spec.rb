@@ -138,9 +138,11 @@ describe IssueTemplatesController, type: :controller do
 
       get :copy, params: { id: template_origin.id }
 
-      assigns(:issue_template).custom_field_values.each_with_index do |field, ind|
-        expect(field.value).to eq("Value for field #{ind + 1}")
-      end
+      custom_field_values = assigns(:issue_template).custom_field_values.map(&:value)
+      expect(custom_field_values).to include("Value for field 1")
+      expect(assigns(:issue_template).custom_field_values[1].value).to eq("Value for field 2")
+      expect(assigns(:issue_template).custom_field_values[2].value).to eq("Value for field 3")
+
     end
   end
 

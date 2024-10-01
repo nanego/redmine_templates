@@ -14,7 +14,8 @@ def log_user(login, password)
     fill_in 'password', with: password
     find('input[name=login]').click
   end
-  expect(current_path).to eq '/my/page'
+
+  expect(page).to have_current_path('/my/page')
 end
 
 RSpec.describe "creating issues with templates", type: :system do
