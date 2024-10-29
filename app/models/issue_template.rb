@@ -105,7 +105,7 @@ class IssueTemplate < ActiveRecord::Base
   end
 
   def has_been_deleted?
-    IssueTemplate.where(id: self.id).blank?
+    destroyed?
   end
 
   def allowed_target_projects
