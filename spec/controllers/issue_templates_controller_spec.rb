@@ -286,7 +286,7 @@ describe IssueTemplatesController, type: :controller do
       end.to change { IssueTemplate.count }.by(1)
 
       expect(IssueTemplate.last.section_groups.first.sections.first.text).to eq("value1;value2")
-      expect(IssueTemplate.last.section_groups.first.sections.first.icon_name).to eq("history;alert-fill")
+      expect(IssueTemplate.last.section_groups.first.sections.first.icon_name).to eq("history;")
     end
 
     it "creates issue template section with range" do

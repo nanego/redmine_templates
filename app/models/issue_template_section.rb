@@ -3,7 +3,7 @@ class IssueTemplateSection < ActiveRecord::Base
   belongs_to :issue_template_section_group
 
   DISPLAY_MODES = [:all_values, :selected_values_only]
-  DEFAULT_ICON = "alert-fill"
+  DEFAULT_ICON = ""
 
   acts_as_list scope: [:issue_template_section_group_id]
 

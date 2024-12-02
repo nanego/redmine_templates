@@ -240,7 +240,7 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to have_css(".octicon-history")
     end
 
-    it "keeps the selected value in issue escription" do
+    it "keeps the selected value in issue description" do
       visit new_issue_path(project_id: project.identifier, template_id: 3)
 
       fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', with: 'One-line edited content'

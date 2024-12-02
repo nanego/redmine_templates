@@ -59,8 +59,8 @@
             id="<%= "issue[issue_template][section_groups_attributes][#{section_group.id}][#{group_index}][sections_attributes][#{section.id}][text]" %>"
             value="<%= select_value %>">
         <% begin %>
-          <% octicon_name = possible_values_icons[value_index] || "alert-fill" %>
-          <%= octicon(octicon_name, :height => 30, :class => "right left", :"aria-label" => "hi") %>
+          <% octicon_name = possible_values_icons[value_index] %>
+          <%= octicon_name.present? ? octicon(octicon_name, :height => 30, :class => "right left", :"aria-label" => "hi") : "" %>
         <% rescue => e %>
           <span class="error">
             Vérifiez le nom de l'octicon
