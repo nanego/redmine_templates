@@ -40,7 +40,7 @@ module RedmineTemplates
   end
 end
 
-class Project < ActiveRecord::Base
+class Project
   prepend RedmineTemplates::ProjectPatch
 
   scope :active_by_attributes, -> do

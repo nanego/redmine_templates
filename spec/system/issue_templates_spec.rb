@@ -14,7 +14,7 @@ def log_user(login, password)
     fill_in 'password', with: password
     find('input[name=login]').click
   end
-  expect(current_path).to eq '/my/page'
+  expect(page).to have_current_path('/my/page', wait: true)
 end
 
 RSpec.describe "creating issues with templates", type: :system do
@@ -69,7 +69,8 @@ RSpec.describe "creating issues with templates", type: :system do
       all('#read_only')[2].click
 
       # save the template
-      find('input[name=commit]').click
+      find('input[type=submit]').click
+      expect(page).to have_content('template has been updated')
 
       section_test = IssueTemplate.find(1).section_groups[0].sections[0]
       expect(section_test.empty_value).to eq("#{array_values[0]};#{array_values[2]}")
@@ -83,6 +84,8 @@ RSpec.describe "creating issues with templates", type: :system do
       visit new_issue_template_path
       # open selected projects modal
       find('#link_update_project_list').click
+
+      expect(page).to have_selector('#ajax-modal', wait: true)
 
       within '#ajax-modal' do
         # select projects with id  3 , 5

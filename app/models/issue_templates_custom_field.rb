@@ -1,4 +1,4 @@
-class IssueTemplatesCustomField < ActiveRecord::Base
+class IssueTemplatesCustomField < ApplicationRecord
   include Redmine::SafeAttributes
 
   belongs_to :custom_field

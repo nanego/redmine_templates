@@ -1,6 +1,6 @@
 require_relative 'issue_template_description'
 
-class IssueTemplate < ActiveRecord::Base
+class IssueTemplate < ApplicationRecord
   include Redmine::SafeAttributes
 
   acts_as_customizable

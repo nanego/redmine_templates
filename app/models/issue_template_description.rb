@@ -1,4 +1,4 @@
-class IssueTemplateDescription < ActiveRecord::Base
+class IssueTemplateDescription < ApplicationRecord
 
   belongs_to :issue_template
 

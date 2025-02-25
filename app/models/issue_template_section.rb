@@ -1,4 +1,4 @@
-class IssueTemplateSection < ActiveRecord::Base
+class IssueTemplateSection < ApplicationRecord
 
   belongs_to :issue_template_section_group
 
@@ -9,6 +9,13 @@ class IssueTemplateSection < ActiveRecord::Base
 
   def self.editable?
     true
+  end
+
+  def self.ordered_subclasses
+    subclasses = IssueTemplateSection.subclasses
+    subclasses.delete(IssueTemplateSectionInstruction)
+    subclasses.push(IssueTemplateSectionInstruction) # Replace la sous-classe "Instruction" en fin de tableau
+    subclasses
   end
 
   def rendered_value(section_attributes, textile: true, value_only: false)

@@ -14,7 +14,7 @@ def log_user(login, password)
     fill_in 'password', with: password
     find('input[name=login]').click
   end
-  expect(current_path).to eq '/my/page'
+  expect(page).to have_current_path('/my/page', wait: true)
 end
 
 RSpec.describe "issue_template view", type: :system do
@@ -49,6 +49,7 @@ RSpec.describe "issue_template view", type: :system do
         page.find("label", :text => project.name).click
         page.find("#button_apply_projects").click
       end
+      expect(page).to_not have_selector('#ajax-modal', wait: 2)
 
       project.all_issue_custom_fields.each do |field|
         expect(page).to have_selector("label", text: field.name)
@@ -78,7 +79,7 @@ RSpec.describe "issue_template view", type: :system do
       expect(page).to_not have_selector("label", text: custom_field_1.name)
     end
 
-    it "Should display deactivated projects in the correct order" do
+    it "displays deactivated projects in the correct order" do
       template_test = IssueTemplate.find(2)
       project_test = Project.find(5)
       project_test.status = Project::STATUS_ARCHIVED
@@ -127,18 +128,24 @@ RSpec.describe "issue_template view", type: :system do
 
   describe "Template edition by a non-admin" do
     before do
+      visit '/logout'
+
       # Add permission to user
       user_jsmith = User.find(2)
       role = Member.where(user: user_jsmith, project: project).first.roles.first
       role.add_permission!(:create_issue_templates)
       role.add_permission!(:manage_project_issue_templates)
+
       log_user('jsmith', 'jsmith')
     end
 
     it "should be accessible by a non-admin user with permissions" do
       visit new_issue_template_path
+      expect(page).to have_current_path('/issue_templates/new', wait: true)
 
       find("#link_update_project_list").click
+
+      expect(page).to have_selector('#ajax-modal', wait: true)
 
       within '#ajax-modal' do
         page.find("label", :text => project.name).click

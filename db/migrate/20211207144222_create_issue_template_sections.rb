@@ -1,4 +1,4 @@
-class MigrationSection < ActiveRecord::Base
+class MigrationSection < ApplicationRecord
   self.table_name = :issue_template_sections
 end
 

@@ -49,7 +49,8 @@
     </p>
 
     <%# Empty templates %>
-    <% IssueTemplateSection.subclasses.each do |klass| %>
+
+    <% IssueTemplateSection.ordered_subclasses.each do |klass| %>
       <%= form.fields_for :sections_attributes, index: "$id_section$" do |section_form| %>
         <%= render partial: "issue_templates/sections/#{klass.short_name}_form",
                    locals: { form: section_form, template: true } %>

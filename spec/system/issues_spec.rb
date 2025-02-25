@@ -2,6 +2,7 @@ require "spec_helper"
 require "active_support/testing/assertions"
 
 def log_user(login, password)
+  visit 'logout'
   visit '/my/page'
   expect(current_path).to eq '/login'
 
@@ -48,12 +49,16 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to have_selector('#attachments_form')
 
       fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', with: 'One-line edited content'
-      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: '01/01/2020'
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: Date.parse('2020-01-01')
+
       click_on 'Create'
+
+      expect(page).to have_content('created', wait: true)
 
       expect(page).to have_selector('.description', text: "Type here first section content")
       expect(page).to have_selector('.description', text: "Type here second section content")
       expect(page).to have_selector('.description', text: 'One-line edited content')
+      expect(page).to have_selector('.description', text: '2020-01-01')
     end
 
     it "keeps sections values when form is reloaded" do
@@ -154,6 +159,8 @@ RSpec.describe "creating issues with templates", type: :system do
 
       click_on 'Create'
 
+      expect(page).to have_content('created', wait: true)
+
       expect(Issue.last.description).to include("#{section.title}")
       expect(Issue.last.description).to include("5")
     end
@@ -250,6 +257,8 @@ RSpec.describe "creating issues with templates", type: :system do
       div_element.click
 
       click_on 'Create'
+
+      expect(page).to have_content('created', wait: true)
 
       expect(Issue.last.description).to include("value2")
     end

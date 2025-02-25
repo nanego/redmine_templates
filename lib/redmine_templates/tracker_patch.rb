@@ -3,7 +3,6 @@ module RedmineTemplates
 
     def self.prepended(base)
       base.class_eval do
-        unloadable
         has_many :issue_templates
         before_destroy :set_default_tracker_id_in_issue_templates
       end

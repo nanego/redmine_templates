@@ -1,4 +1,4 @@
-class IssueTemplateSectionGroup < ActiveRecord::Base
+class IssueTemplateSectionGroup < ApplicationRecord
 
   belongs_to :issue_template
   has_many :sections, -> { order(:position) }, :class_name => 'IssueTemplateSection', :dependent => :destroy

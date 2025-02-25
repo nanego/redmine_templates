@@ -45,7 +45,7 @@ end
 
 Issue.prepend RedmineTemplates::IssuePatch
 
-class Issue < ActiveRecord::Base
+class Issue
   belongs_to :issue_template, optional: true
   safe_attributes 'issue_template_id'
 end

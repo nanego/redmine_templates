@@ -1,4 +1,4 @@
-class MigrationDescriptionSection < ActiveRecord::Base
+class MigrationDescriptionSection < ApplicationRecord
   self.table_name = :issue_template_description_sections
 end
 
