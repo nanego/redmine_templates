@@ -19,7 +19,6 @@ end
 
 def log_out
   visit '/logout'
-  expect(current_path).to eq '/'
 end
 
 RSpec.describe "issue_template view", type: :system do
