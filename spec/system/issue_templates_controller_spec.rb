@@ -17,6 +17,11 @@ def log_user(login, password)
   expect(page).to have_current_path('/my/page', wait: true)
 end
 
+def log_out
+  visit '/logout'
+  expect(current_path).to eq '/'
+end
+
 RSpec.describe "issue_template view", type: :system do
   include ActiveSupport::Testing::Assertions
   include IssuesHelper
@@ -128,7 +133,7 @@ RSpec.describe "issue_template view", type: :system do
 
   describe "Template edition by a non-admin" do
     before do
-      visit '/logout'
+      log_out
 
       # Add permission to user
       user_jsmith = User.find(2)
