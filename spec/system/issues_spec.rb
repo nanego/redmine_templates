@@ -1,24 +1,6 @@
 require "spec_helper"
 require "active_support/testing/assertions"
 
-def log_user(login, password)
-  visit 'logout'
-  visit '/my/page'
-  expect(current_path).to eq '/login'
-
-  if Redmine::Plugin.installed?(:redmine_scn)
-    click_on("ou s'authentifier par login / mot de passe")
-  end
-
-  within('#login-form form') do
-    fill_in 'username', with: login
-    fill_in 'password', with: password
-    find('input[name=login]').click
-  end
-
-  expect(page).to have_current_path('/my/page')
-end
-
 RSpec.describe "creating issues with templates", type: :system do
   include ActiveSupport::Testing::Assertions
   include IssuesHelper
@@ -251,7 +233,7 @@ RSpec.describe "creating issues with templates", type: :system do
       visit new_issue_path(project_id: project.identifier, template_id: 3)
 
       fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', with: 'One-line edited content'
-      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: '01/01/2020'
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: Date.parse('2020-01-01')
 
       div_element = find("[id='issue[issue_template][section_groups_attributes][#{group_id}][0][sections_attributes][#{section_id}][text]']", text: "value2")
       div_element.click
