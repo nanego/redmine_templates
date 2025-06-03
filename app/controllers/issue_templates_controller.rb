@@ -219,10 +219,8 @@ class IssueTemplatesController < ApplicationController
 
     @issue_template = params[:template_id].present? ? IssueTemplate.find(params[:template_id]) : IssueTemplate.new
 
-    vals_allowed_target = Rails.env.test? && params[:format] == 'js' ? JSON.parse(params[:allowed_projects]) : params[:allowed_projects].permit!.to_h.values
-    # convert to int
-    @allowed_target_projects_attributes_array = vals_allowed_target.map do |id, name, status, lft, rgt|
-      [id.to_i, name, status.to_i, lft.to_i, rgt.to_i]
+    @allowed_target_projects_attributes_array = @issue_template.allowed_target_projects.map do |p|
+      [p.id, p.name, p.status.to_i, p.lft.to_i, p.rgt.to_i]
     end
 
     vals_template_projects = params[:project_ids].present? ? Project.find(params[:project_ids]).pluck(:id, :name, :status, :lft, :rgt) : []

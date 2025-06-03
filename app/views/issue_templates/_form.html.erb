@@ -73,7 +73,7 @@
               <span id="my_projects">
                 <% visible_projects.each do |project| %>
 
-                    <%= content_tag("span", project.gsub(/ /, "&nbsp;").html_safe, class: "list_templates_projects_names") %>
+                  <%= content_tag("span", project.gsub(/ /, "&nbsp;").html_safe, class: "list_templates_projects_names") %>
 
                 <% end %>
               </span>
@@ -204,8 +204,8 @@
                 <% end -%>
                 <% i += 1 -%>
               <% end %>
-            </div>
-          </div>
+              </div>
+              </div>
           <% include_calendar_headers_tags %>
         </div>
 
@@ -255,9 +255,6 @@
         });
 
         function buildSelectprojectsModal(id) {
-            var allowed_projects =
-            <%= allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
-
             var project_ids = $('#issue_template_template_project_ids').val();
             if (project_ids.length == 0) {
                 project_ids = ''
@@ -266,7 +263,7 @@
             $.ajax({
                 url: "<%= render_select_projects_modal_by_ajax_path(template_id: @issue_template.id) %>",
                 type: 'POST',
-                data: {allowed_projects: allowed_projects, project_ids: project_ids},
+                data: {project_ids: project_ids},
                 success: function (response) {
                     $('#ajax-indicator').removeClass('bottom');
                     if (response) {
