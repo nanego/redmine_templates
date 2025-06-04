@@ -40,10 +40,6 @@
       options_for_selects[key] << [enum_item.name, val] if enum_item
     else
       values = val.is_a?(Array) ? val : [val]
-      puts options_for_selects.inspect
-      puts key.inspect
-      puts values.inspect
-      puts options_for_selects[key].inspect
       values.each do |val|
         options_for_selects[key] << val
       end

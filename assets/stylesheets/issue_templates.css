@@ -405,7 +405,7 @@ a.list_templates_projects_names.current {
 #issue-form #attributes .subtitle_container {
     display: flex;
     flex-direction: row;
-    margin: -24px 0 8px -6px;
+    margin: -28px 0 8px -8px;
     min-height: 2em;
 }
 
