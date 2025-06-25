@@ -23,8 +23,8 @@ module RedmineTemplates
                                   else
                                     template.reload
                                     template.template_enabled &&
-                                      Issue.allowed_target_trackers(current_project).include?(template.tracker) &&
-                                      template.template_projects.include?(current_project)
+                                      template.template_projects.include?(current_project) &&
+                                      template.tracker_is_valid?(current_project)
                                   end
                                 },
                                 :permission => :add_issues,

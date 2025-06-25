@@ -47,7 +47,7 @@ class IssueTemplate < ApplicationRecord
   scope :displayed_on_overview, -> { active.where(show_on_overview: true) }
   scope :active, -> { where(template_enabled: true) }
 
-  #to avoid firing updates without waiting for the save or update call, we add these 3 attributes
+  # to avoid firing updates without waiting for the save or update call, we add these 3 attributes
   validates_presence_of :assignable_projects, if: :assignable_projects_validation
   attr_accessor :assignable_projects, :skip_template_projects_validation, :assignable_projects_validation
 
@@ -95,6 +95,11 @@ class IssueTemplate < ApplicationRecord
 
   def validate_custom_field_values
     # Skip custom values validation when saving templates
+  end
+
+  def tracker_is_valid?(current_project)
+    tracker_activated_in_current_project = Issue.allowed_target_trackers(current_project).include?(self.tracker)
+    tracker_activated_in_current_project || (self.create_issues_in_main_project && Issue.allowed_target_trackers(self.project).include?(self.tracker))
   end
 
   def title_with_tracker

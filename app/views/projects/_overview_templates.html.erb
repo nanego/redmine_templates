@@ -1,14 +1,13 @@
 <% if @project.present? &&
   @project.module_enabled?('issue_tracking') &&
   @project.active? &&
-  @project.issue_templates.present? &&
-  (Issue.allowed_target_trackers(@project) & @project.issue_templates.displayed_on_overview.map(&:tracker)).any? %>
+  @project.issue_templates.displayed_on_overview.present? %>
 
   <div class="templates_cards">
 
     <% @project.issue_templates.displayed_on_overview.includes(:tracker).order('trackers.position desc, issue_templates.template_title desc').each do |template| %>
 
-      <% if Issue.allowed_target_trackers(@project).include?(template.tracker) && template.template_projects.include?(@project) %>
+      <% if template.tracker_is_valid?(@project) %>
         <div onclick="document.location.href='<%= new_project_issue_path(project_id: @project, template_id: template.id) %>'" class="template_card">
           <div class="template-logo">
             <% begin %>
