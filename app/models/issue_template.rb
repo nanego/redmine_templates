@@ -97,9 +97,9 @@ class IssueTemplate < ApplicationRecord
     # Skip custom values validation when saving templates
   end
 
-  def tracker_is_valid?(current_project)
-    tracker_activated_in_current_project = Issue.allowed_target_trackers(current_project).include?(self.tracker)
-    tracker_activated_in_current_project || (self.create_issues_in_main_project && Issue.allowed_target_trackers(self.project).include?(self.tracker))
+  def tracker_is_valid?(current_project, user = User.current)
+    tracker_activated_in_current_project = Issue.allowed_target_trackers(current_project, user).include?(self.tracker)
+    tracker_activated_in_current_project || (self.create_issues_in_main_project && Issue.allowed_target_trackers(self.project, user).include?(self.tracker))
   end
 
   def title_with_tracker
@@ -119,7 +119,7 @@ class IssueTemplate < ApplicationRecord
   end
 
   def allowed_for?(project:, user: User.current)
-    Issue.allowed_target_trackers(project, user).include?(self.tracker) && self.template_projects.include?(project)
+    tracker_is_valid?(project, user) && self.template_projects.include?(project)
   end
 
   def self.allowed_target_projects_by_attributes

@@ -3,8 +3,7 @@ module RedmineTemplates
     def render_menu(menu, current_project = nil)
 
       if current_project.present? &&
-        current_project.issue_templates.present? &&
-        (Issue.allowed_target_trackers(current_project) & current_project.issue_templates.map(&:tracker)).any?
+         current_project.issue_templates.present?
         Redmine::MenuManager.map :project_menu do |project_menu|
           current_project.issue_templates.includes(:tracker).reorder('trackers.position asc, issue_templates.template_title asc').each do |template|
             menu_item_name = "new_issue_template_#{template.id}".to_sym
