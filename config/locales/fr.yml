@@ -88,3 +88,4 @@ fr:
   label_main_project: "Projet principal"
   label_issue_template_target_project: "Projet de destination"
   label_create_issues_in_main_project: "Créer toutes les demandes dans le projet principal"
+  label_issue_template_target_project_help: "Permet d'afficher un modèle dans différents projets mais de regrouper toutes les demandes créées dans un seul."
