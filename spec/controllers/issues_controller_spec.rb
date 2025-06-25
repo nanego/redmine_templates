@@ -47,6 +47,8 @@ describe IssuesController, type: :controller do
   let(:template) { IssueTemplate.find(4) }
   let(:template_with_instruction) { IssueTemplate.find(5) }
   let(:template_with_repeatable_sections) { IssueTemplate.find(6) }
+  let(:project_1) { Project.find(1) }
+  let(:project_2) { Project.find(2) }
 
   context "POST create" do
     it "shows multiple description sections" do
@@ -305,7 +307,7 @@ describe IssuesController, type: :controller do
         \r\n*New select field displaying only selected values :* \r
         * value-2 : Yes \r
         \r\n*Select Radio field :* val2\r
-                                   DESCRIPTION
+      DESCRIPTION
                                    )
     end
 
@@ -531,5 +533,45 @@ describe IssuesController, type: :controller do
       templetes = issues_in_list.map(&:issue_template)
       expect(templetes.last.template_title).to eq(IssueTemplate.find(1).template_title)
     end
+  end
+
+  context "GET NEW issue with template" do
+    it "sets issue_template_id and project_id when template_id is passed" do
+      get :new, params: { :project_id => 2, :template_id => template.id }
+
+      expect(response).to be_successful
+      expect(assigns(:issue).issue_template_id).to eq(template.id)
+      expect(assigns(:issue).issue_template).to eq(template)
+      expect(assigns(:issue).project).to eq(project_2)
+    end
+
+    describe "create_issues_in_main_project option" do
+      it "sets a different project when create_issues_in_main_project is checked" do
+        template.create_issues_in_main_project = true
+        template.project_id = 1
+        template.save
+
+        get :new, params: { :project_id => 2, :template_id => template.id }
+
+        expect(response).to be_successful
+        expect(assigns(:issue).issue_template_id).to eq(template.id)
+        expect(assigns(:issue).issue_template).to eq(template)
+        expect(assigns(:issue).project).to eq(project_1)
+      end
+
+      it "keeps the original project when create_issues_in_main_project is NOT checked" do
+        template.create_issues_in_main_project = false
+        template.project_id = 1
+        template.save
+
+        get :new, params: { :project_id => 2, :template_id => template.id }
+
+        expect(response).to be_successful
+        expect(assigns(:issue).issue_template_id).to eq(template.id)
+        expect(assigns(:issue).issue_template).to eq(template)
+        expect(assigns(:issue).project).to eq(project_2)
+      end
+    end
+
   end
 end

@@ -85,3 +85,6 @@ fr:
   field_buttons_with_icons_field: Boutons avec icones
   label_value_at_index: "%{title} : la valeur à l'indice %{key} est vide"
   label_copy: Copie de
+  label_main_project: "Projet principal"
+  label_issue_template_target_project: "Projet de destination"
+  label_create_issues_in_main_project: "Créer toutes les demandes dans le projet principal"

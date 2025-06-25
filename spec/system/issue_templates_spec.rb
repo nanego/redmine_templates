@@ -92,7 +92,7 @@ RSpec.describe "creating issues with templates", type: :system do
       find("input[name='commit']").click
 
       # wait for the methode similar_templates (in ajax)
-      sleep(5)
+      sleep(3)
       expect(IssueTemplate.last.template_projects.count).to eq(3)
     end
   end

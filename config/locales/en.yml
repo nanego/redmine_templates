@@ -79,3 +79,6 @@ en:
   field_buttons_with_icons_field: Buttons with icons
   label_value_at_index: "%{title} : value at index %{key}  is empty"
   label_copy: Copy of
+  label_main_project: "Main project"
+  label_issue_template_target_project: "Target project"
+  label_create_issues_in_main_project: "Create all issues in main project"

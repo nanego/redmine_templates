@@ -14,7 +14,13 @@ module RedmineTemplates
         @issue_template = IssueTemplate.find_by_id(params[:template_id])
         if @issue_template.present?
           params[:issue] = @issue_template.attributes.slice(*Issue.attribute_names).merge(permitted_params_override)
-          params[:issue][:project_id] = params[:project_id]
+
+          if @issue_template.create_issues_in_main_project && @issue_template.project_id.present?
+            @initial_project = Project.find(params[:project_id])
+            params[:issue][:project_id] = @issue_template.project_id
+          else
+            params[:issue][:project_id] = params[:project_id]
+          end
         end
       end
     end
@@ -25,6 +31,7 @@ module RedmineTemplates
         @issue.custom_field_values = @issue_template.custom_field_values.to_h { |cv| [cv.custom_field_id.to_s, cv.value] }
         if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
           @issue.projects = @issue_template.secondary_projects
+          @issue.projects << @initial_project if @initial_project.present?
         end
         @issue.issue_template = @issue_template
         @issue_template.increment!(:usage)

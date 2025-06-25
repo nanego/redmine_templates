@@ -23,7 +23,6 @@
             <p>
               <%= f.check_box :hide_file_attachment, :no_label => false %>
             </p>
-            <%= f.hidden_field :project_id, :value => (@project.try(:id) || @issue_template.project_id) %>
             <%= f.hidden_field :id, :value => @issue_template.id %>
             <% if Setting["plugin_redmine_templates"]["disable_templates"] %>
               <p>
@@ -94,6 +93,37 @@
             </div>
 
             <%= link_to l("modify_projects"), '#', id: "link_update_project_list" %>
+
+            <fieldset id="issue_template_target_project" style="margin-top: 2em;">
+              <legend>
+                <%= l(:label_issue_template_target_project) %>
+                <%= content_tag 'a', sprite_icon('help', l(:label_issue_template_target_project_help)),
+                                :class => 'icon-only icon-help',
+                                :title => l(:label_issue_template_target_project_help),
+                                :onclick => "showModal('help_issue_template_target_project', '500px'); return false;",
+                                :href => '#' %>
+              </legend>
+              <div>
+                <%= f.check_box :create_issues_in_main_project, label: l(:label_create_issues_in_main_project) %>
+              </div>
+              <div>
+                <%= f.select :project_id,
+                             project_tree_options_for_select(Project.active.visible.sorted,
+                                                             selected: @issue_template.project || @project),
+                             { required: false, include_blank: " ", label: :label_main_project } %>
+              </div>
+              <script type="text/javascript">
+                  $(function() {
+                      if ((typeof $().select2) === 'function') {
+                          $('#issue_template_project_id').select2({
+                              containerCss: {width: '500px', minwidth: '500px'},
+                              width: 'style'
+                          });
+                      }
+                  });
+              </script>
+
+            </fieldset>
 
           </div>
 

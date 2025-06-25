@@ -65,6 +65,8 @@ class IssueTemplatesController < ApplicationController
       @issue_template.assignable_secondary_projects = secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
     end
 
+    @issue_template.project = projects.first if @issue_template.project_id.blank? && projects.any?
+
     if @issue_template.save
       respond_to do |format|
         format.html {
@@ -100,6 +102,7 @@ class IssueTemplatesController < ApplicationController
     if @issue_template.valid?
       @issue_template.template_projects = projects
       @issue_template.secondary_projects = secondary_projects if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+      @issue_template.project = projects.first if @issue_template.project_id.blank? && projects.any?
     end
 
     if @issue_template.save

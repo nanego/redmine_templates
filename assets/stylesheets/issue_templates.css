@@ -154,6 +154,14 @@ a.list_templates_projects_names.current {
     width: 175px;
 }
 
+#issue_template_target_project label {
+    margin-left: 0;
+    margin-right: 2em;
+    padding: 3px 0 3px 0;
+    min-height: 1.8em;
+    float: none;
+}
+
 .projects_container {
     max-height: 500px;
     overflow: auto;

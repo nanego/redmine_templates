@@ -47,7 +47,7 @@ class IssueTemplate < ApplicationRecord
   scope :displayed_on_overview, -> { active.where(show_on_overview: true) }
   scope :active, -> { where(template_enabled: true) }
 
-  #to avoid fires update without waiting for the save or update call, we add these 3 attributtes
+  #to avoid firing updates without waiting for the save or update call, we add these 3 attributes
   validates_presence_of :assignable_projects, if: :assignable_projects_validation
   attr_accessor :assignable_projects, :skip_template_projects_validation, :assignable_projects_validation
 
@@ -86,7 +86,8 @@ class IssueTemplate < ApplicationRecord
                   :section_groups_attributes,
                   :split_description,
                   :typology_id,
-                  :autocomplete_subject
+                  :autocomplete_subject,
+                  :create_issues_in_main_project
 
   def to_s
     template_title
