@@ -1,5 +1,3 @@
-require "#{Rails.root}/app/models/project.rb"
-
 module RedmineTemplates
   module ProjectPatch
 
