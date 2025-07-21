@@ -1,4 +1,4 @@
-class AddMissingIndexes < ActiveRecord::Migration[7.2]
+class AddMissingIndexes < ActiveRecord::Migration[6.1]
   def change
     add_index :issue_template_descriptions, [:id, :type], if_not_exists: true
     add_index :issue_template_projects, :issue_template_id, if_not_exists: true
