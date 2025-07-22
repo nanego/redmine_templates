@@ -12,7 +12,14 @@ module RedmineTemplates::IssuePatch
       when /^section_\d+/
         section_value_by_id(attribute.delete_prefix("section_"), sections_params)
       else
-        self.send(attribute.downcase.to_sym) if self.respond_to?(attribute.downcase.to_sym)
+        if self.respond_to?(attribute.downcase.to_sym)
+          value = self.send(attribute.downcase.to_sym)
+          if value.is_a?(Date) || value.is_a?(Time)
+            value.strftime("%d/%m/%Y")
+          else
+            value
+          end
+        end
       end
     end
   end
