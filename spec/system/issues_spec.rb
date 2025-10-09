@@ -1,5 +1,6 @@
 require "spec_helper"
 require "active_support/testing/assertions"
+require_relative "../support/system_test_helpers"
 
 RSpec.describe "creating issues with templates", type: :system do
   include ActiveSupport::Testing::Assertions
@@ -31,7 +32,7 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to have_selector('#attachments_form')
 
       fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', with: 'One-line edited content'
-      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: Date.parse('2020-01-01')
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: "01/01/2025"
 
       click_on 'Create'
 
@@ -40,7 +41,7 @@ RSpec.describe "creating issues with templates", type: :system do
       expect(page).to have_selector('.description', text: "Type here first section content")
       expect(page).to have_selector('.description', text: "Type here second section content")
       expect(page).to have_selector('.description', text: 'One-line edited content')
-      expect(page).to have_selector('.description', text: '2020-01-01')
+      expect(page).to have_selector('.description', text: "2025-01-01")
     end
 
     it "keeps sections values when form is reloaded" do
@@ -54,7 +55,7 @@ RSpec.describe "creating issues with templates", type: :system do
 
       fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_1_text', with: 'Edited text area'
       fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_7_text', with: 'One-line edited content'
-      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: '01/01/2020'
+      fill_in 'issue_issue_template_section_groups_attributes_1_0_sections_attributes_8_text', with: Date.current.strftime('%d/%m/%Y')
 
       select "Feature request", :from => "issue_tracker_id"
 

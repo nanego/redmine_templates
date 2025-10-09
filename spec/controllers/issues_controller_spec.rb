@@ -215,7 +215,7 @@ describe IssuesController, type: :controller do
             :tracker_id => 3,
             :status_id => 2,
             :description => 'This is the description',
-            :start_date => '01/01/2025',
+            :start_date => '2025-01-01',
             :priority_id => 5,
             :issue_template_id => template.id
           }
@@ -239,7 +239,7 @@ describe IssuesController, type: :controller do
             :tracker_id => 3,
             :status_id => 2,
             :description => 'This is the description',
-            :start_date => '25/12/2025',
+            :start_date => '2025-12-25',
             :priority_id => 5,
             :issue_template_id => template.id
           }

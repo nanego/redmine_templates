@@ -127,22 +127,29 @@ describe IssueTemplatesController, type: :controller do
       template_origin = IssueTemplate.find(3)
       field_attributes = { :field_format => 'string', :is_for_all => true, :is_filter => true, :trackers => Tracker.all }
 
-      IssueCustomField.create!(field_attributes.merge(:name => 'Field 1', :visible => true))
-      IssueCustomField.create!(field_attributes.merge(:name => 'Field 2', :visible => false, :role_ids => [1, 2]))
-      IssueCustomField.create!(field_attributes.merge(:name => 'Field 3', :visible => false, :role_ids => [1, 3]))
+      field1 = IssueCustomField.create!(field_attributes.merge(:name => 'Field 1', :visible => true))
+      field2 = IssueCustomField.create!(field_attributes.merge(:name => 'Field 2', :visible => false, :role_ids => [1, 2]))
+      field3 = IssueCustomField.create!(field_attributes.merge(:name => 'Field 3', :visible => false, :role_ids => [1, 3]))
 
-      3.times do |i|
-        template_origin.custom_field_values = { i + 1 => "Value for field #{i + 1}" }
-      end
-      template_origin.save
+      template_origin.custom_field_values = { field1.id => "Value for field 1",
+                                              field2.id => "Value for field 2",
+                                              field3.id => "Value for field 3" }
+      template_origin.save!
 
       get :copy, params: { id: template_origin.id }
 
-      custom_field_values = assigns(:issue_template).custom_field_values.map(&:value)
-      expect(custom_field_values).to include("Value for field 1")
-      expect(assigns(:issue_template).custom_field_values[1].value).to eq("Value for field 2")
-      expect(assigns(:issue_template).custom_field_values[2].value).to eq("Value for field 3")
+      copied_template = assigns(:issue_template)
+      custom_field_values = copied_template.custom_field_values.map(&:value)
 
+      expect(custom_field_values).to include("Value for field 1")
+
+      field1_value = copied_template.custom_field_values.find { |cfv| cfv.custom_field_id == field1.id }&.value
+      field2_value = copied_template.custom_field_values.find { |cfv| cfv.custom_field_id == field2.id }&.value
+      field3_value = copied_template.custom_field_values.find { |cfv| cfv.custom_field_id == field3.id }&.value
+
+      expect(field1_value).to eq("Value for field 1")
+      expect(field2_value).to eq("Value for field 2")
+      expect(field3_value).to eq("Value for field 3")
     end
   end
 
