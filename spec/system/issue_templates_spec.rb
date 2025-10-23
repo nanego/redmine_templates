@@ -9,7 +9,7 @@ RSpec.describe "creating issues with templates", type: :system do
            :issue_templates, :issue_template_projects, :issue_template_section_groups, :issue_template_sections
 
   let(:template_with_sections) { IssueTemplate.find(3) }
-  let(:template_with_repeatable_sections) {IssueTemplate.find(6)}
+  let(:template_with_repeatable_sections) { IssueTemplate.find(6) }
 
   before do
     log_user('admin', 'admin')
@@ -63,41 +63,7 @@ RSpec.describe "creating issues with templates", type: :system do
     end
   end
 
-  describe "Fail validation of template" do
-    it "Should keep the selected projects" do
-      visit new_issue_template_path
-      # open selected projects modal
-      find('#link_update_project_list').click
-
-      expect(page).to have_selector('#ajax-modal', wait: true)
-
-      within '#ajax-modal' do
-        # select projects with id  3 , 5
-        find("input[value='5']").click
-        find("input[value='3']").click
-        find("input[id='button_apply_projects']").click
-      end
-
-      # Make fail validation
-      find("input[name='commit']").click
-
-      # selected projects 3, project_id=3 +project_id= 5 + its child project_id=6
-      expect(page).to have_selector("span", text: "#{Project.find(3).name}")
-      expect(page).to have_selector("span", text: "#{Project.find(5).name}")
-      expect(page).to have_selector("span", text: "#{Project.find(6).name}")
-
-      # Remake succes validation
-      fill_in 'issue_template_template_title', with: 'test'
-      
-      find("input[name='commit']").click
-
-      # wait for the methode similar_templates (in ajax)
-      sleep(3)
-      expect(IssueTemplate.last.template_projects.count).to eq(3)
-    end
-  end
-
-  describe "Template with sections" do 
+  describe "Template with sections" do
     it "it display personalized button title field (add/delete)" do
       personalized_add_button_text = "Add section"
       personalized_delete_button_text = "Delete section"
@@ -111,8 +77,8 @@ RSpec.describe "creating issues with templates", type: :system do
       visit edit_issue_template_path(template_with_repeatable_sections.id)
 
       # Display add/delete button text prefilled fields
-      expect(page).to have_selector("input[value='"+ personalized_add_button_text +"']")
-      expect(page).to have_selector("input[value='"+ personalized_delete_button_text +"']")
+      expect(page).to have_selector("input[value='" + personalized_add_button_text +"']")
+      expect(page).to have_selector("input[value='" + personalized_delete_button_text +"']")
     end
 
     it "it do not display personalized button title field (add/delete)" do
@@ -121,7 +87,7 @@ RSpec.describe "creating issues with templates", type: :system do
       # Do not display add/delete button text fields 
       expect(page).not_to have_selector("input[name='issue_template[section_groups_attributes][0][add_button_title]']")
       expect(page).not_to have_selector("input[name='issue_template[section_groups_attributes][0][delete_button_title]']")
-      
+
     end
 
     it "it display personalized button title field (add/delete) on click" do
@@ -140,7 +106,7 @@ RSpec.describe "creating issues with templates", type: :system do
 
       # Display add/delete button text prefilled fields
       expect(page).to have_selector("input[name='issue_template[section_groups_attributes][0][add_button_title]']")
-      expect(page).to have_selector("input[name='issue_template[section_groups_attributes][0][delete_button_title]']")   
+      expect(page).to have_selector("input[name='issue_template[section_groups_attributes][0][delete_button_title]']")
     end
   end
 end

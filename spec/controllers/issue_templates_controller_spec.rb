@@ -164,6 +164,24 @@ describe IssueTemplatesController, type: :controller do
       expect(response).to have_http_status(:forbidden)
     end
 
+    it "keeps selected projects when validation fails" do
+      # Simulate validation failure by omitting a required field (template_title)
+      post :create, params: {
+        issue_template: {
+          template_project_ids: ["3", "5"],
+          tracker_id: 1,
+          status_id: 1
+        }
+      }
+      # it renders the form again with validation errors
+      expect(response).to be_successful
+      assert_template 'new'
+
+      # Check that selected projects are preserved in the template object
+      template = assigns(:issue_template)
+      expect(template.template_project_ids).to include(3, 5)
+    end
+
     it "should succeed and update the first template" do
       post :create, params: { :issue_template => { subject: "New issue", project_id: 1, tracker_id: 1, status_id: 1, template_title: "New template", template_project_ids: [1] } }
       template = IssueTemplate.last
@@ -454,5 +472,19 @@ describe IssueTemplatesController, type: :controller do
     expect(response.body).to have_css(".template_projects")
     expect(response.body).to have_css("tr[data-template-id=#{template.id}] td[class='template_column_count']")
     expect(response.body).to have_css("tr[data-template-id=#{template.id}] td:nth-child(6)", text: "#{template.issue_template_projects.size}", exact_text: true)
+  end
+
+  context "GET index" do
+    it "displays templates that lack a tracker" do
+      tracker_to_remove = Tracker.find(3)
+      tracker_to_remove.destroy
+
+      template_without_tracker = IssueTemplate.find(6)
+      expect(template_without_tracker.tracker_id).to eq(0)
+
+      get :index
+      expect(response).to be_successful
+      expect(response.body).to include(template_without_tracker.template_title)
+    end
   end
 end

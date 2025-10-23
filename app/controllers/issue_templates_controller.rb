@@ -5,7 +5,7 @@ class IssueTemplatesController < ApplicationController
   helper :trackers
   include TrackersHelper
 
-  before_action :authorize_global, except: [:add_repeatable_group, :render_select_projects_modal_by_ajax]
+  before_action :authorize_global, except: [:add_repeatable_group, :render_select_projects_modal_by_ajax, :update_form]
   before_action :find_project, only: [:init]
   before_action :find_optional_project, only: [:index, :new, :edit]
 

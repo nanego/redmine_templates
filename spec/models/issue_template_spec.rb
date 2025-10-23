@@ -339,4 +339,27 @@ describe "IssueTemplate" do
     end
 
   end
+
+  context "template_projects with archived projects" do
+    it "includes archived projects when template is assigned to all projects" do
+      template = IssueTemplate.create(
+        project_id: 1,
+        tracker_id: 1,
+        status_id: 1,
+        author_id: 2,
+        subject: 'test_create',
+        template_title: 'Template with archived projects',
+        template_enabled: true,
+        template_project_ids: Project.all.pluck(:id)
+      )
+
+      project_to_archive = Project.find(5)
+      project_to_archive.status = Project::STATUS_ARCHIVED
+      project_to_archive.save
+
+      template.reload
+      expect(template.template_projects.count).to eq(Project.all.count)
+      expect(template.template_projects).to include(project_to_archive)
+    end
+  end
 end
