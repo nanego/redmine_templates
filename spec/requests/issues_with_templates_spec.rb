@@ -157,7 +157,7 @@ describe "Issue creation with templates", type: :request do
   describe "template with hidden attachments" do
     it "does not show attachments form when configured" do
       template_4.update(hide_file_attachment: true)
-      
+
       get new_project_issue_path(project, template_id: template_4.id)
       expect(response).to be_successful
       expect(response.body).to_not include('attachments_form')

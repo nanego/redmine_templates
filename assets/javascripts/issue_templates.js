@@ -92,17 +92,15 @@ function makeListsSortable() {
 
 // Template Form controller
 (function () {
-    stimulus_application.register("template-form", class extends Stimulus.Controller {
+    Stimulus.register("template-form", class extends Stimulus.Controller {
 
-        static get targets() {
-            return [
-                "custom_form_radio_button",
-                "custom_form_path_text_field",
-                "custom_form",
-                "standard_form",
-                "split_description"
-            ];
-        }
+        static targets = [
+            "custom_form_radio_button",
+            "custom_form_path_text_field",
+            "custom_form",
+            "standard_form",
+            "split_description"
+        ]
 
         connect() {
             this.toogleForm()
@@ -132,18 +130,16 @@ function makeListsSortable() {
 
     })
 
-    stimulus_application.register("split-description", class extends Stimulus.Controller {
+    Stimulus.register("split-description", class extends Stimulus.Controller {
 
-        static get targets() {
-            return [
-                "split_description_checkbox",
-                "description_field",
-                "section_groups_fields",
-                "template_sections",
-                "select_new_section_type",
-                "section_group_template"
-            ];
-        }
+        static targets = [
+            "split_description_checkbox",
+            "description_field",
+            "section_groups_fields",
+            "template_sections",
+            "select_new_section_type",
+            "section_group_template"
+        ]
 
         connect() {
             this.toggleDescriptionField()
@@ -276,13 +272,11 @@ function makeListsSortable() {
         }
     });
 
-    stimulus_application.register("description-item-form", class extends Stimulus.Controller {
+    Stimulus.register("description-item-form", class extends Stimulus.Controller {
 
-        static get targets() {
-            return [
-                "destroy_hidden"
-            ];
-        }
+        static targets = [
+            "destroy_hidden"
+        ]
 
         connect() {
         }
