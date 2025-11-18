@@ -120,7 +120,6 @@ jobs:
           repository: jbbarth/redmine_base_deface
           path: redmine/plugins/redmine_base_deface
 
-
       - name: Checkout plugin
         uses: actions/checkout@v4
         with:

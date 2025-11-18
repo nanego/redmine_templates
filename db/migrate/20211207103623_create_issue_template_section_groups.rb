@@ -6,7 +6,7 @@ class CreateIssueTemplateSectionGroups < ActiveRecord::Migration[5.2]
   def change
     create_table :issue_template_section_groups do |t|
       t.string :title
-      t.references :issue_template, :foreign_key => { index: true }
+      t.references :issue_template, type: :integer, :foreign_key => { index: true }
       t.integer :position
       t.boolean :repeatable, default: false
     end unless ActiveRecord::Base.connection.table_exists? 'issue_template_section_groups'
