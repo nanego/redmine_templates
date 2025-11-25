@@ -12,18 +12,28 @@ module RedmineTemplates
                                 { :controller => 'issues', :action => 'new', :template_id => template.id },
                                 :param => :project_id,
                                 :caption => Proc.new {
-                                  template.reload unless template.has_been_deleted?
-                                  template.title_with_tracker
+                                  begin
+                                    template.reload unless template.has_been_deleted?
+                                    template.title_with_tracker
+                                  rescue ActiveRecord::RecordNotFound
+                                    # Template was deleted between menu construction and rendering
+                                    nil
+                                  end
                                 },
                                 :html => { :accesskey => Redmine::AccessKeys.key_for(:new_issue) },
                                 :if => Proc.new { |current_project|
                                   if template.has_been_deleted?
                                     false
                                   else
-                                    template.reload
-                                    template.template_enabled &&
-                                      template.template_projects.include?(current_project) &&
-                                      template.tracker_is_valid?(current_project)
+                                    begin
+                                      template.reload
+                                      template.template_enabled &&
+                                        template.template_projects.include?(current_project) &&
+                                        template.tracker_is_valid?(current_project)
+                                    rescue ActiveRecord::RecordNotFound
+                                      # Template was deleted between menu construction and rendering
+                                      false
+                                    end
                                   end
                                 },
                                 :permission => :add_issues,
