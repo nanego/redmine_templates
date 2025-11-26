@@ -91,8 +91,16 @@ function makeListsSortable() {
 }
 
 // Template Form controller
-(function () {
-    Stimulus.register("template-form", class extends Stimulus.Controller {
+(async function () {
+    // Wait for Stimulus application to be available
+    while (typeof Stimulus === 'undefined') {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    // Import Controller from Stimulus module
+    const { Controller } = await import('@hotwired/stimulus');
+
+    Stimulus.register("template-form", class extends Controller {
 
         static targets = [
             "custom_form_radio_button",
@@ -130,7 +138,7 @@ function makeListsSortable() {
 
     })
 
-    Stimulus.register("split-description", class extends Stimulus.Controller {
+    Stimulus.register("split-description", class extends Controller {
 
         static targets = [
             "split_description_checkbox",
@@ -272,7 +280,7 @@ function makeListsSortable() {
         }
     });
 
-    Stimulus.register("description-item-form", class extends Stimulus.Controller {
+    Stimulus.register("description-item-form", class extends Controller {
 
         static targets = [
             "destroy_hidden"
