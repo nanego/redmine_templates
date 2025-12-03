@@ -96,11 +96,7 @@ function makeListsSortable() {
     while (typeof Stimulus === 'undefined') {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
-
-    // Import Controller from Stimulus module
-    const { Controller } = await import('@hotwired/stimulus');
-
-    Stimulus.register("template-form", class extends Controller {
+    Stimulus.register("template-form", class extends Stimulus.Controller {
 
         static targets = [
             "custom_form_radio_button",
