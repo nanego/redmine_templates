@@ -90,13 +90,32 @@ function makeListsSortable() {
     })
 }
 
-// Template Form controller
-(async function () {
-    // Wait for Stimulus application to be available
-    while (typeof Stimulus === 'undefined') {
-        await new Promise(resolve => setTimeout(resolve, 100));
+// Register template Stimulus controllers
+async function registerTemplateControllers() {
+    if (typeof window.Stimulus === 'undefined') {
+        return false;
     }
-    Stimulus.register("template-form", class extends Stimulus.Controller {
+
+    let Controller;
+
+    try {
+        // Try to dynamically import Controller from @hotwired/stimulus
+        const stimulus = await import('@hotwired/stimulus');
+        Controller = stimulus.Controller;
+    } catch (error) {
+        // Fallback: extract Controller from existing Redmine controller
+        if (window.Stimulus.application?.router?.modulesByIdentifier?.size > 0) {
+            const modules = Array.from(window.Stimulus.application.router.modulesByIdentifier.values());
+            const existingController = modules[0].definition.controllerConstructor;
+            Controller = Object.getPrototypeOf(existingController.prototype).constructor;
+        } else {
+            console.warn('Could not get Stimulus Controller class');
+            return false;
+        }
+    }
+
+    try {
+        window.Stimulus.register("template-form", class extends Controller {
 
         static targets = [
             "custom_form_radio_button",
@@ -134,7 +153,7 @@ function makeListsSortable() {
 
     })
 
-    Stimulus.register("split-description", class extends Controller {
+    window.Stimulus.register("split-description", class extends Controller {
 
         static targets = [
             "split_description_checkbox",
@@ -276,7 +295,7 @@ function makeListsSortable() {
         }
     });
 
-    Stimulus.register("description-item-form", class extends Controller {
+    window.Stimulus.register("description-item-form", class extends Controller {
 
         static targets = [
             "destroy_hidden"
@@ -304,4 +323,26 @@ function makeListsSortable() {
             }
         }
     });
-})();
+
+        return true;
+    } catch (error) {
+        console.error('Error registering template controllers:', error);
+        return false;
+    }
+}
+
+// Register controllers after DOM and Stimulus are loaded
+function tryRegisterTemplateControllers() {
+    let attempts = 0;
+    const interval = setInterval(async function() {
+        if (await registerTemplateControllers() || attempts++ > 30) {
+            clearInterval(interval);
+        }
+    }, 200);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(tryRegisterTemplateControllers, 1000));
+} else {
+    setTimeout(tryRegisterTemplateControllers, 1000);
+}
