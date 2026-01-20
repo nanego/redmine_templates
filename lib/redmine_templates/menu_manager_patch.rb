@@ -5,36 +5,32 @@ module RedmineTemplates
       if current_project.present? &&
          current_project.issue_templates.present?
         Redmine::MenuManager.map :project_menu do |project_menu|
-          current_project.issue_templates.includes(:tracker).reorder('trackers.position asc, issue_templates.template_title asc').each do |template|
+          templates = current_project.issue_templates
+                                     .includes(:tracker)
+                                     .reorder('trackers.position asc, issue_templates.template_title asc')
+
+          templates.each do |template|
             menu_item_name = "new_issue_template_#{template.id}".to_sym
             unless project_menu.find(menu_item_name)
+              template_id = template.id
+
               project_menu.push menu_item_name,
-                                { :controller => 'issues', :action => 'new', :template_id => template.id },
+                                { :controller => 'issues', :action => 'new', :template_id => template_id },
                                 :param => :project_id,
                                 :caption => Proc.new {
-                                  begin
-                                    template.reload unless template.has_been_deleted?
-                                    template.title_with_tracker
-                                  rescue ActiveRecord::RecordNotFound
-                                    # Template was deleted between menu construction and rendering
-                                    nil
-                                  end
+                                  t = IssueTemplate.find_by(id: template_id)
+                                  t&.title_with_tracker
                                 },
                                 :html => { :accesskey => Redmine::AccessKeys.key_for(:new_issue) },
                                 :if => Proc.new { |current_project|
-                                  if template.has_been_deleted?
-                                    false
-                                  else
-                                    begin
-                                      template.reload
-                                      template.template_enabled &&
-                                        template.template_projects.include?(current_project) &&
-                                        template.tracker_is_valid?(current_project)
-                                    rescue ActiveRecord::RecordNotFound
-                                      # Template was deleted between menu construction and rendering
-                                      false
-                                    end
-                                  end
+                                  IssueTemplateProject.exists?(
+                                    issue_template_id: template_id,
+                                    project_id: current_project.id
+                                  ) &&
+                                    IssueTemplate.where(id: template_id, template_enabled: true)
+                                                 .joins(:tracker)
+                                                 .where(trackers: { id: current_project.tracker_ids })
+                                                 .exists?
                                 },
                                 :permission => :add_issues,
                                 :parent => :new_issue
