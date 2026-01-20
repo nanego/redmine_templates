@@ -11,7 +11,7 @@ module RedmineTemplates
 
     def initialize_available_filters
       super
-      template_values = IssueTemplate.all.collect { |s| [s.template_title, s.id.to_s] }.sort_by { |v| v.first }
+      template_values = IssueTemplate.order(:template_title).pluck(:template_title, :id).map { |title, id| [title, id.to_s] }
       add_available_filter("issue_template_id", :type => :list_subprojects, :values => template_values)
     end
 
