@@ -23,10 +23,7 @@ module RedmineTemplates
                                 },
                                 :html => { :accesskey => Redmine::AccessKeys.key_for(:new_issue) },
                                 :if => Proc.new { |current_project|
-                                  IssueTemplateProject.exists?(
-                                    issue_template_id: template_id,
-                                    project_id: current_project.id
-                                  ) &&
+                                  current_project.issue_template_ids.include?(template_id) &&
                                     IssueTemplate.where(id: template_id, template_enabled: true)
                                                  .joins(:tracker)
                                                  .where(trackers: { id: current_project.tracker_ids })

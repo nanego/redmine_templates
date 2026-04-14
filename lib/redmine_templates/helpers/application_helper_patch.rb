@@ -17,8 +17,6 @@ module RedmineTemplates::Helpers
       s = +''
       if projects.any?
         ancestors = []
-        # in the orginal method we write projects.sort_by(&:lft).each do |project|
-        # but here the projects array is already sorted by lft before sending by ajax
         projects.each do |project|
           project_status = project[0]
           project_name = project[1]
