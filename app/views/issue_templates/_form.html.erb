@@ -262,9 +262,7 @@
               <%= render :partial => "issue_templates/section_groups_form", :locals => { f: f } %>
             </div>
             <p data-target="split-description.add_group_button">
-              <button class="icon icon-add link-cursor" data-action="split-description#addSectionsGroup">Ajouter un
-                groupe de sections
-              </button>
+              <button class="icon link-cursor" data-action="split-description#addSectionsGroup"><%= sprite_icon('add', 'Ajouter un groupe de sections') %></button>
             </p>
           </div>
 

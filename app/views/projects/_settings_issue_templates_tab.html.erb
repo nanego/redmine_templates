@@ -47,7 +47,7 @@
             </td>
             <td>
               <% if @project.trackers.exclude? issue_template.tracker %>
-                <span class="icon icon-warning" style="margin-left: 8px;" title="<%= t('disabled_tracker_for_this_project') %>"></span>
+                <span class="icon icon-warning" style="margin-left: 8px;" title="<%= t('disabled_tracker_for_this_project') %>"><%= sprite_icon('warning') %></span>
               <% end %>
               <%= issue_template.tracker.name if issue_template.tracker.present? %>
             </td>
@@ -102,9 +102,8 @@
             </td>
             <td class="buttons">
               <% if User.current.allowed_to?(:create_issue_templates, @project) %>
-                <%= link_to l(:button_edit),
-                            edit_issue_template_path(id: issue_template.id, project_id: @project.id),
-                            :class => 'icon icon-edit' %>
+                <%= link_to sprite_icon('edit', l(:button_edit)),
+                            edit_issue_template_path(id: issue_template.id, project_id: @project.id) %>
               <% end %>
             </td>
           </tr>

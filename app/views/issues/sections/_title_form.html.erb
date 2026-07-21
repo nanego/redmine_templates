@@ -8,8 +8,8 @@
   <% end %>
 
   <% if section.retracted && group_index == '0' %>
-    <%= link_to '', '#', class: "expand_button expander icon icon-add", data: {group_id: section.id} %>
-    <%= link_to '', '#', class: "expand_button retracter icon icon-cancel", data: {group_id: section.id} %>
+    <%= link_to sprite_icon('add'), '#', class: "expand_button expander icon", data: {group_id: section.id} %>
+    <%= link_to sprite_icon('cancel'), '#', class: "expand_button retracter icon", data: {group_id: section.id} %>
   <% end %>
 
 </div>

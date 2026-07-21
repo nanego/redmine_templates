@@ -19,8 +19,8 @@
               <%= render 'issues/sections/separator_form' %>
               <p style="margin-top: -1.5em">
                 <% add_section_title_button = section_group.add_button_title.present? ? section_group.add_button_title : t("add_repeatable_bloc") %>
-                <%= link_to add_section_title_button, '#',
-                            class: 'add_sections_group icon icon-add',
+                <%= link_to sprite_icon('add', add_section_title_button), '#',
+                            class: 'add_sections_group icon',
                             title: add_section_title_button,
                             data: {
                               sections_group_id: section_group.id,

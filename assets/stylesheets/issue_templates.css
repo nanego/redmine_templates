@@ -322,11 +322,6 @@ a.list_templates_projects_names.current {
     background-color: #ffffff;
 }
 
-#template_sections .icon-add {
-    background-position: 3px 50%;
-    padding-left: 22px;
-}
-
 .sections .position-section-tooltip {
     position: absolute;
     padding: 7px 0 0 0;

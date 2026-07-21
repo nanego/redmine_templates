@@ -65,7 +65,7 @@ module IssueTemplatesHelper
     end
 
     delete_link = content_tag :span, style: "float: right;" do
-      link_to("Supprimer", '#',
+      link_to(sprite_icon('del', "Supprimer"), '#',
               class: "icon icon-del link-cursor action",
               data: { action: "description-item-form#delete" }) +
         form.hidden_field(:_destroy, :value => 0, data: { target: "description-item-form.destroy_hidden" })
@@ -76,9 +76,9 @@ module IssueTemplatesHelper
       label_collapse = section_class.name == "IssueTemplateSectionGroup" ? "Masquer les sections" : "Masquer les détails"
       initial_state = (section_class.name != "IssueTemplateSectionGroup" || template ? "collapsed" : "")
       toggle_display_link = content_tag :span, style: "float: right;margin-right: 2em;" do
-        link_to (initial_state != "collapsed" ? label_collapse : label_expand),
+        link_to sprite_icon('list', (initial_state != "collapsed" ? label_collapse : label_expand)),
                 '#',
-                class: 'icon icon-list expand_collapse action',
+                class: 'icon expand_collapse action',
                 data: { action: "description-item-form#expand_collapse",
                         label_expand: label_expand,
                         label_collapse: label_collapse }
