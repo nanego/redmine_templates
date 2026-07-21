@@ -26,9 +26,10 @@ module IssueTemplatesHelper
       :reorder_url => options[:url] || url_for(object),
       :reorder_param => options[:param] || object.class.name.underscore
     }
-    content_tag('span', '',
+    content_tag('span', sprite_icon('reorder', ''),
                 :class => "icon-only icon-sort-handle sort-handle sort-handle-#{object.class.try(:short_name)}",
-                :data => data)
+                :data => data,
+                :title => l(:button_sort))
   end
 
   def reload_current_value(sections_attributes, section, repeatable_group_index = 0, get_all_attributes: false)

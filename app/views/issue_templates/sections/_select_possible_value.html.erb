@@ -3,7 +3,7 @@
 <% value = "" if value.blank? %>
 <% icon_name = "" if icon_name.blank? %>
 <li>
-  <span class="icon-only icon-sort-handle"></span>
+  <span class="icon-only icon-sort-handle sort-handle"><%= sprite_icon('reorder', '') %></span>
   <%= check_box_tag :checked, '1', default_values.include?(value) %>
   <span><%= text_field_tag 'value', value, size: 45, class: 'value' %></span>
 

@@ -135,6 +135,7 @@ jobs:
           bundle exec rails db:fixtures:load
 
       - name: Run core tests
+        timeout-minutes: 15
         env:
           RAILS_ENV: test
           RUBYOPT: "-W0"
@@ -142,6 +143,7 @@ jobs:
         run: bundle exec rails test
 
       - name: Run plugin tests
+        timeout-minutes: 10
         env:
           RAILS_ENV: test
         working-directory: redmine
