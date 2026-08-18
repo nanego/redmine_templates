@@ -139,6 +139,7 @@ jobs:
         env:
           RAILS_ENV: test
           RUBYOPT: "-W0"
+          PARALLEL_WORKERS: "1" # avoid Rails parallel-test fork deadlock under Ruby 4.0
         working-directory: redmine
         run: bundle exec rails test
 

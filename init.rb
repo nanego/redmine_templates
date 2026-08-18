@@ -17,7 +17,8 @@ Redmine::Plugin.register :redmine_templates do
            :partial => 'settings/redmine_plugin_templates_settings'
   menu :admin_menu, :issue_templates, '/issue_templates',
        :caption => :label_issue_templates,
-       :html => { :class => 'icon' }
+       :icon => 'document',
+       :html => { :class => 'icon icon-document' }
 end
 
 Redmine::MenuManager.map :project_menu do |menu|
