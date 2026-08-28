@@ -474,6 +474,19 @@ describe IssueTemplatesController, type: :controller do
     expect(response.body).to have_css("tr[data-template-id=#{template.id}] td:nth-child(6)", text: "#{template.issue_template_projects.size}", exact_text: true)
   end
 
+  context "POST add_repeatable_group" do
+    it "renders the form of an additional repeatable group" do
+      post :add_repeatable_group, params: { sectionsGroupId: 5 }, xhr: true
+      expect(response).to be_successful
+      expect(response.body).to include("section_groups_5")
+    end
+
+    it "returns 404 when the group id is missing" do
+      post :add_repeatable_group, xhr: true
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
   context "GET index" do
     it "displays templates that lack a tracker" do
       tracker_to_remove = Tracker.find(3)

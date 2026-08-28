@@ -216,6 +216,8 @@ class IssueTemplatesController < ApplicationController
   def add_repeatable_group
     @sections_group = IssueTemplateSectionGroup.find(params[:sectionsGroupId])
     render partial: "issues/sections/add_repeatable_group"
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def render_select_projects_modal_by_ajax
