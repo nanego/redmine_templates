@@ -81,7 +81,7 @@
                   nb_visible_projects = visible_projects.count
                 %>
                 <% template_projects_names.each do |project_name| %>
-                  <%= link_to project_name.gsub(/ /, "&nbsp;").html_safe,
+                  <%= link_to h(project_name).gsub(/ /, "&nbsp;").html_safe,
                               "#",
                               class: "project_id_#{project_name.parameterize} list_templates_projects_names #{@project && @project.name == project_name ? "current" : ""}",
                               :onclick => "$('.list_templates_projects_names').removeClass('current');$(\".project_id_#{project_name.parameterize}\").toggleClass('current')"

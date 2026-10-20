@@ -123,7 +123,7 @@
         });
 
         $("input:checkbox[name='template_project_ids[]']:checked:not(.inactive)").each(function () {
-            htmlContent += "<span class=\"list_templates_projects_names\">" + $(this).closest('label').text() + "</span>";
+            htmlContent += $('<span class="list_templates_projects_names"></span>').text($(this).closest('label').text()).prop('outerHTML');
         });
 
         $("#my_projects").html(htmlContent);

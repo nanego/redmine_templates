@@ -72,7 +72,7 @@
               <span id="my_projects">
                 <% visible_projects.each do |project| %>
 
-                  <%= content_tag("span", project.gsub(/ /, "&nbsp;").html_safe, class: "list_templates_projects_names") %>
+                  <%= content_tag("span", h(project).gsub(/ /, "&nbsp;").html_safe, class: "list_templates_projects_names") %>
 
                 <% end %>
               </span>
